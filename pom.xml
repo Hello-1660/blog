@@ -7,6 +7,7 @@
         <module>blog-common</module>
         <module>blog-service</module>
         <module>blog-pojo</module>
+        <module>blog-security</module>
     </modules>
 
     <parent>

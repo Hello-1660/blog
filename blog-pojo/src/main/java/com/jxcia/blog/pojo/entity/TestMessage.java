@@ -1,10 +1,8 @@
 package com.jxcia.blog.pojo.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
 public class TestMessage {
     // 测试信息
     private String message;
