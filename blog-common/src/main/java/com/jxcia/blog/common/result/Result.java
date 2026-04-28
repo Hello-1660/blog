@@ -25,7 +25,7 @@ public class Result<T> {
      * 获取成功返回结果
      * @return 返回结果对象
      */
-    public static Result<Void> success() {
+    public static <T> Result<T> success() {
         return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMassage(), null);
     }
 
@@ -55,7 +55,7 @@ public class Result<T> {
      * 获取返回失败结果对象
      * @return 返回结果对象
      */
-    public static Result<Void> validateFailed () {
+    public static <T> Result<T> validateFailed () {
         return new Result<>(ResultCode.VALIDATE_FAILED.getCode(), ResultCode.VALIDATE_FAILED.getMassage(), null);
     }
 
@@ -64,7 +64,7 @@ public class Result<T> {
      * @param massage 异常信息
      * @return 返回结果对象
      */
-    public static Result<Void> validateFailed(String massage) {
+    public static <T> Result<T> validateFailed(String massage) {
         return new Result<>(ResultCode.VALIDATE_FAILED.getCode(), massage, null);
     }
 
@@ -72,7 +72,7 @@ public class Result<T> {
      * 获取返回失败结果对象
      * @return 返回结果对象
      */
-    public static Result<Void> unauthorized () {
+    public static <T> Result<T> unauthorized () {
         return new Result<>(ResultCode.UNAUTHORIZED.getCode(), ResultCode.UNAUTHORIZED.getMassage(), null);
     }
 
@@ -81,7 +81,7 @@ public class Result<T> {
      * @param massage 提示信息
      * @return 返回结果对象
      */
-    public static Result<Void> unauthorized(String massage) {
+    public static <T> Result<T> unauthorized(String massage) {
         return new Result<>(ResultCode.UNAUTHORIZED.getCode(), massage, null);
     }
 
@@ -89,7 +89,7 @@ public class Result<T> {
      * 获取返回失败结果对象
      * @return 返回结果对象
      */
-    public static Result<Void> forbidden () {
+    public static <T> Result<T> forbidden () {
         return new Result<>(ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMassage(), null);
     }
 
@@ -98,7 +98,24 @@ public class Result<T> {
      * @param massage 提示信息
      * @return 返回结果对象
      */
-    public static Result<Void> forbidden(String massage) {
+    public static <T> Result<T> forbidden(String massage) {
         return new Result<>(ResultCode.FORBIDDEN.getCode(), massage, null);
+    }
+
+    /**
+     * 获取返回失败结果对象
+     * @param massage 提示信息
+     * @return 返回结果对象
+     */
+    public static <T> Result<T> Failed (String massage) {
+        return new Result<>(ResultCode.FAILED.getCode(), massage, null);
+    }
+
+    /**
+     * 获取返回失败结果对象
+     * @return 返回结果对象
+     */
+    public static <T> Result<T> Failed () {
+        return new Result<>(ResultCode.FAILED.getCode(), ResultCode.FAILED.getMassage(), null);
     }
 }

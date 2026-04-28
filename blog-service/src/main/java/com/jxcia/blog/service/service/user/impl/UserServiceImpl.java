@@ -1,6 +1,8 @@
 package com.jxcia.blog.service.service.user.impl;
 
 import com.jxcia.blog.blog.security.crypto.PasswordEncoder;
+import com.jxcia.blog.common.constant.UserRegisterExceptionConstant;
+import com.jxcia.blog.common.exception.UserRegisterException;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
@@ -31,14 +33,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserRegisterVo register(UserRegisterDto userRegisterDto) {
         // 两次密码不一致
-        if (!userRegisterDto.getPassword().equals(userRegisterDto.getConfirmPassword())) throw new RuntimeException("password not equals");
+        if (!userRegisterDto.getPassword().equals(userRegisterDto.getConfirmPassword()))
+            throw new UserRegisterException(UserRegisterExceptionConstant.CONFIRM_PASSWORD_NOT_EQUALS);
 
         User user = new User();
         user.setEmail(userRegisterDto.getEmail());
 
         // 邮箱已注册
         List<User> userList = userMapper.findByUser(user);
-        if (!userList.isEmpty()) throw new RuntimeException("email exist");
+        if (!userList.isEmpty())
+            throw new UserRegisterException(UserRegisterExceptionConstant.EMAIL_EXISTENT);
 
         user.setNickname(userRegisterDto.getNickname());
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
