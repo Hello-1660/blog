@@ -1,6 +1,7 @@
 package com.jxcia.blog.service.controller.user;
 
 import com.jxcia.blog.common.result.Result;
+import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.service.service.user.UserService;
@@ -30,5 +31,17 @@ public class UserController {
         log.info("user register: {}", userRegisterDto.getEmail());
 
         return Result.success(userService.register(userRegisterDto));
+    }
+
+    /**
+     * 用户登录
+     * @param userLoginDto 用户登录数据
+     * @return token
+     */
+    @PostMapping("/login")
+    public Result<String> login(@RequestBody @Valid UserLoginDto userLoginDto) {
+        log.info("user login: {}", userLoginDto.getEmail());
+
+        return Result.success(userService.login(userLoginDto));
     }
 }

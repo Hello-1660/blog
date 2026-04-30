@@ -34,3 +34,13 @@ logging:
         mapper: debug
         service: info
         controller: info
+
+jwt:
+  tokenHeader: ${jwt.tokenHeader}
+  secret: ${jwt.secret}
+  expiration: ${jwt.expiration}
+  tokenHead: ${jwt.tokenHead}
+
+security:
+  ignored:
+    urls: ${security.ignored.urls}

@@ -6,3 +6,18 @@ blog:
     database: blog
     username: root
     password:
+
+jwt:
+  tokenHeader: Authorization
+  secret: 'nb666nb666nb666nb666nb666nb666nb666'
+  expiration: 604800000
+  tokenHead: 'Bearer '
+
+security:
+  ignored:
+    urls:
+      - /user/**
+      - /admin/login
+      - /admin/logout
+      - /admin/save
+      - /test/**

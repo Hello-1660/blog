@@ -1,8 +1,12 @@
 package com.jxcia.blog.service.service.user.impl;
 
 import com.jxcia.blog.blog.security.crypto.PasswordEncoder;
+import com.jxcia.blog.blog.security.util.JwtTokenUtil;
+import com.jxcia.blog.common.constant.UserLoginExceptionConstant;
 import com.jxcia.blog.common.constant.UserRegisterExceptionConstant;
+import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.common.exception.UserRegisterException;
+import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
@@ -20,7 +24,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private UserMapper userMapper;
 
@@ -56,5 +61,25 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(user, userRegisterVo);
 
         return userRegisterVo;
+    }
+
+    /**
+     * 用户登录
+     *
+     * @param userLoginDto 登录数据
+     * @return token
+     */
+    @Override
+    public String login(UserLoginDto userLoginDto) {
+        User user = userMapper.findByEmail(userLoginDto.getEmail());
+        // 账号不存在
+        if (user == null) throw new UserLoginException(UserLoginExceptionConstant.USER_NOT_FOUND);
+
+        // 密码错误
+        boolean matches = passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword());
+        if (!matches) throw new UserLoginException(UserLoginExceptionConstant.PASSWORD_ERROR);
+
+        // 返回 token
+        return jwtTokenUtil.generateUserToken(user);
     }
 }
