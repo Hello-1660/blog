@@ -6,6 +6,9 @@ import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
 import jakarta.validation.Valid;
 
+/**
+ * 用户 service
+ */
 public interface UserService {
 
     /**

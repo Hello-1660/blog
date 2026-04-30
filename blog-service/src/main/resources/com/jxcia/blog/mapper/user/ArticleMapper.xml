@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxcia.blog.service.mapper.user.ArticleMapper">
+
+    <select id="getByArticleDto" resultType="com.jxcia.blog.pojo.entity.Article">
+        select a.* from article a
+        left join article_category_relation acr on a.id = acr.article_id
+        left join user u on a.user_id = u.id
+        <where>
+            <if test="categoryId != null">and acr.category_id = #{categoryId}</if>
+            <if test="title != null and title != ''">and a.title like concat('%', #{title}, '%')</if>
+            <if test="createTime != null">and a.create_time &gt; #{createTime}</if>
+            <if test="userNickname != null and userNickname != ''">and u.nickname like concat('%', #{userNickname}, '%')</if>
+        </where>
+        order by a.create_time desc
+    </select>
+</mapper>

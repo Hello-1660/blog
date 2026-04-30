@@ -33,6 +33,7 @@
         <mysql.version>8.0.33</mysql.version>
         <mybatis.version>3.0.4</mybatis.version>
         <jjwt.version>0.12.6</jjwt.version>
+        <pagehelper.version>2.1.0</pagehelper.version>
     </properties>
 
     <dependencyManagement>
@@ -72,6 +73,12 @@
                 <artifactId>jjwt-jackson</artifactId>
                 <version>${jjwt.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
