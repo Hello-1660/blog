@@ -3,6 +3,7 @@ package com.jxcia.blog.service.service.user;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
+import com.jxcia.blog.pojo.vo.UserVo;
 import jakarta.validation.Valid;
 
 public interface UserService {
@@ -20,4 +21,10 @@ public interface UserService {
      * @return token
      */
     String login(@Valid UserLoginDto userLoginDto);
+
+    /**
+     * 获取用户详情信息
+     * @return 用户信息
+     */
+    UserVo getUser();
 }

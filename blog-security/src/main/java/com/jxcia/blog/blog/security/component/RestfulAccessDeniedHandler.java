@@ -15,8 +15,7 @@ import java.io.IOException;
  * 自定义无权限访问的返回结果
  */
 public class RestfulAccessDeniedHandler implements AccessDeniedHandler {
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {

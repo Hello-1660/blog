@@ -25,6 +25,19 @@ public interface UserMapper {
             "value (#{nickname}, #{icon}, #{email}, #{password}, #{description}, #{themeId}, #{createTime}, #{likeShowStatus}, #{accountStatus})")
     void insert(User user);
 
+    /**
+     * 根据邮箱获取用户
+     * @param email 用户邮箱
+     * @return 用户信息
+     */
     @Select("select * from user where email = #{email}")
     User findByEmail(String email);
+
+    /**
+     * 根据用户编号获取用户
+     * @param id 用户编号
+     * @return 用户信息
+     */
+    @Select("select * from user where id = #{id}")
+    User getUserById(Integer id);
 }

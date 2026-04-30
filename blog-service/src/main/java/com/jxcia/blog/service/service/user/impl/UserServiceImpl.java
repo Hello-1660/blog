@@ -2,14 +2,18 @@ package com.jxcia.blog.service.service.user.impl;
 
 import com.jxcia.blog.blog.security.crypto.PasswordEncoder;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
+import com.jxcia.blog.blog.security.util.SecurityContextUtil;
+import com.jxcia.blog.common.constant.UserExceptionConstant;
 import com.jxcia.blog.common.constant.UserLoginExceptionConstant;
 import com.jxcia.blog.common.constant.UserRegisterExceptionConstant;
 import com.jxcia.blog.common.exception.UserLoginException;
+import com.jxcia.blog.common.exception.UserNotExistsException;
 import com.jxcia.blog.common.exception.UserRegisterException;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
+import com.jxcia.blog.pojo.vo.UserVo;
 import com.jxcia.blog.service.mapper.user.UserMapper;
 import com.jxcia.blog.service.service.user.UserService;
 import org.springframework.beans.BeanUtils;
@@ -73,7 +77,7 @@ public class UserServiceImpl implements UserService {
     public String login(UserLoginDto userLoginDto) {
         User user = userMapper.findByEmail(userLoginDto.getEmail());
         // 账号不存在
-        if (user == null) throw new UserLoginException(UserLoginExceptionConstant.USER_NOT_FOUND);
+        if (user == null) throw new UserLoginException(UserLoginExceptionConstant.USER_NOT_FIND);
 
         // 密码错误
         boolean matches = passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword());
@@ -81,5 +85,22 @@ public class UserServiceImpl implements UserService {
 
         // 返回 token
         return jwtTokenUtil.generateUserToken(user);
+    }
+
+    /**
+     * 获取用户详情信息
+     *
+     * @return 用户信息
+     */
+    @Override
+    public UserVo getUser() {
+        Integer id = SecurityContextUtil.getId();
+        User user = userMapper.getUserById(id);
+        if (user == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(user, userVo);
+
+        return userVo;
     }
 }

@@ -14,6 +14,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * jwt 工具类
+ */
 @Slf4j
 public class JwtTokenUtil {
     // 用户编号键名

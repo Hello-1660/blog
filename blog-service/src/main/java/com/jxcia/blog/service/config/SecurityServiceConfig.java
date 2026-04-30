@@ -1,5 +1,6 @@
 package com.jxcia.blog.service.config;
 
+import com.jxcia.blog.blog.security.service.CustomUserDetails;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.service.mapper.user.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +17,14 @@ public class SecurityServiceConfig {
     public UserDetailsService userDetailsService() {
         return email -> {
             User user = userMapper.findByEmail(email);
+            if (user == null) return null;
 
-            if (user != null) {
-                return org.springframework.security.core.userdetails.User
-                        .withUsername(user.getEmail())
-                        .password(user.getPassword())
-                        .build();
-            } else {
-                return null;
-            }
+            // TODO 设置角色
+            return CustomUserDetails.builder()
+                    .email(email)
+                    .password(user.getPassword())
+                    .id(user.getId())
+                    .build();
         };
     }
 }

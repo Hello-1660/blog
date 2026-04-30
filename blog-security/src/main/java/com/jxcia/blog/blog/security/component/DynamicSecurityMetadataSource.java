@@ -1,6 +1,7 @@
 package com.jxcia.blog.blog.security.component;
 
 
+import com.jxcia.blog.blog.security.service.DynamicSecurityService;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

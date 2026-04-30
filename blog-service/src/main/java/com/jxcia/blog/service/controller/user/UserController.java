@@ -4,14 +4,12 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
+import com.jxcia.blog.pojo.vo.UserVo;
 import com.jxcia.blog.service.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -43,5 +41,16 @@ public class UserController {
         log.info("user login: {}", userLoginDto.getEmail());
 
         return Result.success(userService.login(userLoginDto));
+    }
+
+    /**
+     * 查看用户详细
+     * @return 用户详细
+     */
+    @GetMapping("/detail")
+    public Result<UserVo> detail() {
+        log.info("user detail");
+
+        return Result.success(userService.getUser());
     }
 }

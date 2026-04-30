@@ -16,7 +16,8 @@ jwt:
 security:
   ignored:
     urls:
-      - /user/**
+      - /user/login
+      - /user/save
       - /admin/login
       - /admin/logout
       - /admin/save

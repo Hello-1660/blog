@@ -1,6 +1,7 @@
 package com.jxcia.blog.blog.security.fliter;
 
 import com.jxcia.blog.blog.security.config.IgnoreUrlsConfig;
+import com.jxcia.blog.blog.security.service.CustomUserDetails;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,6 +23,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * jwt 拦截器，
+ */
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
@@ -53,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String email = jwtTokenUtil.getClaimsEmailFromToken(token);
             // 根据邮箱从数据中中查询用户
             log.info("checked email: {}", email);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
             // 创建 SpringSecurity 令牌
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -81,7 +85,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-
+    /**
+     * 判断是否在白名单内
+     * @param uri 用户访问 uri
+     * @return 是否在白名单内
+     */
     private boolean isWitheList(String uri) {
         List<String> urls = ignoreUrlsConfig.getUrls();
         for (String pattern : urls) {
@@ -89,7 +97,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return true;
             }
         }
-
         return false;
     }
 }

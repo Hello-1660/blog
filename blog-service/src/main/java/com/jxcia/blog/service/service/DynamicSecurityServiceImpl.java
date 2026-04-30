@@ -1,6 +1,6 @@
 package com.jxcia.blog.service.service;
 
-import com.jxcia.blog.blog.security.component.DynamicSecurityService;
+import com.jxcia.blog.blog.security.service.DynamicSecurityService;
 import com.jxcia.blog.pojo.entity.Permission;
 import com.jxcia.blog.service.mapper.admin.PermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
