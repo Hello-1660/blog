@@ -1,6 +1,5 @@
 package com.jxcia.blog.blog.security.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jxcia.blog.blog.security.component.DynamicAuthorizationManager;
 import com.jxcia.blog.blog.security.component.DynamicSecurityMetadataSource;
 import com.jxcia.blog.blog.security.component.RestAuthenticationEntryPoint;

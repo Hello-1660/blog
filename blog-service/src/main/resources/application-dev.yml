@@ -18,6 +18,7 @@ security:
     urls:
       - /user/login
       - /user/save
+      - /category/**
       - /admin/login
       - /admin/logout
       - /admin/save
