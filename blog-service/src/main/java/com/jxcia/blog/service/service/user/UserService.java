@@ -40,4 +40,10 @@ public interface UserService {
      * @return 文章列表
      */
     List<Article> getArticleList();
+
+    /**
+     * 用户浏览文章
+     * @param articleId 文章编号
+     */
+    void browse(Integer articleId);
 }

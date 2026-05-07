@@ -14,9 +14,11 @@ import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.ArticleBrowse;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
+import com.jxcia.blog.service.mapper.user.ArticleBrowseLogMapper;
 import com.jxcia.blog.service.mapper.user.ArticleMapper;
 import com.jxcia.blog.service.mapper.user.UserMapper;
 import com.jxcia.blog.service.service.user.UserService;
@@ -38,6 +40,8 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Autowired
     private ArticleMapper articleMapper;
+    @Autowired
+    private ArticleBrowseLogMapper articleBrowseLogMapper;
 
     /**
      * 用户注册
@@ -120,5 +124,23 @@ public class UserServiceImpl implements UserService {
         Integer userId = SecurityContextUtil.getId();
 
         return articleMapper.getByUserId(userId);
+    }
+
+    /**
+     * 用户浏览文章
+     *
+     * @param articleId 文章编号
+     */
+    @Override
+    public void browse(Integer articleId) {
+        Integer userId = SecurityContextUtil.getId();
+
+        ArticleBrowse articleBrowse = ArticleBrowse.builder()
+                .userId(userId)
+                .articleId(articleId)
+                .createTime(LocalDateTime.now())
+                .build();
+
+        articleBrowseLogMapper.insert(articleBrowse);
     }
 }

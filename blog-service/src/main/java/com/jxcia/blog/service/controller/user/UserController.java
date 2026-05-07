@@ -69,4 +69,18 @@ public class UserController {
 
         return Result.success(userService.getArticleList());
     }
+
+    /**
+     * 用户浏览文章
+     * @param articleId 文章编号
+     * @return 无
+     */
+    @PostMapping("/browse")
+    public Result<Void> browse(Integer articleId) {
+        log.info("browse article: {}", articleId);
+
+        userService.browse(articleId);
+
+        return Result.success();
+    }
 }
