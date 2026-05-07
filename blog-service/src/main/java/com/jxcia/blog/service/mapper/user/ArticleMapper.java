@@ -2,6 +2,7 @@ package com.jxcia.blog.service.mapper.user;
 
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -43,4 +44,19 @@ public interface ArticleMapper {
      * @return 文章列表
      */
     List<Article> getByArticleIds(List<Integer> articleIdList);
+
+    /**
+     * 根据文章编号删除文章
+     * @param articleId 文章编号
+     */
+    @Delete("delete from article where id = #{articleId}")
+    void deleteByArticleId(Integer articleId);
+
+    /**
+     * 根据用户编号查询文章
+     * @param articleId 文章编号
+     * @return 文章
+     */
+    @Select("select * from article where id = #{articleId}")
+    Article getByArticleId(Integer articleId);
 }

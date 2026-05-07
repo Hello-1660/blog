@@ -5,6 +5,7 @@ import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 文章 service
@@ -30,4 +31,10 @@ public interface ArticleService {
      * @param articleDto 文章信息
      */
     void save(ArticleDto articleDto);
+
+    /**
+     * 删除文章
+     * @param articleId 文章编号
+     */
+    void delete(Integer articleId);
 }

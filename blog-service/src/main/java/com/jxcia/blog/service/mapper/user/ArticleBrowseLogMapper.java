@@ -3,6 +3,7 @@ package com.jxcia.blog.service.mapper.user;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleBrowse;
 import com.jxcia.blog.pojo.entity.ArticleWithBrowseCount;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -26,4 +27,11 @@ public interface ArticleBrowseLogMapper {
     @Insert("insert into user_article_browse_log (user_id, article_id, create_time) " +
             "value (#{userId}, #{articleId}, #{createTime})")
     void insert(ArticleBrowse articleBrowse);
+
+    /**
+     * 根据文章编号删除浏览记录
+     * @param articleId 文章编号
+     */
+    @Delete("delete from user_article_browse_log where article_id = #{articleId}")
+    void deleteByArticleId(Integer articleId);
 }

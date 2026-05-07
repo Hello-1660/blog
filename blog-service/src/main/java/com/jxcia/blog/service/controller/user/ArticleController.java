@@ -8,6 +8,7 @@ import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
 import com.jxcia.blog.service.service.user.ArticleService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +58,21 @@ public class ArticleController {
         log.info("article save: {}", articleDto);
 
         articleService.save(articleDto);
+
+        return Result.success();
+    }
+
+    /**
+     * 删除文章
+     * @param articleId 文章编号
+     * @return 无
+     */
+    @DeleteMapping("/delete")
+    public Result<Void> delete(@NotNull Integer articleId) {
+        log.info("article delete: {}", articleId);
+
+        articleService.delete(articleId);
+
         return Result.success();
     }
 }
