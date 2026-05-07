@@ -76,4 +76,16 @@ public class ArticleController {
 
         return Result.success();
     }
+
+    /**
+     * 查看文章
+     * @param id 文章编号
+     * @return 文章
+     */
+    @GetMapping("/browse/{id}")
+    public Result<Article> browse (@PathVariable @NotNull Integer id) {
+        log.info("article browse: {}", id);
+
+        return Result.success(articleService.getById(id));
+    }
 }

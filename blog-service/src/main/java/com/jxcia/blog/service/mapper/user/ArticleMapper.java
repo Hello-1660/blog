@@ -66,4 +66,12 @@ public interface ArticleMapper {
      * @return 推荐文章列表
      */
     List<HotArticleVo> getHotArticleByArticleSearchDto();
+
+    /**
+     * 根据文章编号查询文章
+     * @param id 文章编号
+     * @return 文章
+     */
+    @Select("select * from article where id = #{id}")
+    Article getById(Integer id);
 }

@@ -3,11 +3,14 @@ package com.jxcia.blog.service.service.user.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
+import com.jxcia.blog.common.constant.ArticleExceptionConstant;
 import com.jxcia.blog.common.constant.ArticleStatusConstant;
 import com.jxcia.blog.common.constant.UserExceptionConstant;
+import com.jxcia.blog.common.exception.ArticleException;
 import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.common.result.PageResult;
+import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
@@ -16,7 +19,6 @@ import com.jxcia.blog.pojo.vo.HotArticleVo;
 import com.jxcia.blog.service.mapper.user.ArticleBrowseLogMapper;
 import com.jxcia.blog.service.mapper.user.ArticleMapper;
 import com.jxcia.blog.service.mapper.user.UserLikeArticleMapper;
-import com.jxcia.blog.service.mapper.user.UserMapper;
 import com.jxcia.blog.service.service.user.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,8 +39,6 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleBrowseLogMapper articleBrowseLogMapper;
     @Autowired
     private UserLikeArticleMapper userLikeArticleMapper;
-    @Autowired
-    private UserMapper userMapper;
 
     /**
      * 文章搜索
@@ -83,6 +83,34 @@ public class ArticleServiceImpl implements ArticleService {
         // TODO 删除评论记录
         // 删除浏览记录
         articleBrowseLogMapper.deleteByArticleId(articleId);
+    }
+
+    /**
+     * 根据文章编号查询文章
+     *
+     * @param id 文章编号
+     * @return 文章
+     */
+    @Override
+    public Article getById(Integer id) {
+        if (id == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+        Article article = articleMapper.getById(id);
+        if (article == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+
+        // 用户可以查看自己的文章，其他用户只能查看公开文章
+        Integer userId = SecurityContextUtil.getId();
+        if (article.getUserId().equals(userId)) {
+            return article;
+        } else {
+            if (article.getStatus().equals(ArticleStatusConstant.PUBLIC)) {
+                return article;
+            } else if (article.getStatus().equals(ArticleStatusConstant.PRIVATE)) {
+                throw new ArticleException(ArticleExceptionConstant.ARTICLE_IS_PRIVATE);
+            } else if (article.getStatus().equals(ArticleStatusConstant.DISABLED)) {
+                throw new ArticleException(ArticleExceptionConstant.ARTICLE_IS_DISABLE);
+            }
+            throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+        }
     }
 
     /**

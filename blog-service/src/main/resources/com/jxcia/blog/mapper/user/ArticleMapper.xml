@@ -36,6 +36,7 @@
         from user_article_browse_log uabl
         join article a on uabl.article_id = a.id
         left join user u on a.user_id = u.id
+        where a.status = 1
         group by a.id, a.user_id, u.nickname, a.icon, a.title, a.create_time
         order by value desc
     </select>
