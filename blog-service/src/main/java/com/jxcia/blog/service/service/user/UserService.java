@@ -8,6 +8,7 @@ import com.jxcia.blog.pojo.vo.UserLikeArticleVo;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public interface UserService {
 
     /**
      * 用户点赞文章
+     * @param articleId 文章
      */
     void likeArticle(Integer articleId);
 }

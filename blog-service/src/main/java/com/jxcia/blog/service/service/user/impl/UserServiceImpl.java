@@ -6,6 +6,7 @@ import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.constant.UserExceptionConstant;
 import com.jxcia.blog.common.constant.UserLoginExceptionConstant;
 import com.jxcia.blog.common.constant.UserRegisterExceptionConstant;
+import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.common.exception.UserNotExistsException;
 import com.jxcia.blog.common.exception.UserRegisterException;
@@ -187,7 +188,8 @@ public class UserServiceImpl implements UserService {
     public void likeArticle(Integer articleId) {
         Integer userId = SecurityContextUtil.getId();
 
-        if (articleId == null || userId == null) return;
+        if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+        if (articleId == null) throw new UserException(UserExceptionConstant.ARTICLE_NOT_EXISTS);
 
         UserLikeArticle userLikeArticle = UserLikeArticle.builder()
                 .userId(userId)
@@ -195,8 +197,15 @@ public class UserServiceImpl implements UserService {
                 .likeTime(LocalDateTime.now())
                 .build();
 
+        UserLikeArticle ula = userLikeArticleMapper.getByUserLikeArticle(userLikeArticle);
 
-        userLikeArticleMapper.insert(userLikeArticle);
+        // 用户点过赞就删除，没有就新增
+        if (ula == null) {
+            userLikeArticleMapper.insert(userLikeArticle);
+        } else {
+            userLikeArticleMapper.delete(userLikeArticle);
+        }
+
     }
 
     /**
