@@ -4,6 +4,7 @@ import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.vo.HotArticleVo;
 import com.jxcia.blog.service.service.user.ArticleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,17 @@ public class ArticleController {
         log.info("article search: {}", articleDto);
 
         return Result.success(articleService.search(articleDto));
+    }
+
+    /**
+     * 推荐文章详情列表
+     * @param articleSearchDto 推荐文章选择详细
+     * @return 推荐文章列表
+     */
+    @GetMapping("/detail")
+    public Result<PageResult<HotArticleVo>> hotDetail(@RequestBody ArticleSearchDto articleSearchDto) {
+        log.info("hotDetail: {}", articleSearchDto);
+
+        return Result.success(articleService.hotDetail(articleSearchDto));
     }
 }

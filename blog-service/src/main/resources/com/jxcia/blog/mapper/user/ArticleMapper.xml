@@ -3,7 +3,7 @@
 <mapper namespace="com.jxcia.blog.service.mapper.user.ArticleMapper">
 
     <select id="getByArticleDto" resultType="com.jxcia.blog.pojo.entity.Article">
-        select a.* from article a
+        select a.*, count(*) from article a
         left join article_category_relation acr on a.id = acr.article_id
         left join user u on a.user_id = u.id
         <where>

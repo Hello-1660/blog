@@ -17,11 +17,13 @@ public class Article {
     // 文章内容
     private String content;
     // 文章创建日期
-    private LocalDateTime create_time;
+    private LocalDateTime createTime;
     // 文章修改日期
-    private LocalDateTime update_time;
+    private LocalDateTime updateTime;
     // 文章是否置顶 0不置顶 1置顶
     private Integer sort;
     // 文章状态 0私有 1公开 2封禁
     private Integer status;
+    // 文章分类编号
+    private Integer categoryId;
 }

@@ -5,7 +5,11 @@ import com.github.pagehelper.PageInfo;
 import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.ArticleWithBrowseCount;
+import com.jxcia.blog.pojo.vo.HotArticleVo;
+import com.jxcia.blog.service.mapper.user.ArticleBrowseLogMapper;
 import com.jxcia.blog.service.mapper.user.ArticleMapper;
+import com.jxcia.blog.service.mapper.user.UserMapper;
 import com.jxcia.blog.service.service.user.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,11 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private ArticleMapper articleMapper;
+    @Autowired
+    private ArticleBrowseLogMapper articleBrowseLogMapper;
+    @Autowired
+    private UserMapper userMapper;
+
 
     /**
      * 文章搜索
@@ -36,5 +45,51 @@ public class ArticleServiceImpl implements ArticleService {
         PageInfo<Article> pageInfo = new PageInfo<>(articleList);
 
         return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
+    }
+
+    /**
+     * 推荐文章列表
+     *
+     * @param articleSearchDto 推荐文章选择信息
+     * @return 推荐文章列表
+     */
+    @Override
+    public PageResult<HotArticleVo> hotDetail(ArticleSearchDto articleSearchDto) {
+        // 开启分页
+        PageHelper.startPage(articleSearchDto.getPageNum(), articleSearchDto.getPageSize());
+
+        // 查询文章列表
+        List<Article> articleList = articleMapper.getByArticleDto(articleSearchDto);
+        List<ArticleWithBrowseCount> articleWithBrowseCountList = articleBrowseLogMapper.getArticleBrowseCountByArticleList(articleList);
+
+        List<HotArticleVo> hotArticleVoList = articleList.stream().map(ac -> HotArticleVo.builder()
+                .id(ac.getId())
+                .userId(ac.getUserId())
+                // TODO 获取用户昵称
+                .icon(ac.getIcon())
+                .title(ac.getTitle())
+                .createTime(ac.getCreateTime())
+                .value(findArticleBrowseCountByArticleId(ac.getId(), articleWithBrowseCountList))
+                .build()).toList();
+
+        PageInfo<HotArticleVo> pageInfo = new PageInfo<>(hotArticleVoList);
+
+        return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
+    }
+
+    /**
+     * 获取文章热度
+     * @param articleId 文章编号
+     * @param articleWithBrowseCountList 文章热度列表
+     * @return 文章热度
+     */
+    private Long findArticleBrowseCountByArticleId(Integer articleId, List<ArticleWithBrowseCount> articleWithBrowseCountList) {
+        if (articleId == null || articleWithBrowseCountList == null) return null;
+
+        for (ArticleWithBrowseCount ac : articleWithBrowseCountList) {
+            if (ac.getArticleId().equals(articleId)) return ac.getBrowseCount();
+        }
+
+        return null;
     }
 }
