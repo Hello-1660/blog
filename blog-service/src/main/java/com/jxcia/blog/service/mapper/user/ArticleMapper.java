@@ -2,6 +2,7 @@ package com.jxcia.blog.service.mapper.user;
 
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.vo.HotArticleVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -59,4 +60,10 @@ public interface ArticleMapper {
      */
     @Select("select * from article where id = #{articleId}")
     Article getByArticleId(Integer articleId);
+
+    /**
+     * 根据文章搜索信息查询推荐文章
+     * @return 推荐文章列表
+     */
+    List<HotArticleVo> getHotArticleByArticleSearchDto();
 }

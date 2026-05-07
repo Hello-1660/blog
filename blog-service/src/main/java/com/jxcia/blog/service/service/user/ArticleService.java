@@ -5,7 +5,8 @@ import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
-import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 /**
  * 文章 service
@@ -21,10 +22,9 @@ public interface ArticleService {
 
     /**
      * 推荐文章列表
-     * @param ArticleSearchDto 推荐文章选择信息
      * @return 推荐文章列表
      */
-    PageResult<HotArticleVo> hotDetail(ArticleSearchDto ArticleSearchDto);
+    List<HotArticleVo> hotDetail();
 
     /**
      * 新增文章

@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 文章 controller
  */
@@ -38,14 +40,13 @@ public class ArticleController {
 
     /**
      * 推荐文章详情列表
-     * @param articleSearchDto 推荐文章选择详细
      * @return 推荐文章列表
      */
     @GetMapping("/detail")
-    public Result<PageResult<HotArticleVo>> hotDetail(@RequestBody ArticleSearchDto articleSearchDto) {
-        log.info("article hotDetail: {}", articleSearchDto);
+    public Result<List<HotArticleVo>> hotDetail() {
+        log.info("article hotDetail");
 
-        return Result.success(articleService.hotDetail(articleSearchDto));
+        return Result.success(articleService.hotDetail());
     }
 
     /**
