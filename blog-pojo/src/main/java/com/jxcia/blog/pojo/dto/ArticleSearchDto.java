@@ -18,4 +18,6 @@ public class ArticleSearchDto {
     private Integer pageNum;
     // 每页文章数量
     private Integer pageSize;
+    // 查询状态 0私有 1公开 2封禁
+    private Integer status;
 }

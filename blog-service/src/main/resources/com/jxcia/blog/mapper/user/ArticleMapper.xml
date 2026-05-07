@@ -3,14 +3,14 @@
 <mapper namespace="com.jxcia.blog.service.mapper.user.ArticleMapper">
 
     <select id="getByArticleDto" resultType="com.jxcia.blog.pojo.entity.Article">
-        select a.*, count(*) from article a
-        left join article_category_relation acr on a.id = acr.article_id
+        select a.* from article a
         left join user u on a.user_id = u.id
         <where>
-            <if test="categoryId != null">and acr.category_id = #{categoryId}</if>
+            <if test="categoryId != null">and a.category_id = #{categoryId}</if>
             <if test="title != null and title != ''">and a.title like concat('%', #{title}, '%')</if>
             <if test="createTime != null">and a.create_time &gt; #{createTime}</if>
             <if test="userNickname != null and userNickname != ''">and u.nickname like concat('%', #{userNickname}, '%')</if>
+            <if test="status != null">and a.status = #{status}</if>
         </where>
         order by a.create_time desc
     </select>

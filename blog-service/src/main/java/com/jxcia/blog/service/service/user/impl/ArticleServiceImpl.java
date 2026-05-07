@@ -3,6 +3,7 @@ package com.jxcia.blog.service.service.user.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
+import com.jxcia.blog.common.constant.ArticleStatusConstant;
 import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
@@ -44,6 +45,7 @@ public class ArticleServiceImpl implements ArticleService {
         // 开启分页
         PageHelper.startPage(articleDto.getPageNum(), articleDto.getPageSize());
         // 查询数据
+        articleDto.setStatus(ArticleStatusConstant.PUBLIC);
         List<Article> articleList = articleMapper.getByArticleDto(articleDto);
         PageInfo<Article> pageInfo = new PageInfo<>(articleList);
 
