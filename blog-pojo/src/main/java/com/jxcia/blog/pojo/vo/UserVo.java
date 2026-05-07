@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 @Data
 public class UserVo {
+    // 用户编号
+    private Integer id;
     // 用户邮箱
     private String email;
     // 用户昵称

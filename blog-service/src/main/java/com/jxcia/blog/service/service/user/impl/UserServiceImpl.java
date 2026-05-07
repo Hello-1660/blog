@@ -10,8 +10,6 @@ import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.common.exception.UserNotExistsException;
 import com.jxcia.blog.common.exception.UserRegisterException;
-import com.jxcia.blog.common.result.PageResult;
-import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
@@ -209,6 +207,25 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 根据用户编号查询用户
+     *
+     * @param id 用户编号
+     * @return 用户信息
+     */
+    @Override
+    public UserVo getUserById(Integer id) {
+        if (id == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+        User user = userMapper.getUserById(id);
+
+        if (user == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(user, userVo);
+
+        return userVo;
+    }
+
+    /**
      * 根据文章编号查询文章点赞记录
      * @param articleId 文章编号
      * @param userLikeArticleList 文章点赞记录列表
@@ -223,6 +240,4 @@ public class UserServiceImpl implements UserService {
 
         return null;
     }
-
-
 }

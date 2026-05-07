@@ -108,4 +108,16 @@ public class UserController {
 
         return Result.success();
     }
+
+    /**
+     * 根据用户编号查询用户
+     * @param id 用户编号
+     * @return 用户信息
+     */
+    @GetMapping("/visit/{id}")
+    public Result<UserVo> visit(@PathVariable @NotNull Integer id) {
+        log.info("visit article: {}", id);
+
+        return Result.success(userService.getUserById(id));
+    }
 }

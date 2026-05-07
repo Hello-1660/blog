@@ -60,4 +60,11 @@ public interface UserService {
      * @param articleId 文章
      */
     void likeArticle(Integer articleId);
+
+    /**
+     * 根据用户编号查询用户
+     * @param id 用户编号
+     * @return 用户信息
+     */
+    UserVo getUserById(Integer id);
 }
