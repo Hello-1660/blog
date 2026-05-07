@@ -2,7 +2,9 @@ package com.jxcia.blog.service.mapper.user;
 
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -18,4 +20,12 @@ public interface ArticleMapper {
      * @return 文章列表
      */
     List<Article> getByArticleDto(ArticleSearchDto articleDto);
+
+    /**
+     * 插入文章
+     * @param article 文章
+     */
+    @Insert("insert into article (user_id, icon, title, content, create_time, update_time, sort, status, category_id) " +
+            "value (#{userId}, #{icon}, #{title}, #{content}, #{createTime}, #{updateTime}, #{sort}, #{status}, #{categoryId})")
+    void insert(Article article);
 }

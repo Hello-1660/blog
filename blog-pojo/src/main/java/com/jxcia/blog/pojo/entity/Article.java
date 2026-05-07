@@ -1,10 +1,12 @@
 package com.jxcia.blog.pojo.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class Article {
     // 文章编号
     private Integer id;

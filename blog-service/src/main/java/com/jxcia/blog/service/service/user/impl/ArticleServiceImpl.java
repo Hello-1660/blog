@@ -2,7 +2,9 @@ package com.jxcia.blog.service.service.user.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.result.PageResult;
+import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleWithBrowseCount;
@@ -14,6 +16,7 @@ import com.jxcia.blog.service.service.user.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -75,6 +78,30 @@ public class ArticleServiceImpl implements ArticleService {
         PageInfo<HotArticleVo> pageInfo = new PageInfo<>(hotArticleVoList);
 
         return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
+    }
+
+    /**
+     * 新增文章
+     * @param articleDto 文章信息
+     */
+    @Override
+    public void save(ArticleDto articleDto) {
+        Integer userId = SecurityContextUtil.getId();
+        LocalDateTime now = LocalDateTime.now();
+
+        Article article = Article.builder()
+                .userId(userId)
+                .icon(articleDto.getIcon())
+                .title(articleDto.getTitle())
+                .content(articleDto.getContent())
+                .createTime(now)
+                .updateTime(now)
+                .sort(articleDto.getSort())
+                .status(articleDto.getStatus())
+                .categoryId(articleDto.getCategoryId())
+                .build();
+
+        articleMapper.insert(article);
     }
 
     /**
