@@ -179,6 +179,27 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 用户点赞文章
+     *
+     * @param articleId
+     */
+    @Override
+    public void likeArticle(Integer articleId) {
+        Integer userId = SecurityContextUtil.getId();
+
+        if (articleId == null || userId == null) return;
+
+        UserLikeArticle userLikeArticle = UserLikeArticle.builder()
+                .userId(userId)
+                .articleId(articleId)
+                .likeTime(LocalDateTime.now())
+                .build();
+
+
+        userLikeArticleMapper.insert(userLikeArticle);
+    }
+
+    /**
      * 根据文章编号查询文章点赞记录
      * @param articleId 文章编号
      * @param userLikeArticleList 文章点赞记录列表

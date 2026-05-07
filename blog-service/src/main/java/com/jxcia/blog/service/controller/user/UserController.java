@@ -11,7 +11,9 @@ import com.jxcia.blog.pojo.vo.UserVo;
 import com.jxcia.blog.service.service.user.ArticleService;
 import com.jxcia.blog.service.service.user.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.http11.filters.VoidInputFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,7 +79,7 @@ public class UserController {
      * @return 无
      */
     @PostMapping("/browse")
-    public Result<Void> browse(Integer articleId) {
+    public Result<Void> browse(@NotNull Integer articleId) {
         log.info("browse article: {}", articleId);
 
         userService.browse(articleId);
@@ -94,5 +96,19 @@ public class UserController {
         log.info("like list");
 
         return Result.success(userService.likeList());
+    }
+
+    /**
+     * 用户点赞文章
+     * @param articleId 文章编号
+     * @return 无
+     */
+    @PostMapping("/likeArticle")
+    public Result<Void> likeArticle(@NotNull Integer articleId) {
+        log.info("like article: {}", articleId);
+
+        userService.likeArticle(articleId);
+
+        return Result.success();
     }
 }

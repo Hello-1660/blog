@@ -53,4 +53,9 @@ public interface UserService {
      * @return 文章列表
      */
     List<UserLikeArticleVo> likeList();
+
+    /**
+     * 用户点赞文章
+     */
+    void likeArticle(Integer articleId);
 }
