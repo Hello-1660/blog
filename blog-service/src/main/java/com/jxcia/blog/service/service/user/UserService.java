@@ -1,10 +1,14 @@
 package com.jxcia.blog.service.service.user;
 
+import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
+import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 /**
  * 用户 service
@@ -30,4 +34,10 @@ public interface UserService {
      * @return 用户信息
      */
     UserVo getUser();
+
+    /**
+     * 获取用户文章列表
+     * @return 文章列表
+     */
+    List<Article> getArticleList();
 }

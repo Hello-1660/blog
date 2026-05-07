@@ -1,10 +1,12 @@
 package com.jxcia.blog.pojo.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class ArticleSearchDto {
     // 作者名称
     private String userNickname;

@@ -1,15 +1,20 @@
 package com.jxcia.blog.service.controller.user;
 
+import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
+import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
+import com.jxcia.blog.service.service.user.ArticleService;
 import com.jxcia.blog.service.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -52,5 +57,16 @@ public class UserController {
         log.info("user detail");
 
         return Result.success(userService.getUser());
+    }
+
+    /**
+     * 获取用户文章列表
+     * @return 文章列表
+     */
+    @GetMapping("/articleList")
+    public Result<List<Article>> articleList() {
+        log.info("article list");
+
+        return Result.success(userService.getArticleList());
     }
 }

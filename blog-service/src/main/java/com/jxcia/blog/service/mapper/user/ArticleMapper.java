@@ -28,4 +28,12 @@ public interface ArticleMapper {
     @Insert("insert into article (user_id, icon, title, content, create_time, update_time, sort, status, category_id) " +
             "value (#{userId}, #{icon}, #{title}, #{content}, #{createTime}, #{updateTime}, #{sort}, #{status}, #{categoryId})")
     void insert(Article article);
+
+    /**
+     * 根据用户编号查询文章
+     * @param userId 用户编号
+     * @return 文章列表
+     */
+    @Select("select * from article where user_id = #{userId} order by create_time desc")
+    List<Article> getByUserId(Integer userId);
 }

@@ -9,11 +9,15 @@ import com.jxcia.blog.common.constant.UserRegisterExceptionConstant;
 import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.common.exception.UserNotExistsException;
 import com.jxcia.blog.common.exception.UserRegisterException;
+import com.jxcia.blog.common.result.PageResult;
+import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
+import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
+import com.jxcia.blog.service.mapper.user.ArticleMapper;
 import com.jxcia.blog.service.mapper.user.UserMapper;
 import com.jxcia.blog.service.service.user.UserService;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private ArticleMapper articleMapper;
 
     /**
      * 用户注册
@@ -102,5 +108,17 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(user, userVo);
 
         return userVo;
+    }
+
+    /**
+     * 获取用户文章列表
+     *
+     * @return 文章列表
+     */
+    @Override
+    public List<Article> getArticleList() {
+        Integer userId = SecurityContextUtil.getId();
+
+        return articleMapper.getByUserId(userId);
     }
 }
