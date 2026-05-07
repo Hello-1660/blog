@@ -5,6 +5,7 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.vo.UserLikeArticleVo;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
 import com.jxcia.blog.service.service.user.ArticleService;
@@ -82,5 +83,16 @@ public class UserController {
         userService.browse(articleId);
 
         return Result.success();
+    }
+
+    /**
+     * 用户喜欢列表
+     * @return 文章列表
+     */
+    @GetMapping("/likeList")
+    public Result<List<UserLikeArticleVo>> likeList() {
+        log.info("like list");
+
+        return Result.success(userService.likeList());
     }
 }

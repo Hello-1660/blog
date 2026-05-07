@@ -4,6 +4,7 @@ import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.vo.UserLikeArticleVo;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
 import jakarta.validation.Valid;
@@ -46,4 +47,10 @@ public interface UserService {
      * @param articleId 文章编号
      */
     void browse(Integer articleId);
+
+    /**
+     * 用户喜欢列表
+     * @return 文章列表
+     */
+    List<UserLikeArticleVo> likeList();
 }

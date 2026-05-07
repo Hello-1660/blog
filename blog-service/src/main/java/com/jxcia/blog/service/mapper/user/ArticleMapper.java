@@ -36,4 +36,11 @@ public interface ArticleMapper {
      */
     @Select("select * from article where user_id = #{userId} order by create_time desc")
     List<Article> getByUserId(Integer userId);
+
+    /**
+     * 根据文章编号列表查询文章
+     * @param articleIdList 文章编号列表
+     * @return 文章列表
+     */
+    List<Article> getByArticleIds(List<Integer> articleIdList);
 }

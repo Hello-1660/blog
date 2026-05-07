@@ -14,4 +14,13 @@
         </where>
         order by a.create_time desc
     </select>
+
+    <select id="getByArticleIds" resultType="com.jxcia.blog.pojo.entity.Article">
+        select article_id
+        from user_like_article
+        where article_id in
+        <foreach collection="articleIdList" item="aci" open="(" close=")" separator=",">
+            #{aci}
+        </foreach>
+    </select>
 </mapper>

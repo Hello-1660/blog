@@ -16,10 +16,13 @@ import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleBrowse;
 import com.jxcia.blog.pojo.entity.User;
+import com.jxcia.blog.pojo.entity.UserLikeArticle;
+import com.jxcia.blog.pojo.vo.UserLikeArticleVo;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
 import com.jxcia.blog.service.mapper.user.ArticleBrowseLogMapper;
 import com.jxcia.blog.service.mapper.user.ArticleMapper;
+import com.jxcia.blog.service.mapper.user.UserLikeArticleMapper;
 import com.jxcia.blog.service.mapper.user.UserMapper;
 import com.jxcia.blog.service.service.user.UserService;
 import org.springframework.beans.BeanUtils;
@@ -42,6 +45,8 @@ public class UserServiceImpl implements UserService {
     private ArticleMapper articleMapper;
     @Autowired
     private ArticleBrowseLogMapper articleBrowseLogMapper;
+    @Autowired
+    private UserLikeArticleMapper userLikeArticleMapper;
 
     /**
      * 用户注册
@@ -142,5 +147,50 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         articleBrowseLogMapper.insert(articleBrowse);
+    }
+
+    /**
+     * 用户喜欢列表
+     *
+     * @return 文章列表
+     */
+    @Override
+    public List<UserLikeArticleVo> likeList() {
+        Integer userId = SecurityContextUtil.getId();
+        // 查询用户点赞文章编号
+        List<UserLikeArticle> userLikeArticleList = userLikeArticleMapper.getArticleIdsByUserId(userId);
+
+        if (userLikeArticleList == null || userLikeArticleList.isEmpty()) return null;
+
+        List<Integer> articleIdList = userLikeArticleList.stream().map(UserLikeArticle::getUserId).toList();
+        List<Article> articleList = articleMapper.getByArticleIds(articleIdList);
+
+        return articleList.stream().map(a -> {
+            UserLikeArticle ua = findUserLikeArticleByArticleId(a.getId(), userLikeArticleList);
+
+            return UserLikeArticleVo.builder()
+                    .userId(a.getUserId())
+                    .articleId(a.getId())
+                    .likeTime(ua.getLikeTime())
+                    .icon(a.getIcon())
+                    .title(a.getTitle())
+                    .build();
+        }).toList();
+    }
+
+    /**
+     * 根据文章编号查询文章点赞记录
+     * @param articleId 文章编号
+     * @param userLikeArticleList 文章点赞记录列表
+     * @return 文章点赞记录
+     */
+    private UserLikeArticle findUserLikeArticleByArticleId(Integer articleId, List<UserLikeArticle> userLikeArticleList) {
+        if (articleId == null) return null;
+
+        for (UserLikeArticle ua : userLikeArticleList) {
+            if (ua.getArticleId().equals(articleId)) return ua;
+        }
+
+        return null;
     }
 }
