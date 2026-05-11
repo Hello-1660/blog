@@ -12,4 +12,10 @@ public interface CommentService {
      * @param commentDto 用户评论信息
      */
     void save(CommentDto commentDto);
+
+    /**
+     * 删除用户评论
+     * @param commentId 评论编号
+     */
+    void delete(Long commentId);
 }

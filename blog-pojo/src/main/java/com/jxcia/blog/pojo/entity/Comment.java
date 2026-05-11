@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 @Data
 public class Comment {
     // 评论编号
-    private Integer id;
+    private Long id;
     // 评论用户编号
     private Integer userId;
     // 评论文章编号
     private Integer articleId;
     // 父评论编号
-    private Integer fId;
+    private Long fId;
     // 评论内容
     private String content;
     // 评论排序

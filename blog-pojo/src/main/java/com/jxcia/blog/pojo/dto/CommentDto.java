@@ -8,12 +8,12 @@ import lombok.Data;
 public class CommentDto {
     // 评论用户编号
     @NotNull
-    private Integer userId;
+    private Long userId;
     // 评论文章编号
     @NotNull
     private Integer articleId;
     // 父评论编号
-    private Integer fId;
+    private Long fId;
     // 评论内容
     @NotBlank
     private String content;

@@ -6,10 +6,7 @@ import com.jxcia.blog.service.service.user.CommentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 评论 controller
@@ -32,6 +29,20 @@ public class CommentController {
         log.info("comment save: {}", commentDto);
 
         commentService.save(commentDto);
+
+        return Result.success();
+    }
+
+    /**
+     * 删除用户评论
+     * @param commentId 评论编号
+     * @return 无
+     */
+    @DeleteMapping("/delete/{commentId}")
+    public Result<Void> delete(@PathVariable Long commentId) {
+        log.info("comment delete: {}", commentId);
+
+        commentService.delete(commentId);
 
         return Result.success();
     }
