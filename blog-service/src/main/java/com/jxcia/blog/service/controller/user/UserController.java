@@ -5,6 +5,7 @@ import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.UserLikeArticleVo;
+import com.jxcia.blog.pojo.vo.UserLoginVo;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
 import com.jxcia.blog.service.service.user.UserService;
@@ -42,7 +43,7 @@ public class UserController {
      * @return token
      */
     @PostMapping("/login")
-    public Result<String> login(@RequestBody @Valid UserLoginDto userLoginDto) {
+    public Result<UserLoginVo> login(@RequestBody @Valid UserLoginDto userLoginDto) {
         log.info("user login: {}", userLoginDto.getEmail());
 
         return Result.success(userService.login(userLoginDto));

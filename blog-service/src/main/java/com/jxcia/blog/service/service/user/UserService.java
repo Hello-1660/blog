@@ -5,6 +5,7 @@ import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.UserLikeArticleVo;
+import com.jxcia.blog.pojo.vo.UserLoginVo;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
 import jakarta.validation.Valid;
@@ -29,7 +30,7 @@ public interface UserService {
      * @param userLoginDto 登录数据
      * @return token
      */
-    String login(@Valid UserLoginDto userLoginDto);
+    UserLoginVo login(@Valid UserLoginDto userLoginDto);
 
     /**
      * 获取用户详情信息
