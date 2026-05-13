@@ -8,10 +8,7 @@ import com.jxcia.blog.common.exception.*;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.*;
-import com.jxcia.blog.pojo.vo.UserLikeArticleVo;
-import com.jxcia.blog.pojo.vo.UserLoginVo;
-import com.jxcia.blog.pojo.vo.UserRegisterVo;
-import com.jxcia.blog.pojo.vo.UserVo;
+import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.service.mapper.user.*;
 import com.jxcia.blog.service.service.user.UserService;
 import org.springframework.beans.BeanUtils;
@@ -178,7 +175,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 用户点赞文章
      *
-     * @param articleId
+     * @param articleId 文章编号
      */
     @Override
     public void likeArticle(Integer articleId) {
@@ -256,6 +253,19 @@ public class UserServiceImpl implements UserService {
         } else {
             subscribeMapper.deleteBySubscribe(ss);
         }
+    }
+
+    /**
+     * 获取关注列表
+     *
+     * @return 关注列表
+     */
+    @Override
+    public List<SubscribeVo> subscribeList() {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        return subscribeMapper.getSubscribeVoByUserId(userId);
     }
 
     /**

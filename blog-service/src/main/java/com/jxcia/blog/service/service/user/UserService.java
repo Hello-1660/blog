@@ -4,10 +4,7 @@ import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
-import com.jxcia.blog.pojo.vo.UserLikeArticleVo;
-import com.jxcia.blog.pojo.vo.UserLoginVo;
-import com.jxcia.blog.pojo.vo.UserRegisterVo;
-import com.jxcia.blog.pojo.vo.UserVo;
+import com.jxcia.blog.pojo.vo.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -74,4 +71,10 @@ public interface UserService {
      * @param subUserId 关注用户编号
      */
     void subscribe(Integer subUserId);
+
+    /**
+     * 获取关注列表
+     * @return 关注列表
+     */
+    List<SubscribeVo> subscribeList();
 }

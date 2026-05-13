@@ -4,10 +4,7 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
-import com.jxcia.blog.pojo.vo.UserLikeArticleVo;
-import com.jxcia.blog.pojo.vo.UserLoginVo;
-import com.jxcia.blog.pojo.vo.UserRegisterVo;
-import com.jxcia.blog.pojo.vo.UserVo;
+import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.service.service.user.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -134,5 +131,16 @@ public class UserController {
         userService.subscribe(subUserId);
 
         return Result.success();
+    }
+
+    /**
+     * 查看关注列表
+     * @return 关注列表
+     */
+    @GetMapping("/subscribeList")
+    public Result<List<SubscribeVo>> subscribeList() {
+        log.info("subscribe list");
+
+        return Result.success(userService.subscribeList());
     }
 }

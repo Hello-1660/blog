@@ -1,10 +1,13 @@
 package com.jxcia.blog.service.mapper.user;
 
 import com.jxcia.blog.pojo.entity.Subscribe;
+import com.jxcia.blog.pojo.vo.SubscribeVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface SubscribeMapper {
@@ -31,4 +34,16 @@ public interface SubscribeMapper {
      */
     @Delete("delete from subscribe where user_id = #{userId} and sub_user_id = #{subUserId}")
     void deleteBySubscribe(Subscribe ss);
+
+    /**
+     * 查询关注列表
+     * @param userId 用户编号
+     * @return 关注列表
+     */
+    @Select("select " +
+            "s.id as id, s.sub_user_id as subUserId, u.nickname as nickname, u.icon as icon, s.sort as sort, s.create_time as createTime " +
+            "from subscribe s " +
+            "inner join user u on s.sub_user_id = u.id " +
+            "where s.user_id = #{userId}")
+    List<SubscribeVo> getSubscribeVoByUserId(Integer userId);
 }
