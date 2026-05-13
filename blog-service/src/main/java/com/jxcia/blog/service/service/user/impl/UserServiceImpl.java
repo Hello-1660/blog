@@ -269,6 +269,18 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 获取粉丝列表
+     * @return 粉丝列表
+     */
+    @Override
+    public List<SubscribeVo> fansList() {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        return subscribeMapper.getSubscribeVoBySubscribeId(userId);
+    }
+
+    /**
      * 根据文章编号查询文章点赞记录
      * @param articleId 文章编号
      * @param userLikeArticleList 文章点赞记录列表

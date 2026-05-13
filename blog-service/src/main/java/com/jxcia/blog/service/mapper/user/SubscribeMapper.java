@@ -36,7 +36,7 @@ public interface SubscribeMapper {
     void deleteBySubscribe(Subscribe ss);
 
     /**
-     * 查询关注列表
+     * 根据用户编号查询用户关注记录
      * @param userId 用户编号
      * @return 关注列表
      */
@@ -46,4 +46,16 @@ public interface SubscribeMapper {
             "inner join user u on s.sub_user_id = u.id " +
             "where s.user_id = #{userId}")
     List<SubscribeVo> getSubscribeVoByUserId(Integer userId);
+
+    /**
+     * 根据关注用户编号查询用户关注记录
+     * @param subscribeId 关注用户编号
+     * @return 粉丝列表
+     */
+    @Select("select " +
+            "s.id as id, s.sub_user_id as subUserId, u.nickname as nickname, u.icon as icon, s.sort as sort, s.create_time as createTime " +
+            "from subscribe s " +
+            "inner join user u on s.user_id = u.id " +
+            "where s.sub_user_id = #{subscribeId}")
+    List<SubscribeVo> getSubscribeVoBySubscribeId(Integer subscribeId);
 }

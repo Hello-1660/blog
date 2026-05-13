@@ -143,4 +143,15 @@ public class UserController {
 
         return Result.success(userService.subscribeList());
     }
+
+    /**
+     * 查看粉丝列表
+     * @return 粉丝列表
+     */
+    @GetMapping("/fansList")
+    public Result<List<SubscribeVo>> fansList() {
+        log.info("fansList");
+
+        return Result.success(userService.fansList());
+    }
 }

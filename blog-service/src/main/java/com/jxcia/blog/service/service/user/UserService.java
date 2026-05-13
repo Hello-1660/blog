@@ -77,4 +77,10 @@ public interface UserService {
      * @return 关注列表
      */
     List<SubscribeVo> subscribeList();
+
+    /**
+     * 获取粉丝列表
+     * @return 粉丝列表
+     */
+    List<SubscribeVo> fansList();
 }
