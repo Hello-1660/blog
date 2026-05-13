@@ -5,10 +5,7 @@ import com.jxcia.blog.pojo.dto.FavoriteDto;
 import com.jxcia.blog.service.service.user.FavoriteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 收藏夹 controller
@@ -30,6 +27,20 @@ public class FavoriteController {
         log.info("save favorite: {}", favoriteDto);
 
         favoriteService.save(favoriteDto);
+
+        return Result.success();
+    }
+
+    /**
+     * 删除收藏夹
+     * @param favoriteId 收藏夹编号
+     * @return 无
+     */
+    @DeleteMapping("/delete/{favoriteId}")
+    public Result<Void> delete(@PathVariable Long favoriteId) {
+        log.info("delete favorite: {}", favoriteId);
+
+        favoriteService.delete(favoriteId);
 
         return Result.success();
     }

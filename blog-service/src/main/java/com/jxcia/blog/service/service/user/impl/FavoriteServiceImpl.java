@@ -33,9 +33,9 @@ public class FavoriteServiceImpl implements FavoriteService {
         Integer userId = SecurityContextUtil.getId();
         if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
 
-        if (favoriteDto.getName() == null || favoriteDto.getName().isEmpty()) {
+        if (favoriteDto.getName() == null || favoriteDto.getName().isEmpty())
             throw new FavoriteException(FavoriteExceptionConstant.NAME_CANNOT_NULL);
-        }
+
 
         List<Favorite> f = favoriteMapper.getByFavoriteDto(favoriteDto);
         if (!f.isEmpty()) throw new FavoriteException(FavoriteExceptionConstant.NAME_CANNOT_EQUALS);
@@ -48,5 +48,25 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .build();
 
         favoriteMapper.insert(favorite);
+    }
+
+    /**
+     * 删除收藏夹
+     *
+     * @param favoriteId 收藏夹编号
+     */
+    @Override
+    public void delete(Long favoriteId) {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        Favorite favorite = favoriteMapper.getById(favoriteId);
+
+        if (favorite == null) throw new FavoriteException(FavoriteExceptionConstant.FAVORITE_NOT_FOUND);
+
+        if (!favorite.getUserId().equals(userId))
+            throw new FavoriteException(FavoriteExceptionConstant.OTHER_USER_CANNOT_DELETE_FAVORITE);
+
+        favoriteMapper.deleteById(favoriteId);
     }
 }

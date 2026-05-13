@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Favorite {
     // 收藏夹编号
-    private Integer id;
+    private Long id;
     // 用户编号
     private Integer userId;
     // 收藏夹名称

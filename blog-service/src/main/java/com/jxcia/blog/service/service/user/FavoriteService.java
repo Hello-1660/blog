@@ -12,4 +12,10 @@ public interface FavoriteService {
      * @param favoriteDto 收藏夹
      */
     void save(FavoriteDto favoriteDto);
+
+    /**
+     * 删除收藏夹
+     * @param favoriteId 收藏夹编号
+     */
+    void delete(Long favoriteId);
 }

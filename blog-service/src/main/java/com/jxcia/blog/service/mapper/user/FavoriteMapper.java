@@ -2,6 +2,7 @@ package com.jxcia.blog.service.mapper.user;
 
 import com.jxcia.blog.pojo.dto.FavoriteDto;
 import com.jxcia.blog.pojo.entity.Favorite;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -26,4 +27,19 @@ public interface FavoriteMapper {
      */
     @Select("select * from favorite where name = #{name}")
     List<Favorite> getByFavoriteDto(FavoriteDto favoriteDto);
+
+    /**
+     * 删除收藏夹
+     * @param favoriteId 收藏夹编号
+     */
+    @Delete("delete from favorite where id = #{favoriteId}")
+    void deleteById(Long favoriteId);
+
+    /**
+     * 根据收藏夹编号查询收藏夹记录
+     * @param favoriteId 收藏夹编号
+     * @return 收藏夹记录
+     */
+    @Select("select * from favorite where id = #{favoriteId}")
+    Favorite getById(Long favoriteId);
 }
