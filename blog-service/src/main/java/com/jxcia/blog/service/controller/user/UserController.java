@@ -102,7 +102,7 @@ public class UserController {
      * @return 无
      */
     @PostMapping("/likeArticle")
-    public Result<Void> likeArticle(@NotNull Integer articleId) {
+    public Result<Void> likeArticle(Integer articleId) {
         log.info("like article: {}", articleId);
 
         userService.likeArticle(articleId);
@@ -116,9 +116,23 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping("/visit/{id}")
-    public Result<UserVo> visit(@PathVariable @NotNull Integer id) {
+    public Result<UserVo> visit(@PathVariable Integer id) {
         log.info("visit article: {}", id);
 
         return Result.success(userService.getUserById(id));
+    }
+
+    /**
+     * 关注用户
+     * @param subUserId 关注用户编号
+     * @return 无
+     */
+    @PostMapping("/subscribe")
+    public Result<Void> subscribe(Integer subUserId) {
+        log.info("subscribe user: {}", subUserId);
+
+        userService.subscribe(subUserId);
+
+        return Result.success();
     }
 }

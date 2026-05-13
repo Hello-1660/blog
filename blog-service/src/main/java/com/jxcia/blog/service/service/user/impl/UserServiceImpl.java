@@ -3,27 +3,16 @@ package com.jxcia.blog.service.service.user.impl;
 import com.jxcia.blog.blog.security.crypto.PasswordEncoder;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
-import com.jxcia.blog.common.constant.UserExceptionConstant;
-import com.jxcia.blog.common.constant.UserLoginExceptionConstant;
-import com.jxcia.blog.common.constant.UserRegisterExceptionConstant;
-import com.jxcia.blog.common.exception.UserException;
-import com.jxcia.blog.common.exception.UserLoginException;
-import com.jxcia.blog.common.exception.UserNotExistsException;
-import com.jxcia.blog.common.exception.UserRegisterException;
+import com.jxcia.blog.common.constant.*;
+import com.jxcia.blog.common.exception.*;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
-import com.jxcia.blog.pojo.entity.Article;
-import com.jxcia.blog.pojo.entity.ArticleBrowse;
-import com.jxcia.blog.pojo.entity.User;
-import com.jxcia.blog.pojo.entity.UserLikeArticle;
+import com.jxcia.blog.pojo.entity.*;
 import com.jxcia.blog.pojo.vo.UserLikeArticleVo;
 import com.jxcia.blog.pojo.vo.UserLoginVo;
 import com.jxcia.blog.pojo.vo.UserRegisterVo;
 import com.jxcia.blog.pojo.vo.UserVo;
-import com.jxcia.blog.service.mapper.user.ArticleBrowseLogMapper;
-import com.jxcia.blog.service.mapper.user.ArticleMapper;
-import com.jxcia.blog.service.mapper.user.UserLikeArticleMapper;
-import com.jxcia.blog.service.mapper.user.UserMapper;
+import com.jxcia.blog.service.mapper.user.*;
 import com.jxcia.blog.service.service.user.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private ArticleBrowseLogMapper articleBrowseLogMapper;
     @Autowired
     private UserLikeArticleMapper userLikeArticleMapper;
+    @Autowired
+    private SubscribeMapper subscribeMapper;
 
     /**
      * 用户注册
@@ -230,6 +221,41 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(user, userVo);
 
         return userVo;
+    }
+
+    /**
+     * 关注用户
+     *
+     * @param subUserId 关注用户编号
+     */
+    @Override
+    public void subscribe(Integer subUserId) {
+        if (subUserId == null) throw new SubscribeException(SubScribeExceptionConstant.SUBSCRIBE_USER_NOT_FOUND);
+
+        User user = userMapper.getUserById(subUserId);
+        if (user == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+
+        if (userId.equals(subUserId)) throw new SubscribeException(SubScribeExceptionConstant.CANNOT_SUBSCRIBE_ONESELF);
+
+        Subscribe subscribe = Subscribe.builder()
+                .userId(userId)
+                .subUserId(subUserId)
+                .sort(SubscribeConstant.NOT_TOP)
+                .createTime(LocalDateTime.now())
+                .build();
+
+        // 查询用户是已经关注
+        Subscribe ss = subscribeMapper.getBySubscribe(subscribe);
+
+        // 已经关注则取关，没有则关注
+        if (ss == null) {
+            subscribeMapper.insert(subscribe);
+        } else {
+            subscribeMapper.deleteBySubscribe(ss);
+        }
     }
 
     /**

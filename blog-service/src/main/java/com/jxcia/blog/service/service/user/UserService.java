@@ -68,4 +68,10 @@ public interface UserService {
      * @return 用户信息
      */
     UserVo getUserById(Integer id);
+
+    /**
+     * 关注用户
+     * @param subUserId 关注用户编号
+     */
+    void subscribe(Integer subUserId);
 }
