@@ -2,6 +2,7 @@ package com.jxcia.blog.service.controller.user;
 
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.FavoriteDto;
+import com.jxcia.blog.pojo.entity.FavoriteArticle;
 import com.jxcia.blog.service.service.user.FavoriteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,20 @@ public class FavoriteController {
         log.info("delete favorite: {}", favoriteId);
 
         favoriteService.delete(favoriteId);
+
+        return Result.success();
+    }
+
+    /**
+     * 收藏夹文章编号
+     * @param favoriteArticle 收藏夹文章信息
+     * @return 无
+     */
+    @PostMapping("/addArticle")
+    public Result<Void> addArticle(@RequestBody FavoriteArticle favoriteArticle) {
+        log.info("update favorite: {}", favoriteArticle);
+
+        favoriteService.addArticle(favoriteArticle);
 
         return Result.success();
     }

@@ -2,6 +2,7 @@ package com.jxcia.blog.service.mapper.user;
 
 import com.jxcia.blog.pojo.dto.FavoriteDto;
 import com.jxcia.blog.pojo.entity.Favorite;
+import com.jxcia.blog.pojo.entity.FavoriteArticle;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -42,4 +43,28 @@ public interface FavoriteMapper {
      */
     @Select("select * from favorite where id = #{favoriteId}")
     Favorite getById(Long favoriteId);
+
+    /**
+     * 根据收藏夹文章信息获取收藏夹文章
+     * @param favoriteArticle 收藏夹文章信息
+     * @return 收藏夹文章
+     */
+    @Select("select * from favorite_article_relation where favorite_id = #{favoriteId} and article_id = #{articleId}")
+    FavoriteArticle getFavoriteArticleByFavoriteArticle(FavoriteArticle favoriteArticle);
+
+    /**
+     * 新增收藏夹文章
+     * @param favoriteArticle 收藏夹文章
+     */
+    @Insert("insert into favorite_article_relation (favorite_id, article_id) " +
+            "value (#{favoriteId}, #{articleId})")
+    void insertFavoriteArticle(FavoriteArticle favoriteArticle);
+
+    /**
+     * 根据收藏夹文章信息删除收藏夹文章记录
+     * @param favoriteArticle 收藏夹文章信息
+     */
+    @Delete("delete from favorite_article_relation " +
+            "where favorite_id = #{favoriteId} and article_id = #{articleId}")
+    void deleteFavoriteArticleByFavoriteArticle(FavoriteArticle favoriteArticle);
 }

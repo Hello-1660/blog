@@ -1,12 +1,17 @@
 package com.jxcia.blog.service.service.user.impl;
 
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
+import com.jxcia.blog.common.constant.ArticleExceptionConstant;
 import com.jxcia.blog.common.constant.FavoriteExceptionConstant;
 import com.jxcia.blog.common.constant.UserExceptionConstant;
+import com.jxcia.blog.common.exception.ArticleException;
 import com.jxcia.blog.common.exception.FavoriteException;
 import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.pojo.dto.FavoriteDto;
+import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Favorite;
+import com.jxcia.blog.pojo.entity.FavoriteArticle;
+import com.jxcia.blog.service.mapper.user.ArticleMapper;
 import com.jxcia.blog.service.mapper.user.FavoriteMapper;
 import com.jxcia.blog.service.service.user.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +27,8 @@ import java.util.List;
 public class FavoriteServiceImpl implements FavoriteService {
     @Autowired
     private FavoriteMapper favoriteMapper;
+    @Autowired
+    private ArticleMapper articleMapper;
 
     /**
      * 新增收藏夹
@@ -68,5 +75,32 @@ public class FavoriteServiceImpl implements FavoriteService {
             throw new FavoriteException(FavoriteExceptionConstant.OTHER_USER_CANNOT_DELETE_FAVORITE);
 
         favoriteMapper.deleteById(favoriteId);
+    }
+
+    /**
+     * 新增文章
+     *
+     * @param favoriteArticle 文章信息
+     */
+    @Override
+    public void addArticle(FavoriteArticle favoriteArticle) {
+        if (favoriteArticle.getArticleId() == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+        if (favoriteArticle.getFavoriteId() == null) throw new FavoriteException(FavoriteExceptionConstant.FAVORITE_NOT_FOUND);
+
+        Article article = articleMapper.getById(favoriteArticle.getArticleId());
+        if (article == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+
+        Favorite favorite = favoriteMapper.getById(favoriteArticle.getFavoriteId());
+        if (favorite == null) throw new FavoriteException(FavoriteExceptionConstant.FAVORITE_NOT_FOUND);
+
+        // 查询添加记录
+        FavoriteArticle fa = favoriteMapper.getFavoriteArticleByFavoriteArticle(favoriteArticle);
+
+        // 如果存在就移除，没有就新增
+        if (fa == null) {
+            favoriteMapper.insertFavoriteArticle(favoriteArticle);
+        } else {
+            favoriteMapper.deleteFavoriteArticleByFavoriteArticle(favoriteArticle);
+        }
     }
 }
