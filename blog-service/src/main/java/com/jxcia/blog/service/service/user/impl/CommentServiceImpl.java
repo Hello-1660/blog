@@ -8,6 +8,7 @@ import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.pojo.dto.CommentDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Comment;
+import com.jxcia.blog.pojo.entity.LikeComment;
 import com.jxcia.blog.service.mapper.user.ArticleMapper;
 import com.jxcia.blog.service.mapper.user.CommentMapper;
 import com.jxcia.blog.service.mapper.user.UserLikeCommentMapper;
@@ -72,6 +73,40 @@ public class CommentServiceImpl implements CommentService {
             userLikeCommentMapper.deleteByCommentId(commentId);
         } else {
             throw new CommentException(CommentExceptionConstant.OTHER_USER_CANNOT_DEL_COMMENT);
+        }
+    }
+
+    /**
+     * 用户点赞评论
+     *
+     * @param commentId 用户评论编号
+     */
+    @Override
+    public void like(Long commentId) {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        Comment comment = commentMapper.get(commentId);
+        if (comment == null) throw new CommentException(CommentExceptionConstant.COMMENT_NOT_FOND);
+
+        LikeComment likeComment = LikeComment.builder()
+                .userCommentId(comment.getId())
+                .userId(userId)
+                .build();
+
+        // 查询点赞记录
+        LikeComment lc = userLikeCommentMapper.getByUserLikeComment(likeComment);
+
+        // 用户已经点赞过就取消点赞，没有点赞过就添加点赞信息
+        if (lc != null) {
+            userLikeCommentMapper.delete(lc.getId());
+        } else {
+            LikeComment blc = LikeComment.builder().
+                    userId(userId)
+                    .userCommentId(commentId)
+                    .createTime(LocalDateTime.now())
+                    .build();
+            userLikeCommentMapper.insert(blc);
         }
     }
 }

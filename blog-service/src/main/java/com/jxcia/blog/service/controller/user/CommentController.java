@@ -4,8 +4,10 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.CommentDto;
 import com.jxcia.blog.service.service.user.CommentService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/comment")
 @Slf4j
+@Validated
 public class CommentController {
 
     @Autowired
@@ -43,6 +46,20 @@ public class CommentController {
         log.info("comment delete: {}", commentId);
 
         commentService.delete(commentId);
+
+        return Result.success();
+    }
+
+    /**
+     * 用户点赞评论
+     * @param commentId 用户评论编号
+     * @return 无
+     */
+    @PostMapping("/like")
+    public Result<Void> like(@NotNull Long commentId) {
+        log.info("comment like: {}", commentId);
+
+        commentService.like(commentId);
 
         return Result.success();
     }

@@ -18,4 +18,10 @@ public interface CommentService {
      * @param commentId 评论编号
      */
     void delete(Long commentId);
+
+    /**
+     * 用户点赞评论
+     * @param commentId 用户评论编号
+     */
+    void like(Long commentId);
 }

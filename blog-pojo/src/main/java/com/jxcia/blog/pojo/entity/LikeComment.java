@@ -1,10 +1,12 @@
 package com.jxcia.blog.pojo.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class LikeComment {
     // 用户点赞评论编号
     private Long id;
