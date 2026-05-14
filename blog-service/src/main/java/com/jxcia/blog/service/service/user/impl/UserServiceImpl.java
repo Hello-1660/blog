@@ -281,6 +281,29 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 更新用户信息
+     *
+     * @param user 更新用户信息
+     * @return 用户信息
+     */
+    @Override
+    public UserVo update(User user) {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+
+        user.setId(userId);
+        // 加密密码
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userMapper.update(user);
+
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(user, userVo);
+
+        return userVo;
+    }
+
+
+    /**
      * 根据文章编号查询文章点赞记录
      * @param articleId 文章编号
      * @param userLikeArticleList 文章点赞记录列表

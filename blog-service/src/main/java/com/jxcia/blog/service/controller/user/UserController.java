@@ -4,6 +4,7 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.service.service.user.UserService;
 import jakarta.validation.Valid;
@@ -153,5 +154,17 @@ public class UserController {
         log.info("fansList");
 
         return Result.success(userService.fansList());
+    }
+
+    /**
+     * 更新用户，更新完 token 失效，需要重新登录
+     * @param user 更新用户信息
+     * @return 用户信息
+     */
+    @PostMapping("/update")
+    public Result<UserVo> update(@RequestBody User user) {
+        log.info("update user: {}", user);
+
+        return Result.success(userService.update(user));
     }
 }

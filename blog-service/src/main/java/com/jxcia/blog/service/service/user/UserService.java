@@ -4,6 +4,7 @@ import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -83,4 +84,11 @@ public interface UserService {
      * @return 粉丝列表
      */
     List<SubscribeVo> fansList();
+
+    /**
+     * 更新用户信息
+     * @param user 更新用户信息
+     * @return 用户信息
+     */
+    UserVo update(User user);
 }

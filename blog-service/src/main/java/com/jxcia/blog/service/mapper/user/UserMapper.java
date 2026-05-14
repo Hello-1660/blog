@@ -40,4 +40,10 @@ public interface UserMapper {
      */
     @Select("select * from user where id = #{id}")
     User getUserById(Integer id);
+
+    /**
+     * 修改用户字段
+     * @param user 用户信息
+     */
+    void update(User user);
 }

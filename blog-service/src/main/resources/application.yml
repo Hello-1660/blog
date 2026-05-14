@@ -23,7 +23,7 @@ spring:
 
 mybatis:
   mapper-locations: classpath:com/jxcia/blog/mapper/**/*.xml
-  type-aliases-package: com.sky.entity
+  type-aliases-package: com.jxcia.blog.pojo.entity
   configuration:
     map-underscore-to-camel-case: true
 
