@@ -88,4 +88,16 @@ public class ArticleController {
 
         return Result.success(articleService.getById(id));
     }
+
+    /**
+     * 更新文章
+     * @param article 更新文章信息
+     * @return 文章信息
+     */
+    @PostMapping("/update")
+    public Result<Article> update(@RequestBody Article article) {
+        log.info("article update: {}", article);
+
+        return Result.success(articleService.update(article));
+    }
 }

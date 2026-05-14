@@ -74,4 +74,10 @@ public interface ArticleMapper {
      */
     @Select("select * from article where id = #{id}")
     Article getById(Integer id);
+
+    /**
+     * 修改文章记录信息
+     * @param article 修改文章信息
+     */
+    void update(Article article);
 }

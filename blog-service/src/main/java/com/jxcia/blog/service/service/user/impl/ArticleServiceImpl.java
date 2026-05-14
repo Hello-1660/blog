@@ -114,6 +114,22 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
+     * 更新文章
+     *
+     * @param article 更新文章信息
+     * @return 文章信息
+     */
+    @Override
+    public Article update(Article article) {
+        if (article.getId() == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+
+        article.setUpdateTime(LocalDateTime.now());
+        articleMapper.update(article);
+
+        return article;
+    }
+
+    /**
      * 推荐文章列表
      * @return 推荐文章列表
      */

@@ -46,4 +46,11 @@ public interface ArticleService {
      * @return 文章
      */
     Article getById(Integer id);
+
+    /**
+     * 更新文章
+     * @param article 更新文章信息
+     * @return 文章信息
+     */
+    Article update(Article article);
 }
