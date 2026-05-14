@@ -75,14 +75,8 @@ public class ArticleServiceImpl implements ArticleService {
 
         // 不能删除其他用户文章
         if (!article.getUserId().equals(userId)) throw new UserException(UserExceptionConstant.CANNOT_DELETE_OTHER_USER_ARTICLE);
-
-        // 删除文章记录
-        articleMapper.deleteByArticleId(articleId);
         // 删除点赞记录
         userLikeArticleMapper.delete(UserLikeArticle.builder().articleId(articleId).userId(userId).build());
-        // TODO 删除评论记录
-        // 删除浏览记录
-        articleBrowseLogMapper.deleteByArticleId(articleId);
     }
 
     /**
