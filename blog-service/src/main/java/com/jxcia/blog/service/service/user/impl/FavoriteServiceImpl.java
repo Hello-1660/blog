@@ -6,6 +6,7 @@ import com.jxcia.blog.common.constant.FavoriteExceptionConstant;
 import com.jxcia.blog.common.constant.UserExceptionConstant;
 import com.jxcia.blog.common.exception.ArticleException;
 import com.jxcia.blog.common.exception.FavoriteException;
+import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.pojo.dto.FavoriteDto;
 import com.jxcia.blog.pojo.entity.Article;
@@ -72,7 +73,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         if (favorite == null) throw new FavoriteException(FavoriteExceptionConstant.FAVORITE_NOT_FOUND);
 
         if (!favorite.getUserId().equals(userId))
-            throw new FavoriteException(FavoriteExceptionConstant.OTHER_USER_CANNOT_DELETE_FAVORITE);
+            throw new FavoriteException(FavoriteExceptionConstant.CANNOT_OTHER_USER_DELETE_FAVORITE);
 
         favoriteMapper.deleteById(favoriteId);
     }
@@ -102,5 +103,20 @@ public class FavoriteServiceImpl implements FavoriteService {
         } else {
             favoriteMapper.deleteFavoriteArticleByFavoriteArticle(favoriteArticle);
         }
+    }
+
+    /**
+     * 更新收藏夹
+     *
+     * @param favorite 收藏夹信息
+     */
+    @Override
+    public void update(Favorite favorite) {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
+        if (favorite.getId() == null) throw new FavoriteException(FavoriteExceptionConstant.FAVORITE_NOT_FOUND);
+
+        favorite.setUserId(userId);
+        favoriteMapper.update(favorite);
     }
 }

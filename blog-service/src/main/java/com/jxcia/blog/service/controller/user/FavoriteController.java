@@ -2,6 +2,7 @@ package com.jxcia.blog.service.controller.user;
 
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.FavoriteDto;
+import com.jxcia.blog.pojo.entity.Favorite;
 import com.jxcia.blog.pojo.entity.FavoriteArticle;
 import com.jxcia.blog.service.service.user.FavoriteService;
 import lombok.extern.slf4j.Slf4j;
@@ -53,9 +54,23 @@ public class FavoriteController {
      */
     @PostMapping("/addArticle")
     public Result<Void> addArticle(@RequestBody FavoriteArticle favoriteArticle) {
-        log.info("update favorite: {}", favoriteArticle);
+        log.info("addArticle favorite: {}", favoriteArticle);
 
         favoriteService.addArticle(favoriteArticle);
+
+        return Result.success();
+    }
+
+    /**
+     * 更新收藏夹
+     * @param favorite 收藏夹信息
+     * @return 收藏夹
+     */
+    @PostMapping("/update")
+    public Result<Void> update(@RequestBody Favorite favorite) {
+        log.info("update favorite: {}", favorite);
+
+        favoriteService.update(favorite);
 
         return Result.success();
     }

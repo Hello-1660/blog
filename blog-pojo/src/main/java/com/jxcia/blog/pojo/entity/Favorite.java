@@ -1,12 +1,16 @@
 package com.jxcia.blog.pojo.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Favorite {
     // 收藏夹编号
     private Long id;

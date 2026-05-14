@@ -1,6 +1,7 @@
 package com.jxcia.blog.service.service.user;
 
 import com.jxcia.blog.pojo.dto.FavoriteDto;
+import com.jxcia.blog.pojo.entity.Favorite;
 import com.jxcia.blog.pojo.entity.FavoriteArticle;
 
 /**
@@ -25,4 +26,10 @@ public interface FavoriteService {
      * @param favoriteArticle 文章信息
      */
     void addArticle(FavoriteArticle favoriteArticle);
+
+    /**
+     * 更新收藏夹
+     * @param favorite 收藏夹信息
+     */
+    void update(Favorite favorite);
 }

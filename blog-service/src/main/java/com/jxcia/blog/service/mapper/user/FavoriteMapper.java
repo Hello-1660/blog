@@ -3,10 +3,7 @@ package com.jxcia.blog.service.mapper.user;
 import com.jxcia.blog.pojo.dto.FavoriteDto;
 import com.jxcia.blog.pojo.entity.Favorite;
 import com.jxcia.blog.pojo.entity.FavoriteArticle;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -67,4 +64,10 @@ public interface FavoriteMapper {
     @Delete("delete from favorite_article_relation " +
             "where favorite_id = #{favoriteId} and article_id = #{articleId}")
     void deleteFavoriteArticleByFavoriteArticle(FavoriteArticle favoriteArticle);
+
+    /**
+     * 修改收藏夹记录
+     * @param favorite 收藏夹信息
+     */
+    void update(Favorite favorite);
 }
