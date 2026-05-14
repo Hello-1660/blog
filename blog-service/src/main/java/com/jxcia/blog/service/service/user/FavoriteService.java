@@ -1,6 +1,7 @@
 package com.jxcia.blog.service.service.user;
 
 import com.jxcia.blog.pojo.dto.FavoriteDto;
+import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Favorite;
 import com.jxcia.blog.pojo.entity.FavoriteArticle;
 
@@ -40,4 +41,11 @@ public interface FavoriteService {
      * @return 收藏夹列表
      */
     List<Favorite> favoriteList();
+
+    /**
+     * 查看收藏夹文章列表
+     * @param favoriteId 收藏夹编号
+     * @return 收藏夹文章列表
+     */
+    List<Article> listArticle(Integer favoriteId);
 }

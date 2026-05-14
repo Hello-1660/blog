@@ -2,6 +2,7 @@ package com.jxcia.blog.service.controller.user;
 
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.FavoriteDto;
+import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Favorite;
 import com.jxcia.blog.pojo.entity.FavoriteArticle;
 import com.jxcia.blog.service.service.user.FavoriteService;
@@ -86,5 +87,17 @@ public class FavoriteController {
         log.info("favorite list");
 
         return Result.success(favoriteService.favoriteList());
+    }
+
+    /**
+     * 获取收藏夹文章列表
+     * @param favoriteId 收藏夹编号
+     * @return 文章列表
+     */
+    @GetMapping("/listArticle/{favoriteId}")
+    public Result<List<Article>> listArticle(@PathVariable Integer favoriteId) {
+        log.info("favorite listArticle: {}", favoriteId);
+
+        return Result.success(favoriteService.listArticle(favoriteId));
     }
 }

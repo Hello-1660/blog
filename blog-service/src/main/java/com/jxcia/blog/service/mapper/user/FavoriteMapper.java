@@ -1,6 +1,7 @@
 package com.jxcia.blog.service.mapper.user;
 
 import com.jxcia.blog.pojo.dto.FavoriteDto;
+import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Favorite;
 import com.jxcia.blog.pojo.entity.FavoriteArticle;
 import org.apache.ibatis.annotations.*;
@@ -78,4 +79,14 @@ public interface FavoriteMapper {
      */
     @Select("select * from favorite where user_id = #{userId}")
     List<Favorite> getListByUserId(Integer userId);
+
+    /**
+     * 根据收藏夹编号查询文章
+     * @param favoriteId 收藏夹编号
+     * @return 文章列表
+     */
+    @Select("select a.* " +
+            "from favorite_article_relation far " +
+            "left join article a on far.article_id = a.id")
+    List<Article> getArticleByFavoriteId(Integer favoriteId);
 }

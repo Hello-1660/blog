@@ -132,4 +132,17 @@ public class FavoriteServiceImpl implements FavoriteService {
 
         return favoriteMapper.getListByUserId(userId);
     }
+
+    /**
+     * 查看收藏夹文章列表
+     *
+     * @param favoriteId 收藏夹编号
+     * @return 收藏夹文章列表
+     */
+    @Override
+    public List<Article> listArticle(Integer favoriteId) {
+        if (favoriteId == null) throw new FavoriteException(FavoriteExceptionConstant.FAVORITE_NOT_FOUND);
+
+        return favoriteMapper.getArticleByFavoriteId(favoriteId);
+    }
 }
