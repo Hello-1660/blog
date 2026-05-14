@@ -1,14 +1,17 @@
 package com.jxcia.blog.service.service.user.impl;
 
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
+import com.jxcia.blog.common.constant.ArticleExceptionConstant;
 import com.jxcia.blog.common.constant.CommentExceptionConstant;
 import com.jxcia.blog.common.constant.UserExceptionConstant;
+import com.jxcia.blog.common.exception.ArticleException;
 import com.jxcia.blog.common.exception.CommentException;
 import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.pojo.dto.CommentDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Comment;
 import com.jxcia.blog.pojo.entity.LikeComment;
+import com.jxcia.blog.pojo.vo.CommentWithUserVo;
 import com.jxcia.blog.service.mapper.user.ArticleMapper;
 import com.jxcia.blog.service.mapper.user.CommentMapper;
 import com.jxcia.blog.service.mapper.user.UserLikeCommentMapper;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 评论 serviceImpl
@@ -108,5 +112,18 @@ public class CommentServiceImpl implements CommentService {
                     .build();
             userLikeCommentMapper.insert(blc);
         }
+    }
+
+    /**
+     * 查看文章评论
+     *
+     * @param articleId 文章编号
+     * @return 文章评论列表
+     */
+    @Override
+    public List<CommentWithUserVo> detail(Integer articleId) {
+        if (articleId == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+
+        return commentMapper.getCommentWithUserVoByArticleId(articleId);
     }
 }

@@ -2,6 +2,9 @@ package com.jxcia.blog.service.controller.user;
 
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.CommentDto;
+import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.Comment;
+import com.jxcia.blog.pojo.vo.CommentWithUserVo;
 import com.jxcia.blog.service.service.user.CommentService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 评论 controller
@@ -62,5 +67,17 @@ public class CommentController {
         commentService.like(commentId);
 
         return Result.success();
+    }
+
+    /**
+     * 查看文章评论
+     * @param articleId 文章编号
+     * @return 文章评论列表
+     */
+    @GetMapping("/detail/{articleId}")
+    public Result<List<CommentWithUserVo>> detail(@PathVariable Integer articleId) {
+        log.info("comment detail: {}", articleId);
+
+        return Result.success(commentService.detail(articleId));
     }
 }
