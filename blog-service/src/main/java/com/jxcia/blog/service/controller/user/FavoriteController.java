@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 收藏夹 controller
  */
@@ -73,5 +75,16 @@ public class FavoriteController {
         favoriteService.update(favorite);
 
         return Result.success();
+    }
+
+    /**
+     * 查看收藏夹列表
+     * @return 收藏夹列表
+     */
+    @GetMapping("/list")
+    public Result<List<Favorite>> list() {
+        log.info("favorite list");
+
+        return Result.success(favoriteService.favoriteList());
     }
 }

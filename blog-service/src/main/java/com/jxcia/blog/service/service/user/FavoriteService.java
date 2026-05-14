@@ -4,6 +4,8 @@ import com.jxcia.blog.pojo.dto.FavoriteDto;
 import com.jxcia.blog.pojo.entity.Favorite;
 import com.jxcia.blog.pojo.entity.FavoriteArticle;
 
+import java.util.List;
+
 /**
  * 收藏夹 service
  */
@@ -32,4 +34,10 @@ public interface FavoriteService {
      * @param favorite 收藏夹信息
      */
     void update(Favorite favorite);
+
+    /**
+     * 查看收藏夹列表
+     * @return 收藏夹列表
+     */
+    List<Favorite> favoriteList();
 }

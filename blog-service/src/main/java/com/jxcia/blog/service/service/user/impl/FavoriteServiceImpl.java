@@ -119,4 +119,17 @@ public class FavoriteServiceImpl implements FavoriteService {
         favorite.setUserId(userId);
         favoriteMapper.update(favorite);
     }
+
+    /**
+     * 查看收藏夹列表
+     *
+     * @return 收藏夹列表
+     */
+    @Override
+    public List<Favorite> favoriteList() {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        return favoriteMapper.getListByUserId(userId);
+    }
 }

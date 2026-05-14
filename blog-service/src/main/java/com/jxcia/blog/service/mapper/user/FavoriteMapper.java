@@ -70,4 +70,12 @@ public interface FavoriteMapper {
      * @param favorite 收藏夹信息
      */
     void update(Favorite favorite);
+
+    /**
+     * 根据用户编号获取收藏夹列表
+     * @param userId 用户编号
+     * @return 收藏夹列表
+     */
+    @Select("select * from favorite where user_id = #{userId}")
+    List<Favorite> getListByUserId(Integer userId);
 }
