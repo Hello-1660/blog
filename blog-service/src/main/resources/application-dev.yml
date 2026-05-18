@@ -18,8 +18,13 @@ security:
     urls:
       - /user/login
       - /user/save
+      - /user/articleList
+      - /user/visit/*
       - /category/**
+      - /article/search
+      - /article/detail
+      - /article/browse/*
+      - /comment/detail/*
       - /admin/login
       - /admin/logout
-      - /admin/save
       - /test/**

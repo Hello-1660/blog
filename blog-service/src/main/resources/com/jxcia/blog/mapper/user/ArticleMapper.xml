@@ -15,8 +15,15 @@
         where id = #{id}
     </update>
 
-    <select id="getByArticleDto" resultType="com.jxcia.blog.pojo.entity.Article">
-        select a.* from article a
+    <select id="getByArticleDto" resultType="com.jxcia.blog.pojo.vo.ArticleSearchVo">
+        select
+            a.id as id,
+            a.user_id as userId,
+            a.icon as icon,
+            a.title as title,
+            a.create_time as createTiem,
+            u.nickname as userNickname
+        from article a
         left join user u on a.user_id = u.id
         <where>
             <if test="categoryId != null">and a.category_id = #{categoryId}</if>

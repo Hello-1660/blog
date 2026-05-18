@@ -16,7 +16,7 @@ import java.util.Base64;
 public class Pbkdf2PasswordEncoder implements PasswordEncoder {
 
     private static final String ALGORITHM = "PBKDF2WithHmacSHA256";
-    // 2026年推荐值
+    // 推荐值
     private static final int DEFAULT_ITERATIONS = 310000;
     // 128位盐
     private static final int SALT_LENGTH = 16;

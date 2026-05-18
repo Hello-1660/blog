@@ -15,6 +15,7 @@ import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.UserLikeArticle;
+import com.jxcia.blog.pojo.vo.ArticleSearchVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
 import com.jxcia.blog.service.mapper.user.ArticleBrowseLogMapper;
 import com.jxcia.blog.service.mapper.user.ArticleMapper;
@@ -47,13 +48,13 @@ public class ArticleServiceImpl implements ArticleService {
      * @return 文章分页数据
      */
     @Override
-    public PageResult<Article> search(ArticleSearchDto articleDto) {
+    public PageResult<ArticleSearchVo> search(ArticleSearchDto articleDto) {
         // 开启分页
         PageHelper.startPage(articleDto.getPageNum(), articleDto.getPageSize());
         // 查询数据
         articleDto.setStatus(ArticleStatusConstant.PUBLIC);
-        List<Article> articleList = articleMapper.getByArticleDto(articleDto);
-        PageInfo<Article> pageInfo = new PageInfo<>(articleList);
+        List<ArticleSearchVo> articleList = articleMapper.getByArticleDto(articleDto);
+        PageInfo<ArticleSearchVo> pageInfo = new PageInfo<>(articleList);
 
         return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
     }

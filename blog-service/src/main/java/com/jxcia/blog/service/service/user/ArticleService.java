@@ -5,6 +5,7 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.vo.ArticleSearchVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
 import jakarta.validation.constraints.NotNull;
 
@@ -20,7 +21,7 @@ public interface ArticleService {
      * @param articleDto 文章搜索信息
      * @return 文章分页数据
      */
-    PageResult<Article> search(ArticleSearchDto articleDto);
+    PageResult<ArticleSearchVo> search(ArticleSearchDto articleDto);
 
     /**
      * 推荐文章列表

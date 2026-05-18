@@ -2,6 +2,7 @@ package com.jxcia.blog.service.mapper.user;
 
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.vo.ArticleSearchVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -21,7 +22,7 @@ public interface ArticleMapper {
      * @param articleDto 查询文章信息
      * @return 文章列表
      */
-    List<Article> getByArticleDto(ArticleSearchDto articleDto);
+    List<ArticleSearchVo> getByArticleDto(ArticleSearchDto articleDto);
 
     /**
      * 插入文章

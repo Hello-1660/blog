@@ -5,6 +5,7 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.vo.ArticleSearchVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
 import com.jxcia.blog.service.service.user.ArticleService;
 import jakarta.validation.Valid;
@@ -32,7 +33,7 @@ public class ArticleController {
      * @return 文章分数据
      */
     @GetMapping("/search")
-    public Result<PageResult<Article>> search(@RequestBody ArticleSearchDto articleDto) {
+    public Result<PageResult<ArticleSearchVo>> search(@RequestBody ArticleSearchDto articleDto) {
         log.info("article search: {}", articleDto);
 
         return Result.success(articleService.search(articleDto));

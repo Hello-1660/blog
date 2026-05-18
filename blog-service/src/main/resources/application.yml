@@ -29,11 +29,9 @@ mybatis:
 
 logging:
   level:
-    com:
-      sky:
-        mapper: debug
-        service: info
-        controller: info
+    com.jxcia.blog.mapper: DEBUG
+
+
 
 jwt:
   tokenHeader: ${jwt.tokenHeader}
