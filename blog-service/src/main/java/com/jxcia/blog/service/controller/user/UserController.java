@@ -91,7 +91,7 @@ public class UserController {
     public Result<List<UserLikeArticleVo>> likeList() {
         log.info("like list");
 
-        return Result.success(userService.likeList());
+        return Result.success(userService.likeList(null));
     }
 
     /**
@@ -114,7 +114,7 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping("/visit/{id}")
-    public Result<UserVo> visit(@PathVariable Integer id) {
+    public Result<UserVisitVo> visit(@PathVariable Integer id) {
         log.info("visit article: {}", id);
 
         return Result.success(userService.getUserById(id));

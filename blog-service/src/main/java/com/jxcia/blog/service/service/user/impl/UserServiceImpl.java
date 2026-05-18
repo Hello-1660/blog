@@ -149,8 +149,8 @@ public class UserServiceImpl implements UserService {
      * @return 文章列表
      */
     @Override
-    public List<UserLikeArticleVo> likeList() {
-        Integer userId = SecurityContextUtil.getId();
+    public List<UserLikeArticleVo> likeList(Integer userId) {
+        if (userId == null) userId = SecurityContextUtil.getId();
         // 查询用户点赞文章编号
         List<UserLikeArticle> userLikeArticleList = userLikeArticleMapper.getArticleIdsByUserId(userId);
 
@@ -208,16 +208,27 @@ public class UserServiceImpl implements UserService {
      * @return 用户信息
      */
     @Override
-    public UserVo getUserById(Integer id) {
+    public UserVisitVo getUserById(Integer id) {
         if (id == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+        // 获取用户信息
         User user = userMapper.getUserById(id);
-
         if (user == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
 
-        UserVo userVo = new UserVo();
-        BeanUtils.copyProperties(user, userVo);
+        // 获取用户关注列表
+        List<SubscribeVo> subscribeVoList = subscribeMapper.getSubscribeVoByUserId(user.getId());
 
-        return userVo;
+        List<UserLikeArticleVo> userLikeArticleVoList = null;
+        // 查看用户喜欢是否公开，公开则返回，私密则不返回
+        if (user.getLikeShowStatus() == UserStatusConstant.USER_LIKE_PUBLIC) {
+            userLikeArticleVoList = likeList(user.getId());
+        }
+
+        UserVisitVo userVisitVo = new UserVisitVo();
+        BeanUtils.copyProperties(user, userVisitVo);
+        userVisitVo.setSubscribeList(subscribeVoList);
+        userVisitVo.setUserLikeArticleList(userLikeArticleVoList);
+
+        return userVisitVo;
     }
 
     /**

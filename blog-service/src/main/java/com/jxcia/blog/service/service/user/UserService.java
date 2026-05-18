@@ -52,7 +52,7 @@ public interface UserService {
      * 用户喜欢列表
      * @return 文章列表
      */
-    List<UserLikeArticleVo> likeList();
+    List<UserLikeArticleVo> likeList(Integer userId);
 
     /**
      * 用户点赞文章
@@ -65,7 +65,7 @@ public interface UserService {
      * @param id 用户编号
      * @return 用户信息
      */
-    UserVo getUserById(Integer id);
+    UserVisitVo getUserById(Integer id);
 
     /**
      * 关注用户
