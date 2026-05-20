@@ -15,7 +15,13 @@ public class SecurityContextUtil {
      */
     public static Integer getId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails details = (CustomUserDetails) auth.getPrincipal();
-        return details.getId();
+
+        Object principal = auth.getPrincipal();
+        // 当存在用户信息时返回 id, 没有则返回 null
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getId();
+        } else {
+            return null;
+        }
     }
 }

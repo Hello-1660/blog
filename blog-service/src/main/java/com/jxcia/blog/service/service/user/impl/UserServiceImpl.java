@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
     public UserVo getUser() {
         Integer id = SecurityContextUtil.getId();
         User user = userMapper.getUserById(id);
-        if (user == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+        if (user == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
 
         UserVo userVo = new UserVo();
         BeanUtils.copyProperties(user, userVo);
