@@ -36,9 +36,9 @@
     </select>
 
     <select id="getByArticleIds" resultType="com.jxcia.blog.pojo.entity.Article">
-        select article_id
-        from user_like_article
-        where article_id in
+        select *
+        from article
+        where id in
         <foreach collection="articleIdList" item="aci" open="(" close=")" separator=",">
             #{aci}
         </foreach>
@@ -52,6 +52,7 @@
             a.icon,
             a.title,
             a.create_time,
+            a.category_id,
             count(*) value
         from user_article_browse_log uabl
         join article a on uabl.article_id = a.id

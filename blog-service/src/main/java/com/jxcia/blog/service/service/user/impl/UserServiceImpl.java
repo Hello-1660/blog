@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
 
         if (userLikeArticleList == null || userLikeArticleList.isEmpty()) return null;
 
-        List<Integer> articleIdList = userLikeArticleList.stream().map(UserLikeArticle::getUserId).toList();
+        List<Integer> articleIdList = userLikeArticleList.stream().map(UserLikeArticle::getArticleId).toList();
         List<Article> articleList = articleMapper.getByArticleIds(articleIdList);
 
         return articleList.stream().map(a -> {

@@ -1,5 +1,6 @@
 package com.jxcia.blog.blog.security.util;
 
+import com.jxcia.blog.pojo.entity.Admin;
 import com.jxcia.blog.pojo.entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -23,11 +24,11 @@ public class JwtTokenUtil {
     private static final String ID = "sub";
     // 用户邮箱键名
     private static final String EMAIL = "email";
-    public static final String TYPE = "T";
+    private static final String TYPE = "T";
     // 用户类型值
-    public static final String USER = "u";
+    private static final String USER = "u";
     // 管理员类型值
-    public static final String ADMIN = "a";
+    private static final String ADMIN = "a";
     // 密钥
     @Value("${jwt.secret}")
     private String secret;
@@ -80,6 +81,21 @@ public class JwtTokenUtil {
         claims.put(ID, user.getId().toString());
         claims.put(TYPE, USER);
         claims.put(EMAIL, user.getEmail());
+
+        return generateToken(claims);
+    }
+
+    /**
+     * 生成管理员 token
+     * @param admin 管理员
+     * @return token
+     */
+    public String generateAdminToken(Admin admin) {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put(ID, admin.getId().toString());
+        claims.put(TYPE, USER);
+        claims.put(EMAIL, admin.getEmail());
 
         return generateToken(claims);
     }
@@ -176,8 +192,7 @@ public class JwtTokenUtil {
         if (USER.equals(type)) {
             return generateUserToken(User.builder().id(id).build());
         } else if (ADMIN.equals(type)) {
-            // TODO 返回 admin token
-            return null;
+            return generateAdminToken(Admin.builder().build());
         } else {
             return null;
         }
@@ -190,5 +205,23 @@ public class JwtTokenUtil {
      */
     public String processToken(String token) {
         return token.substring(tokenHead.length());
+    }
+
+    /**
+     * 判断是否是管理员账号
+     * @param type 账号类型
+     * @return 是返回 true, 否返回 false
+     */
+    public static boolean isAdmin (String type) {
+        return ADMIN.equals(type);
+    }
+
+    /**
+     * 判断是否是用户账号
+     * @param type 账号类型
+     * @return 是返回 true, 否返回 false
+     */
+    public static boolean isUser (String type) {
+        return USER.equals(type);
     }
 }

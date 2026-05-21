@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,9 +55,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (jwtTokenUtil.validateToken(token)) {
             // 从 token 中获取邮箱
             String email = jwtTokenUtil.getClaimsEmailFromToken(token);
+            String type = jwtTokenUtil.getClaimsTypeFromToken(token);
+            Integer id = jwtTokenUtil.getClaimsIdFromToken(token);
             // 根据邮箱从数据中中查询用户
             log.info("checked email: {}", email);
-            CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
+            // 获取账号详情
+            CustomUserDetails userDetails = getCustomUserDetails(type, email, id);
             // 创建 SpringSecurity 令牌
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -67,6 +71,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 继续执行过滤器链
         filterChain.doFilter(request, response);
+    }
+
+    /**
+     * 根据 type 获取 CustomUserDetails
+     * @param type 账号类型
+     * @param email 账号邮箱
+     * @param id 账号编号
+     * @return 用户详情
+     */
+    private CustomUserDetails getCustomUserDetails(String type, String email, Integer id) {
+        CustomUserDetails userDetails = null;
+
+        if (JwtTokenUtil.isAdmin(type)) {
+            // 当前账号是管理员，配置权限
+            userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
+        } else if (JwtTokenUtil.isUser(type)) {
+            // 普通用户直接返回信息
+            userDetails = CustomUserDetails.builder()
+                    .id(id)
+                    .email(email)
+                    .build();
+        }
+        return userDetails;
     }
 
     /**

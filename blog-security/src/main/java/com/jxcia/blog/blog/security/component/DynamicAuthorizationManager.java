@@ -7,6 +7,7 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -30,13 +31,14 @@ public class DynamicAuthorizationManager implements AuthorizationManager<Request
         // 没有配置权限，直接放行
         if (CollectionUtils.isEmpty(configAttribute)) return new AuthorizationDecision(true);
 
+        AntPathMatcher antMatcher = new AntPathMatcher();
         // 比较权限
         for (ConfigAttribute attribute : configAttribute) {
             String needAuthority = attribute.getAttribute();
 
             for (GrantedAuthority grantAuthority : authentication.getAuthorities()) {
                 // 拥有权限，放行
-                if (needAuthority.trim().equals(grantAuthority.getAuthority())) return new AuthorizationDecision(true);
+                if (antMatcher.match(needAuthority, grantAuthority.getAuthority())) return new AuthorizationDecision(true);
             }
         }
 

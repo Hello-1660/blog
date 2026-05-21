@@ -22,4 +22,6 @@ public class HotArticleVo {
     private LocalDateTime createTime;
     // 文章热度
     private Long value;
+    // 文章分类
+    private Integer categoryId;
 }
