@@ -1,9 +1,10 @@
 package com.jxcia.blog.service.service.admin;
 
 import com.jxcia.blog.pojo.dto.AdminRegisterDto;
-import com.jxcia.blog.pojo.entity.AdminLoginDto;
+import com.jxcia.blog.pojo.dto.AdminLoginDto;
 import com.jxcia.blog.pojo.vo.AdminLoginVo;
 import com.jxcia.blog.pojo.vo.AdminRegisterVo;
+import com.jxcia.blog.pojo.vo.AdminVo;
 
 /**
  * 管理员 service
@@ -23,4 +24,11 @@ public interface AdminService {
      * @return 管理员信息
      */
     AdminRegisterVo save(AdminRegisterDto adminRegisterDto);
+
+    /**
+     * 获取管理员详情
+     * @param id 管理员编号
+     * @return 管理员详情
+     */
+    AdminVo detail(Integer id);
 }

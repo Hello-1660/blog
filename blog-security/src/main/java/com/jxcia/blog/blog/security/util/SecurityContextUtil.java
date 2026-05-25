@@ -24,4 +24,14 @@ public class SecurityContextUtil {
             return null;
         }
     }
+
+    /**
+     * 判断是否存储数据
+     * @param auth 用户详细
+     * @return 是否含有信息
+     */
+    public static boolean hasData(Authentication auth) {
+        if (auth == null) return false;
+        return auth.getPrincipal() instanceof CustomUserDetails;
+    }
 }

@@ -14,13 +14,17 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.entity.UserLikeArticle;
 import com.jxcia.blog.pojo.vo.ArticleSearchVo;
+import com.jxcia.blog.pojo.vo.ArticleVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
 import com.jxcia.blog.service.mapper.user.ArticleBrowseLogMapper;
 import com.jxcia.blog.service.mapper.user.ArticleMapper;
 import com.jxcia.blog.service.mapper.user.UserLikeArticleMapper;
+import com.jxcia.blog.service.mapper.user.UserMapper;
 import com.jxcia.blog.service.service.user.ArticleService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +41,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleMapper articleMapper;
     @Autowired
-    private ArticleBrowseLogMapper articleBrowseLogMapper;
+    private UserMapper userMapper;
     @Autowired
     private UserLikeArticleMapper userLikeArticleMapper;
 
@@ -87,21 +91,29 @@ public class ArticleServiceImpl implements ArticleService {
      * @return 文章
      */
     @Override
-    public Article getById(Integer id) {
+    public ArticleVo getById(Integer id) {
+        // 获取文章
         if (id == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
         Article article = articleMapper.getById(id);
         if (article == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
 
+        // 获取文章返回对象
+        User user = userMapper.getUserById(article.getUserId());
+        ArticleVo articleVo = new ArticleVo();
+        BeanUtils.copyProperties(article, articleVo);
+        articleVo.setUserNickname(user.getNickname());
+        articleVo.setUserIcon(user.getIcon());
+
         // 用户可以查看自己的文章，其他用户只能查看公开文章
         Integer userId = SecurityContextUtil.getId();
-        if (article.getUserId().equals(userId)) {
-            return article;
+        if (articleVo.getUserId().equals(userId)) {
+            return articleVo;
         } else {
-            if (article.getStatus().equals(ArticleStatusConstant.PUBLIC)) {
-                return article;
-            } else if (article.getStatus().equals(ArticleStatusConstant.PRIVATE)) {
+            if (articleVo.getStatus().equals(ArticleStatusConstant.PUBLIC)) {
+                return articleVo;
+            } else if (articleVo.getStatus().equals(ArticleStatusConstant.PRIVATE)) {
                 throw new ArticleException(ArticleExceptionConstant.ARTICLE_IS_PRIVATE);
-            } else if (article.getStatus().equals(ArticleStatusConstant.DISABLED)) {
+            } else if (articleVo.getStatus().equals(ArticleStatusConstant.DISABLED)) {
                 throw new ArticleException(ArticleExceptionConstant.ARTICLE_IS_DISABLE);
             }
             throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);

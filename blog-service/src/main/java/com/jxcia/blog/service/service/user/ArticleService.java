@@ -6,6 +6,7 @@ import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.ArticleSearchVo;
+import com.jxcia.blog.pojo.vo.ArticleVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
 import jakarta.validation.constraints.NotNull;
 
@@ -46,7 +47,7 @@ public interface ArticleService {
      * @param id 文章编号
      * @return 文章
      */
-    Article getById(Integer id);
+    ArticleVo getById(Integer id);
 
     /**
      * 更新文章

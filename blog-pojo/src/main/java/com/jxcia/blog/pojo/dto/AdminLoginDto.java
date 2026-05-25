@@ -1,4 +1,4 @@
-package com.jxcia.blog.pojo.entity;
+package com.jxcia.blog.pojo.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

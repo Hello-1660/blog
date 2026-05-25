@@ -8,12 +8,12 @@ import com.jxcia.blog.common.constant.AdminRegisterExceptionConstant;
 import com.jxcia.blog.common.exception.AdminRegisterException;
 import com.jxcia.blog.pojo.dto.AdminRegisterDto;
 import com.jxcia.blog.pojo.entity.Admin;
-import com.jxcia.blog.pojo.entity.AdminLoginDto;
+import com.jxcia.blog.pojo.dto.AdminLoginDto;
 import com.jxcia.blog.pojo.vo.AdminLoginVo;
 import com.jxcia.blog.pojo.vo.AdminRegisterVo;
+import com.jxcia.blog.pojo.vo.AdminVo;
 import com.jxcia.blog.service.mapper.admin.AdminMapper;
 import com.jxcia.blog.service.service.admin.AdminService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,5 +90,16 @@ public class AdminServiceImpl implements AdminService {
                 .email(adminRegisterDto.getEmail())
                 .password(adminRegisterDto.getPassword())
                 .build();
+    }
+
+    /**
+     * 获取管理员详情
+     *
+     * @param id 管理员编号
+     * @return 管理员详情
+     */
+    @Override
+    public AdminVo detail(Integer id) {
+        return adminMapper.getById(id);
     }
 }

@@ -1,5 +1,7 @@
 package com.jxcia.blog.blog.security.component;
 
+import com.jxcia.blog.blog.security.util.SecurityContextUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -13,9 +15,11 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collection;
 import java.util.function.Supplier;
 
+
 /**
  * 动态权限决策管理器
  */
+@Slf4j
 public class DynamicAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
     @Autowired
     private DynamicSecurityMetadataSource dynamicSecurityMetadataSource;
@@ -24,7 +28,7 @@ public class DynamicAuthorizationManager implements AuthorizationManager<Request
     public AuthorizationDecision check(Supplier<Authentication> authenticationSupplier, RequestAuthorizationContext context) {
         // 获取认证信息
         Authentication authentication = authenticationSupplier.get();
-        if (authentication == null) return new AuthorizationDecision(false);
+        if (!SecurityContextUtil.hasData(authentication)) return new AuthorizationDecision(false);
 
         // 获取当前请求所需要的权限
         Collection<ConfigAttribute> configAttribute = getAuthorities(context);

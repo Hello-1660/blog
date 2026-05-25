@@ -1,6 +1,7 @@
 package com.jxcia.blog.service.mapper.admin;
 
 import com.jxcia.blog.pojo.entity.Admin;
+import com.jxcia.blog.pojo.vo.AdminVo;
 import jakarta.validation.constraints.Email;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -27,4 +28,7 @@ public interface AdminMapper {
     @Insert("insert into admin (nickname, email, password, create_time, status) " +
             "value (#{nickname}, #{email}, #{password}, #{createTime}, #{status})")
     void insert(Admin admin);
+
+    @Select("select * from admin where id = #{id}")
+    AdminVo getById(Integer id);
 }

@@ -6,6 +6,7 @@ import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.ArticleSearchVo;
+import com.jxcia.blog.pojo.vo.ArticleVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
 import com.jxcia.blog.service.service.user.ArticleService;
 import jakarta.validation.Valid;
@@ -84,7 +85,7 @@ public class ArticleController {
      * @return 文章
      */
     @GetMapping("/browse/{id}")
-    public Result<Article> browse (@PathVariable @NotNull Integer id) {
+    public Result<ArticleVo> browse (@PathVariable @NotNull Integer id) {
         log.info("article browse: {}", id);
 
         return Result.success(articleService.getById(id));

@@ -2,9 +2,10 @@ package com.jxcia.blog.service.controller.admin;
 
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.AdminRegisterDto;
-import com.jxcia.blog.pojo.entity.AdminLoginDto;
+import com.jxcia.blog.pojo.dto.AdminLoginDto;
 import com.jxcia.blog.pojo.vo.AdminLoginVo;
 import com.jxcia.blog.pojo.vo.AdminRegisterVo;
+import com.jxcia.blog.pojo.vo.AdminVo;
 import com.jxcia.blog.service.service.admin.AdminService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -44,5 +45,16 @@ public class AdminController {
     public Result<AdminRegisterVo> save(@RequestBody @Valid AdminRegisterDto adminRegisterDto) {
         log.info("admin save: {}", adminRegisterDto);
         return Result.success(adminService.save(adminRegisterDto));
+    }
+
+    /**
+     * 获取管理员账号详细
+     * @param id 管理员编号
+     * @return 管理员详细
+     */
+    @GetMapping("/detail/{id}")
+    public Result<AdminVo> detail(@PathVariable Integer id) {
+        log.info("admin detail: {}", id);
+        return Result.success(adminService.detail(id));
     }
 }
