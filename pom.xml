@@ -8,6 +8,7 @@
         <module>blog-service</module>
         <module>blog-pojo</module>
         <module>blog-security</module>
+        <module>blog-mapper</module>
     </modules>
 
     <parent>

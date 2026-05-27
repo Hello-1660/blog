@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxcia.blog.mapper.user.ArticleMapper">
+    <update id="update">
+        update article
+        <set>
+            <if test="icon != null and icon != ''">icon = #{icon},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="categoryId != null">categoryId = #{categoryId},</if>
+            update_time = #{updateTime}
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getByArticleDto" resultType="com.jxcia.blog.pojo.vo.ArticleSearchVo">
+        select
+            a.id as id,
+            a.user_id as userId,
+            a.icon as icon,
+            a.title as title,
+            a.create_time as createTiem,
+            u.nickname as userNickname
+        from article a
+        left join user u on a.user_id = u.id
+        <where>
+            <if test="categoryId != null">and a.category_id = #{categoryId}</if>
+            <if test="title != null and title != ''">and a.title like concat('%', #{title}, '%')</if>
+            <if test="createTime != null">and a.create_time &gt; #{createTime}</if>
+            <if test="userNickname != null and userNickname != ''">and u.nickname like concat('%', #{userNickname}, '%')</if>
+            <if test="status != null">and a.status = #{status}</if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="getByArticleIds" resultType="com.jxcia.blog.pojo.entity.Article">
+        select *
+        from article
+        where id in
+        <foreach collection="articleIdList" item="aci" open="(" close=")" separator=",">
+            #{aci}
+        </foreach>
+    </select>
+
+    <select id="getHotArticleByArticleSearchDto" resultType="com.jxcia.blog.pojo.vo.HotArticleVo">
+        select
+            a.id,
+            a.user_id,
+            u.nickname,
+            a.icon,
+            a.title,
+            a.create_time,
+            a.category_id,
+            count(*) value
+        from user_article_browse_log uabl
+        join article a on uabl.article_id = a.id
+        left join user u on a.user_id = u.id
+        where a.status = 1
+        group by a.id, a.user_id, u.nickname, a.icon, a.title, a.create_time
+        order by value desc
+    </select>
+</mapper>

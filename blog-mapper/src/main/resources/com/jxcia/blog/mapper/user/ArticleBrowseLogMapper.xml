@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxcia.blog.mapper.user.ArticleBrowseLogMapper">
+
+    <select id="getArticleBrowseCountByArticleList" resultType="com.jxcia.blog.pojo.entity.ArticleWithBrowseCount">
+        select article_id, count(*)
+        from user_article_browse_log
+        where article_id in
+        <foreach collection="articleList" item="ac" open="(" close=")" separator=",">
+            #{ac.id}
+        </foreach>
+        group by article_id
+    </select>
+</mapper>
