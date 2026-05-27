@@ -13,6 +13,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Supplier;
 
 
@@ -28,19 +29,21 @@ public class DynamicAuthorizationManager implements AuthorizationManager<Request
     public AuthorizationDecision check(Supplier<Authentication> authenticationSupplier, RequestAuthorizationContext context) {
         // 获取认证信息
         Authentication authentication = authenticationSupplier.get();
-        if (!SecurityContextUtil.hasData(authentication)) return new AuthorizationDecision(false);
+        if (SecurityContextUtil.isValid(authentication)) return new AuthorizationDecision(false);
 
         // 获取当前请求所需要的权限
         Collection<ConfigAttribute> configAttribute = getAuthorities(context);
         // 没有配置权限，直接放行
         if (CollectionUtils.isEmpty(configAttribute)) return new AuthorizationDecision(true);
+        // 获取用户拥有权限
+        List<GrantedAuthority> grantedAuthorityList = SecurityContextUtil.getAuthorities(authentication);
 
         AntPathMatcher antMatcher = new AntPathMatcher();
         // 比较权限
         for (ConfigAttribute attribute : configAttribute) {
             String needAuthority = attribute.getAttribute();
 
-            for (GrantedAuthority grantAuthority : authentication.getAuthorities()) {
+            for (GrantedAuthority grantAuthority : grantedAuthorityList) {
                 // 拥有权限，放行
                 if (antMatcher.match(needAuthority, grantAuthority.getAuthority())) return new AuthorizationDecision(true);
             }

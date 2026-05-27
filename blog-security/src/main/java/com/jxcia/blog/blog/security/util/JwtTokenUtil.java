@@ -94,7 +94,7 @@ public class JwtTokenUtil {
         Map<String, Object> claims = new HashMap<>();
 
         claims.put(ID, admin.getId().toString());
-        claims.put(TYPE, USER);
+        claims.put(TYPE, ADMIN);
         claims.put(EMAIL, admin.getEmail());
 
         return generateToken(claims);

@@ -3,10 +3,13 @@
 <mapper namespace="com.jxcia.blog.mapper.admin.PermissionMapper">
 
     <select id="getByRoleIdList" resultType="com.jxcia.blog.pojo.entity.Permission">
-        select distinct p.* from permission
-        where id in
-        <foreach collection="roleIdList" item="rId" separator="," open="(" close=")">
-            #{rId}
-        </foreach>
+        select distinct url from permission
+        where id in (
+            select permission_id from role_permission_relation where role_id in (
+                <foreach collection="roleIdList" item="rId" open="(" close=")" separator=",">
+                    #{rId}
+                </foreach>
+                )
+            )
     </select>
 </mapper>

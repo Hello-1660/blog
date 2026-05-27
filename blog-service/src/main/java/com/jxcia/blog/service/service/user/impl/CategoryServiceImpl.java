@@ -1,7 +1,7 @@
 package com.jxcia.blog.service.service.user.impl;
 
 import com.jxcia.blog.pojo.entity.Category;
-import com.jxcia.blog.service.mapper.user.CategoryMapper;
+import com.jxcia.blog.mapper.user.CategoryMapper;
 import com.jxcia.blog.service.service.user.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -12,7 +12,7 @@ import com.jxcia.blog.pojo.dto.AdminLoginDto;
 import com.jxcia.blog.pojo.vo.AdminLoginVo;
 import com.jxcia.blog.pojo.vo.AdminRegisterVo;
 import com.jxcia.blog.pojo.vo.AdminVo;
-import com.jxcia.blog.service.mapper.admin.AdminMapper;
+import com.jxcia.blog.mapper.admin.AdminMapper;
 import com.jxcia.blog.service.service.admin.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

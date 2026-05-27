@@ -1,5 +1,6 @@
 package com.jxcia.blog.blog.security.fliter;
 
+import com.jxcia.blog.blog.security.component.AdminUserDetailService;
 import com.jxcia.blog.blog.security.config.IgnoreUrlsConfig;
 import com.jxcia.blog.blog.security.service.CustomUserDetails;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
@@ -11,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;

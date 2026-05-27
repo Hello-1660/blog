@@ -9,7 +9,7 @@ import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.entity.*;
 import com.jxcia.blog.pojo.vo.*;
-import com.jxcia.blog.service.mapper.user.*;
+import com.jxcia.blog.mapper.user.*;
 import com.jxcia.blog.service.service.user.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

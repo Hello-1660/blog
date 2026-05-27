@@ -2,6 +2,8 @@ package com.jxcia.blog.blog.security.component;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jxcia.blog.common.constant.AccountConstant;
+import com.jxcia.blog.common.constant.AdminConstant;
 import com.jxcia.blog.common.result.Result;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +27,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setHeader("Cache-Control","no-cache");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.getWriter().println(objectMapper.writeValueAsString(Result.unauthorized(authException.getMessage())));
+        response.getWriter().println(objectMapper.writeValueAsString(Result.unauthorized(AdminConstant.NOT_LOGIN)));
         response.getWriter().flush();
     }
 }

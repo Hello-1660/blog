@@ -1,8 +1,8 @@
-package com.jxcia.blog.service.service;
+package com.jxcia.blog.blog.security.component;
 
 import com.jxcia.blog.blog.security.service.DynamicSecurityService;
 import com.jxcia.blog.pojo.entity.Permission;
-import com.jxcia.blog.service.mapper.admin.PermissionMapper;
+import com.jxcia.blog.mapper.admin.PermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -26,7 +26,7 @@ public class DynamicSecurityServiceImpl implements DynamicSecurityService {
     public Map<String, ConfigAttribute> loadDataSource() {
         Map<String, ConfigAttribute> map = new ConcurrentHashMap<>();
         List<Permission> permissionList = permissionMapper.getAll();
-        permissionList.forEach(p -> map.put(p.getUrl(), new SecurityConfig(p.getId() + ":" + p.getName())));
+        permissionList.forEach(p -> map.put(p.getUrl(), new SecurityConfig(p.getUrl())));
         return map;
     }
 }

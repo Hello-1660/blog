@@ -6,7 +6,7 @@ import com.jxcia.blog.common.constant.UserExceptionConstant;
 import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.pojo.dto.ReportDto;
 import com.jxcia.blog.pojo.entity.Report;
-import com.jxcia.blog.service.mapper.user.ReportMapper;
+import com.jxcia.blog.mapper.user.ReportMapper;
 import com.jxcia.blog.service.service.user.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
