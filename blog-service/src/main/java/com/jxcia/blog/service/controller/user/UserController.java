@@ -3,6 +3,7 @@ package com.jxcia.blog.service.controller.user;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
+import com.jxcia.blog.pojo.dto.UserUpdateDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.*;
@@ -158,13 +159,13 @@ public class UserController {
 
     /**
      * 更新用户，更新完 token 失效，需要重新登录
-     * @param user 更新用户信息
+     * @param userUpdateDto 更新用户信息
      * @return 用户信息
      */
     @PostMapping("/update")
-    public Result<UserVo> update(@RequestBody User user) {
-        log.info("update user: {}", user);
+    public Result<UserVo> update(@RequestBody UserUpdateDto userUpdateDto) {
+        log.info("update user: {}", userUpdateDto);
 
-        return Result.success(userService.update(user));
+        return Result.success(userService.update(userUpdateDto));
     }
 }

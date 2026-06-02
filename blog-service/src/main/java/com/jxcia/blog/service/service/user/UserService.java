@@ -3,6 +3,7 @@ package com.jxcia.blog.service.service.user;
 import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
+import com.jxcia.blog.pojo.dto.UserUpdateDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.*;
@@ -90,5 +91,5 @@ public interface UserService {
      * @param user 更新用户信息
      * @return 用户信息
      */
-    UserVo update(User user);
+    UserVo update(UserUpdateDto userUpdateDto);
 }

@@ -7,6 +7,7 @@ import com.jxcia.blog.common.constant.*;
 import com.jxcia.blog.common.exception.*;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
+import com.jxcia.blog.pojo.dto.UserUpdateDto;
 import com.jxcia.blog.pojo.entity.*;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.mapper.user.*;
@@ -294,17 +295,25 @@ public class UserServiceImpl implements UserService {
     /**
      * 更新用户信息
      *
-     * @param user 更新用户信息
+     * @param userUpdateDto 更新用户信息
      * @return 用户信息
      */
     @Override
-    public UserVo update(User user) {
+    public UserVo update(UserUpdateDto userUpdateDto) {
         Integer userId = SecurityContextUtil.getId();
         if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
 
-        user.setId(userId);
-        // 加密密码
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // 原对象
+        User user = userMapper.getUserById(userId);
+
+        // 修改属性
+        user.setNickname(userUpdateDto.getNickname());
+        user.setIcon(userUpdateDto.getIcon());
+        user.setEmail(userUpdateDto.getEmail());
+        user.setDescription(userUpdateDto.getDescription());
+        user.setThemeId(userUpdateDto.getThemeId());
+        user.setLikeShowStatus(userUpdateDto.getLikeShowStatus());
+
         userMapper.update(user);
 
         UserVo userVo = new UserVo();

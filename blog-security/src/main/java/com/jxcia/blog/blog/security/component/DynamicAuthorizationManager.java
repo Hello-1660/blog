@@ -1,6 +1,7 @@
 package com.jxcia.blog.blog.security.component;
 
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
+import com.jxcia.blog.common.constant.PermissionVerificationConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
@@ -29,7 +30,12 @@ public class DynamicAuthorizationManager implements AuthorizationManager<Request
     public AuthorizationDecision check(Supplier<Authentication> authenticationSupplier, RequestAuthorizationContext context) {
         // 获取认证信息
         Authentication authentication = authenticationSupplier.get();
-        if (SecurityContextUtil.isValid(authentication)) return new AuthorizationDecision(false);
+        String uri = context.getRequest().getRequestURI();
+
+        // 管理端必须登录
+        if (uri.startsWith(PermissionVerificationConstant.ADMIN_URI_START) && SecurityContextUtil.isValid(authentication)) {
+            return new AuthorizationDecision(false);
+        }
 
         // 获取当前请求所需要的权限
         Collection<ConfigAttribute> configAttribute = getAuthorities(context);
