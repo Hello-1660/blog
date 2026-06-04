@@ -36,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private UserLikeArticleMapper userLikeArticleMapper;
     @Autowired
     private SubscribeMapper subscribeMapper;
+    @Autowired
+    private EmailMapper emailMapper;
 
     /**
      * 用户注册
@@ -320,6 +322,19 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(user, userVo);
 
         return userVo;
+    }
+
+    /**
+     * 获取邮箱列表
+     *
+     * @return 邮箱列表
+     */
+    @Override
+    public List<Email> emailList() {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+
+        return emailMapper.getListByUserId(userId);
     }
 
 

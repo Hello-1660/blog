@@ -5,6 +5,7 @@ import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.dto.UserUpdateDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.Email;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.*;
 import jakarta.validation.Valid;
@@ -92,4 +93,10 @@ public interface UserService {
      * @return 用户信息
      */
     UserVo update(UserUpdateDto userUpdateDto);
+
+    /**
+     * 获取邮箱列表
+     * @return 邮箱列表
+     */
+    List<Email> emailList();
 }

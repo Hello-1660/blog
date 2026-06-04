@@ -5,6 +5,7 @@ import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.dto.UserUpdateDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.Email;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.service.service.user.UserService;
@@ -167,5 +168,16 @@ public class UserController {
         log.info("update user: {}", userUpdateDto);
 
         return Result.success(userService.update(userUpdateDto));
+    }
+
+    /**
+     * 查看邮箱列表
+     * @return 邮箱列表
+     */
+    @GetMapping("/emailList")
+    public Result<List<Email>> emailList() {
+        log.info("email list");
+
+        return Result.success(userService.emailList());
     }
 }
