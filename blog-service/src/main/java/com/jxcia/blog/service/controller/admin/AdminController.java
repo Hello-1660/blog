@@ -1,8 +1,10 @@
 package com.jxcia.blog.service.controller.admin;
 
 import com.jxcia.blog.common.result.Result;
+import com.jxcia.blog.pojo.dto.AdminDto;
 import com.jxcia.blog.pojo.dto.AdminRegisterDto;
 import com.jxcia.blog.pojo.dto.AdminLoginDto;
+import com.jxcia.blog.pojo.entity.Admin;
 import com.jxcia.blog.pojo.vo.AdminLoginVo;
 import com.jxcia.blog.pojo.vo.AdminRegisterVo;
 import com.jxcia.blog.pojo.vo.AdminVo;
@@ -56,5 +58,15 @@ public class AdminController {
     public Result<AdminVo> detail(@PathVariable Integer id) {
         log.info("admin detail: {}", id);
         return Result.success(adminService.detail(id));
+    }
+
+    /**
+     * 更新管理员账号
+     * @param adminDto 管理员信息
+     * @return 管理员信息
+     */
+    public Result<AdminVo> update(@RequestBody AdminDto adminDto) {
+        log.info("admin update: {}", adminDto);
+        return Result.success(adminService.update(adminDto));
     }
 }

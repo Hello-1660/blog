@@ -1,5 +1,6 @@
 package com.jxcia.blog.service.service.admin;
 
+import com.jxcia.blog.pojo.dto.AdminDto;
 import com.jxcia.blog.pojo.dto.AdminRegisterDto;
 import com.jxcia.blog.pojo.dto.AdminLoginDto;
 import com.jxcia.blog.pojo.vo.AdminLoginVo;
@@ -31,4 +32,11 @@ public interface AdminService {
      * @return 管理员详情
      */
     AdminVo detail(Integer id);
+
+    /**
+     * 更新管理员信息
+     * @param adminDto 管理员信息
+     * @return 管理员信息
+     */
+    AdminVo update(AdminDto adminDto);
 }

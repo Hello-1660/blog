@@ -2,10 +2,12 @@ package com.jxcia.blog.service.service.admin.impl;
 
 import com.jxcia.blog.blog.security.crypto.PasswordEncoder;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
+import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.constant.AdminConstant;
 import com.jxcia.blog.common.constant.AdminExceptionConstant;
 import com.jxcia.blog.common.constant.AdminRegisterExceptionConstant;
 import com.jxcia.blog.common.exception.AdminRegisterException;
+import com.jxcia.blog.pojo.dto.AdminDto;
 import com.jxcia.blog.pojo.dto.AdminRegisterDto;
 import com.jxcia.blog.pojo.entity.Admin;
 import com.jxcia.blog.pojo.dto.AdminLoginDto;
@@ -14,6 +16,7 @@ import com.jxcia.blog.pojo.vo.AdminRegisterVo;
 import com.jxcia.blog.pojo.vo.AdminVo;
 import com.jxcia.blog.mapper.admin.AdminMapper;
 import com.jxcia.blog.service.service.admin.AdminService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -101,5 +104,26 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AdminVo detail(Integer id) {
         return adminMapper.getById(id);
+    }
+
+    /**
+     * 更新管理员信息
+     *
+     * @param adminDto 管理员信息
+     * @return 管理员信息
+     */
+    @Override
+    public AdminVo update(AdminDto adminDto) {
+        // 有编号就是其他管理员账号修改信息
+        // 没有就是自己修改
+        if (adminDto.getId() == null) adminDto.setId(SecurityContextUtil.getId());
+
+        Admin admin = new Admin();
+        BeanUtils.copyProperties(adminDto, admin);
+        if (admin.getPassword() != null) admin.setPassword(passwordEncoder.encode(adminDto.getPassword()));
+
+        adminMapper.update(admin);
+
+        return adminMapper.getById(admin.getId());
     }
 }

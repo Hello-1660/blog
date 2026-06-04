@@ -29,6 +29,17 @@ public interface AdminMapper {
             "value (#{nickname}, #{email}, #{password}, #{createTime}, #{status})")
     void insert(Admin admin);
 
+    /***
+     * 根据编导查询管理员
+     * @param id 管理员编号
+     * @return 管理员
+     */
     @Select("select * from admin where id = #{id}")
     AdminVo getById(Integer id);
+
+    /**
+     * 更新管理员账号
+     * @param admin 管理员
+     */
+    void update(Admin admin);
 }
