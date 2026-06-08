@@ -32,15 +32,22 @@ public class DynamicAuthorizationManager implements AuthorizationManager<Request
         Authentication authentication = authenticationSupplier.get();
         String uri = context.getRequest().getRequestURI();
 
-        // 管理端必须登录
         if (uri.startsWith(PermissionVerificationConstant.ADMIN_URI_START) && SecurityContextUtil.isValid(authentication)) {
+            // 管理端必须登录
             return new AuthorizationDecision(false);
         }
 
         // 获取当前请求所需要的权限
         Collection<ConfigAttribute> configAttribute = getAuthorities(context);
         // 没有配置权限，直接放行
-        if (CollectionUtils.isEmpty(configAttribute)) return new AuthorizationDecision(true);
+        if (CollectionUtils.isEmpty(configAttribute)) {
+            return new AuthorizationDecision(true);
+        } else  {
+            // 移动端在没有登录的情况访问非白名单接口时禁止访问
+            if (uri.startsWith(PermissionVerificationConstant.ADMIN_URI_START) && SecurityContextUtil.isValid(authentication)) {
+                return new AuthorizationDecision(false);
+            }
+        }
         // 获取用户拥有权限
         List<GrantedAuthority> grantedAuthorityList = SecurityContextUtil.getAuthorities(authentication);
 

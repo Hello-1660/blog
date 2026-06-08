@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -55,12 +56,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.info("checked email: {}", email);
             // 获取账号详情
             CustomUserDetails userDetails = getCustomUserDetails(type, email, id);
-            // 创建 SpringSecurity 令牌
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            // 将认证信息存入 SpringSecurity 上下文当中
-            log.info("authenticated user: {}", userDetails.getUsername());
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            if (userDetails != null) {// 创建 SpringSecurity 令牌
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // 将认证信息存入 SpringSecurity 上下文当中
+                log.info("authenticated user: {}", userDetails.getUsername());
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
         }
 
         // 继续执行过滤器链
@@ -87,7 +89,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .email(email)
                     .build();
         }
-        return userDetails;
+
+        if (userDetails == null) {
+            // TODO 抛出没有该用户异常
+            return null;
+        } else {
+            return userDetails;
+        }
     }
 
     /**

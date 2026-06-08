@@ -65,6 +65,7 @@ public class AdminController {
      * @param adminDto 管理员信息
      * @return 管理员信息
      */
+    @PostMapping("/update")
     public Result<AdminVo> update(@RequestBody AdminDto adminDto) {
         log.info("admin update: {}", adminDto);
         return Result.success(adminService.update(adminDto));

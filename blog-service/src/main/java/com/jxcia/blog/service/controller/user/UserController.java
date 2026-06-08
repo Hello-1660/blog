@@ -9,6 +9,7 @@ import com.jxcia.blog.pojo.entity.Email;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.service.service.user.UserService;
+import com.jxcia.blog.service.util.SampleMailUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,6 @@ public class UserController {
     @PostMapping("/save")
     public Result<UserRegisterVo> save(@RequestBody @Valid UserRegisterDto userRegisterDto) {
         log.info("user register: {}", userRegisterDto.getEmail());
-
         return Result.success(userService.register(userRegisterDto));
     }
 
