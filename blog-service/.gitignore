@@ -33,8 +33,8 @@ build/
 .vscode/
 
 # 忽略 Spring Boot 配置文件（含敏感信息）
-application-prod.yml
-application-prod.properties
+application.yml
+application-dev.yml
 
 # 忽略本地配置文件
 application-local.yml
