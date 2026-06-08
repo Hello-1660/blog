@@ -99,4 +99,11 @@ public interface UserService {
      * @return 邮箱列表
      */
     List<Email> emailList();
+
+    /**
+     * 发送验证码
+     * @param email 邮箱
+     * @return 验证码
+     */
+    void sendVerificationCode(String email);
 }

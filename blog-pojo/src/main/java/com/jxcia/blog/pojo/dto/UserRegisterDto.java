@@ -18,4 +18,7 @@ public class UserRegisterDto {
     // 用户确认密码
     @NotBlank
     private String confirmPassword;
+    // 验证码
+    @NotBlank
+    private String verificationCode;
 }

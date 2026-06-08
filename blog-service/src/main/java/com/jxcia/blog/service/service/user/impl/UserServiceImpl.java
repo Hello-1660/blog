@@ -12,6 +12,8 @@ import com.jxcia.blog.pojo.entity.*;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.mapper.user.*;
 import com.jxcia.blog.service.service.user.UserService;
+import com.jxcia.blog.service.util.SampleMailUtil;
+import com.jxcia.blog.service.util.VerificationCodeUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,10 @@ public class UserServiceImpl implements UserService {
     private SubscribeMapper subscribeMapper;
     @Autowired
     private EmailMapper emailMapper;
+    @Autowired
+    private VerificationCodeUtil verificationCodeUtil;
+    @Autowired
+    private SampleMailUtil sampleMailUtil;
 
     /**
      * 用户注册
@@ -50,6 +56,11 @@ public class UserServiceImpl implements UserService {
         // 两次密码不一致
         if (!userRegisterDto.getPassword().equals(userRegisterDto.getConfirmPassword()))
             throw new UserRegisterException(UserRegisterExceptionConstant.CONFIRM_PASSWORD_NOT_EQUALS);
+
+        // 处理验证码
+        verificationCodeUtil.verify(
+                VerificationCodeConstant.VERIFICATION_CODE__REGISTER_PRO + userRegisterDto.getEmail(),
+                userRegisterDto.getVerificationCode());
 
         User user = new User();
         user.setEmail(userRegisterDto.getEmail());
@@ -335,6 +346,20 @@ public class UserServiceImpl implements UserService {
         if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
 
         return emailMapper.getListByUserId(userId);
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param email 验证码
+     */
+    @Override
+    public void sendVerificationCode(String email) {
+        // TODO 节流检查
+        String code = verificationCodeUtil.setCode(VerificationCodeConstant.VERIFICATION_CODE__REGISTER_PRO + email);
+        boolean result = sampleMailUtil.send(email, code);
+
+        if (!result) throw new UserRegisterException(UserRegisterExceptionConstant.VERIFICATION_CODE_SEND_ERROR);
     }
 
 

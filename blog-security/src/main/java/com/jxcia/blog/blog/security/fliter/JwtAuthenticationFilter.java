@@ -56,7 +56,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.info("checked email: {}", email);
             // 获取账号详情
             CustomUserDetails userDetails = getCustomUserDetails(type, email, id);
-            if (userDetails != null) {// 创建 SpringSecurity 令牌
+            if (userDetails != null) {
+                // 创建 SpringSecurity 令牌
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 // 将认证信息存入 SpringSecurity 上下文当中

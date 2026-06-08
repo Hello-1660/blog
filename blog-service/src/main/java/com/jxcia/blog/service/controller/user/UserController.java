@@ -1,5 +1,6 @@
 package com.jxcia.blog.service.controller.user;
 
+import com.jxcia.blog.common.constant.VerificationCodeConstant;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
@@ -179,5 +180,16 @@ public class UserController {
         log.info("email list");
 
         return Result.success(userService.emailList());
+    }
+
+    /**
+     * 获取验证码
+     * @param email 用户邮箱
+     */
+    @GetMapping("/verificationCode/{email}")
+    public Result<String> verificationCode(@PathVariable String email) {
+        log.info("verification code: {}", email);
+        userService.sendVerificationCode(email);
+        return Result.success();
     }
 }

@@ -51,7 +51,7 @@ public class SampleMailUtil {
         message.setRecipients(type, addresses);
     }
 
-    public void send(String receiveAddress) {
+    public boolean send(String receiveAddress, String verificationCode) {
         // 配置发送邮件的环境属性
         final Properties props = new Properties();
 
@@ -95,7 +95,7 @@ public class SampleMailUtil {
             InternetAddress replyToAddress = new InternetAddress(REPLY);
             message.setReplyTo(new Address[]{replyToAddress});//可选。设置回信地址
             message.setSentDate(new Date());
-            message.setSubject("测试主题");
+            message.setSubject("信风邮箱验证码");
 
             //发送附件和内容：
             // 创建多重消息
@@ -103,17 +103,16 @@ public class SampleMailUtil {
 
             // 创建一个BodyPart用于HTML内容
             BodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent("测试<br> html内容4", "text/html;charset=UTF-8");//设置邮件的内容，会覆盖前面的message.setContent
+            htmlPart.setContent("验证码" + verificationCode, "text/html;charset=UTF-8");//设置邮件的内容，会覆盖前面的message.setContent
             multipart.addBodyPart(htmlPart);
 
             // 添加完整消息
             message.setContent(multipart);
             // 发送附件代码，结束
             Transport.send(message);
-            log.info("发送验证码成功");
+            return true;
         } catch (MessagingException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-            throw new EmailException(EmailExceptionConstant.ERROR);
+            return false;
         }
 
     }
