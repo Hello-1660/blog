@@ -1,7 +1,6 @@
 package com.jxcia.blog.service.util;
 
 import com.jxcia.blog.common.constant.UserRegisterExceptionConstant;
-import com.jxcia.blog.common.constant.VerificationCodeConstant;
 import com.jxcia.blog.common.exception.UserRegisterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class VerificationCodeUtil {
@@ -39,7 +39,7 @@ public class VerificationCodeUtil {
      */
     private void setVerificationCode(String email, String code) {
         redisTemplate.opsForValue()
-                .set(email, code, Duration.ofMillis(ttl));
+                .set(email, code, Duration.ofMinutes(ttl));
     }
 
     /**
@@ -47,7 +47,7 @@ public class VerificationCodeUtil {
      * @param email 用户邮箱，用于标识用户
      * @return 验证码
      */
-    private String getVerificationCode(String email) {
+    public String getCode(String email) {
         return redisTemplate.opsForValue().get(email);
     }
 
@@ -55,10 +55,8 @@ public class VerificationCodeUtil {
      * 设置验证码
      * @param email 用户邮箱
      */
-    public String setCode(String email) {
-        String code = generateCode(CodeLength);
-        setVerificationCode(email, code);
-        return code;
+    public void setCode(String email) {
+        setVerificationCode(email, generateCode(CodeLength));
     }
 
     /**
@@ -67,8 +65,18 @@ public class VerificationCodeUtil {
      * @param code 验证码
      */
     public void verify(String email, String code) {
-        String verificationCode = getVerificationCode(email);
+        String verificationCode = getCode(email);
         if (verificationCode == null) throw new UserRegisterException(UserRegisterExceptionConstant.VERIFICATION_CODE_EXPIRED);
         if (!verificationCode.equals(code)) throw new UserRegisterException(UserRegisterExceptionConstant.VERIFICATION_CODE_ERROR);
+    }
+
+    /**
+     * 获取验证码过期时间
+     * @param email 用户邮箱
+     * @return 剩余时间，如果没有获取过，返回 -2
+     */
+    public long getTtl(String email) {
+        Long expire = redisTemplate.getExpire(email, TimeUnit.SECONDS);
+        return expire == null ? -2 : expire;
     }
 }

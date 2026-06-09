@@ -9,4 +9,5 @@ public class UserRegisterExceptionConstant {
     public static final String VERIFICATION_CODE_EXPIRED = "验证码已过期";
     public static final String VERIFICATION_CODE_ERROR = "验证码错误";
     public static final String VERIFICATION_CODE_SEND_ERROR = "验证码发送失败，请稍后再试";
+    public static final String VERIFICATION_CODE_SEND_EXCESSIVE = "验证码发送频繁，请稍后再试";
 }
