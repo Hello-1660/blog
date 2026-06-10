@@ -90,7 +90,7 @@ public interface UserService {
 
     /**
      * 更新用户信息
-     * @param user 更新用户信息
+     * @param userUpdateDto 更新用户信息
      * @return 用户信息
      */
     UserVo update(UserUpdateDto userUpdateDto);

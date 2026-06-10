@@ -1,6 +1,7 @@
 package com.jxcia.blog.mapper.admin;
 
 import com.jxcia.blog.pojo.entity.Menu;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -18,4 +19,12 @@ public interface MenuMapper {
             "(select distinct id from admin_role_relation where admin_id = 1)) " +
             "and `status` = #{adminId}")
     List<Menu> getByAdminId(Integer adminId);
+
+    /**
+     * 插入菜单记录
+     * @param menu 菜单信息
+     */
+    @Insert("insert into menu (p_id, name, level, web_name, icon, sort, status, create_time) " +
+            "value ()")
+    void insert(Menu menu);
 }
