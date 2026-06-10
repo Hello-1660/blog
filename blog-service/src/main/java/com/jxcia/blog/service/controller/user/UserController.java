@@ -4,6 +4,7 @@ import com.jxcia.blog.common.constant.VerificationCodeConstant;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
+import com.jxcia.blog.pojo.dto.UserResetPasswordDto;
 import com.jxcia.blog.pojo.dto.UserUpdateDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Email;
@@ -210,5 +211,18 @@ public class UserController {
         log.info("identify");
 
         return Result.success(userService.identify());
+    }
+
+    /**
+     * 用户重置密码
+     * @param userResetPasswordDto 用户重置密码信息
+     * @return 无
+     */
+    @PostMapping("/resetPassword")
+    public Result<Void> resetPassword(@RequestBody UserResetPasswordDto userResetPasswordDto) {
+        log.info("reset password: {}", userResetPasswordDto);
+
+        userService.resetPassword(userResetPasswordDto);
+        return Result.success();
     }
 }

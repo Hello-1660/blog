@@ -3,6 +3,7 @@ package com.jxcia.blog.service.service.user;
 import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
+import com.jxcia.blog.pojo.dto.UserResetPasswordDto;
 import com.jxcia.blog.pojo.dto.UserUpdateDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Email;
@@ -112,4 +113,10 @@ public interface UserService {
      * @return 用户身份
      */
     UserIdentifyVo identify();
+
+    /**
+     * 用户重置密码
+     * @param userResetPasswordDto 用户重置密码信息
+     */
+    void resetPassword(UserResetPasswordDto userResetPasswordDto);
 }

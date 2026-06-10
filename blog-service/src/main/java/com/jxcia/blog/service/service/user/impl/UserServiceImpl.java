@@ -7,6 +7,7 @@ import com.jxcia.blog.common.constant.*;
 import com.jxcia.blog.common.exception.*;
 import com.jxcia.blog.pojo.dto.UserLoginDto;
 import com.jxcia.blog.pojo.dto.UserRegisterDto;
+import com.jxcia.blog.pojo.dto.UserResetPasswordDto;
 import com.jxcia.blog.pojo.dto.UserUpdateDto;
 import com.jxcia.blog.pojo.entity.*;
 import com.jxcia.blog.pojo.vo.*;
@@ -62,9 +63,10 @@ public class UserServiceImpl implements UserService {
             throw new UserRegisterException(UserRegisterExceptionConstant.CONFIRM_PASSWORD_NOT_EQUALS);
 
         // 处理验证码
-        verificationCodeUtil.verify(
+        boolean verify = verificationCodeUtil.verify(
                 VerificationCodeConstant.VERIFICATION_CODE_REGISTER_PRO + userRegisterDto.getEmail(),
                 userRegisterDto.getVerificationCode());
+        if (!verify) throw new UserRegisterException(VerificationCodeConstant.VERIFICATION_CODE_ERROR);
 
         User user = new User();
         user.setEmail(userRegisterDto.getEmail());
@@ -380,6 +382,32 @@ public class UserServiceImpl implements UserService {
         if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_LOGIN);
 
         return identifyMapper.getIdentifyVoByUserId(userId);
+    }
+
+    /**
+     * 用户重置密码
+     *
+     * @param userResetPasswordDto 用户重置密码信息
+     */
+    @Override
+    public void resetPassword(UserResetPasswordDto userResetPasswordDto) {
+        boolean verify = verificationCodeUtil.verify(
+                userResetPasswordDto.getVerificationCode(), VerificationCodeConstant.VERIFICATION_CODE_LIMIT_IP_PRO + userResetPasswordDto.getEmail()
+        );
+
+        // 校验数据
+        if (!verify) throw new UserException(VerificationCodeConstant.VERIFICATION_CODE_ERROR);
+        if (!userResetPasswordDto.getPassword().equals(userResetPasswordDto.getConfirmPassword()))
+            throw new UserException(UserRegisterExceptionConstant.CONFIRM_PASSWORD_NOT_EQUALS);
+
+        // 修改用户密码
+        User findUser = userMapper.findByEmail(userResetPasswordDto.getEmail());
+        User build = User.builder()
+                .id(findUser.getId())
+                .password(userResetPasswordDto.getPassword())
+                .build();
+
+        userMapper.update(build);
     }
 
 
