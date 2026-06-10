@@ -106,4 +106,10 @@ public interface UserService {
      * @return 验证码
      */
     void sendVerificationCode(String email);
+
+    /**
+     * 获取用户身份
+     * @return 用户身份
+     */
+    UserIdentifyVo identify();
 }

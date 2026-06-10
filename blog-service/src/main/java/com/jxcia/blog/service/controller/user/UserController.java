@@ -200,4 +200,15 @@ public class UserController {
         userService.sendVerificationCode(email);
         return Result.success();
     }
+
+    /**
+     * 获取用户身份
+     * @return 用户身份
+     */
+    @GetMapping("/identify")
+    public Result<UserIdentifyVo> identify() {
+        log.info("identify");
+
+        return Result.success(userService.identify());
+    }
 }

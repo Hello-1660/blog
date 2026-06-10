@@ -43,6 +43,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailMapper emailMapper;
     @Autowired
+    private IdentifyMapper identifyMapper;
+    @Autowired
     private VerificationCodeUtil verificationCodeUtil;
     @Autowired
     private SampleMailUtil sampleMailUtil;
@@ -365,6 +367,19 @@ public class UserServiceImpl implements UserService {
         String code = verificationCodeUtil.getCode(codeHead);
         boolean result = sampleMailUtil.send(email, code);
         if (!result) throw new UserRegisterException(VerificationCodeConstant.VERIFICATION_CODE_SEND_ERROR);
+    }
+
+    /**
+     * 获取用户身份
+     *
+     * @return 用户身份
+     */
+    @Override
+    public UserIdentifyVo identify() {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        return identifyMapper.getIdentifyVoByUserId(userId);
     }
 
 
