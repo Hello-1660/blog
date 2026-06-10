@@ -7,10 +7,11 @@ import com.jxcia.blog.pojo.dto.UserRegisterDto;
 import com.jxcia.blog.pojo.dto.UserUpdateDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Email;
-import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.service.service.user.UserService;
-import com.jxcia.blog.service.util.SampleMailUtil;
+import com.jxcia.blog.service.util.IpUtil;
+import com.jxcia.blog.service.util.VerificationCodeUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private VerificationCodeUtil verificationCodeUtil;
 
     /**
      * 用户注册
@@ -187,8 +190,13 @@ public class UserController {
      * @param email 用户邮箱
      */
     @GetMapping("/verificationCode/{email}")
-    public Result<String> verificationCode(@PathVariable String email) {
-        log.info("verification code: {}", email);
+    public Result<String> verificationCode(@PathVariable String email, HttpServletRequest request) {
+        log.info("verification code{}", email);
+
+        // ip 拦截
+        String clientIp = IpUtil.getClientIp(request);
+        if (verificationCodeUtil.limitIp(clientIp)) return Result.Failed(VerificationCodeConstant.VERIFICATION_CODE_SEND_EXCESSIVE);
+
         userService.sendVerificationCode(email);
         return Result.success();
     }

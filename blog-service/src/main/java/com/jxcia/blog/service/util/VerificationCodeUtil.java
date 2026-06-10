@@ -1,7 +1,5 @@
 package com.jxcia.blog.service.util;
 
-import com.jxcia.blog.common.constant.UserRegisterExceptionConstant;
-import com.jxcia.blog.common.exception.UserRegisterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,6 +14,10 @@ public class VerificationCodeUtil {
     private int CodeLength;
     @Value("${verification-code.ttl}")
     private int ttl;
+    @Value("${verification-code.min-interval-time}")
+    private int minIntervalTime;
+    @Value("${verification-code.minute-ip-limit}")
+    private int minuteIpLimit;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
@@ -53,10 +55,15 @@ public class VerificationCodeUtil {
 
     /**
      * 设置验证码
-     * @param email 用户邮箱
+     * @param email 邮箱（用户邮箱 + 标识头）
+     * @return 是否生成成功
      */
-    public void setCode(String email) {
+    public boolean setCode(String email) {
+        long remainTime = getTtl(email);
+        if (remainTime > (ttl * 60L - minIntervalTime)) return false;
+
         setVerificationCode(email, generateCode(CodeLength));
+        return true;
     }
 
     /**
@@ -64,10 +71,8 @@ public class VerificationCodeUtil {
      * @param email 用户邮箱
      * @param code 验证码
      */
-    public void verify(String email, String code) {
-        String verificationCode = getCode(email);
-        if (verificationCode == null) throw new UserRegisterException(UserRegisterExceptionConstant.VERIFICATION_CODE_EXPIRED);
-        if (!verificationCode.equals(code)) throw new UserRegisterException(UserRegisterExceptionConstant.VERIFICATION_CODE_ERROR);
+    public boolean verify(String email, String code) {
+        return code.equals(getCode(email));
     }
 
     /**
@@ -75,8 +80,20 @@ public class VerificationCodeUtil {
      * @param email 用户邮箱
      * @return 剩余时间，如果没有获取过，返回 -2
      */
-    public long getTtl(String email) {
+    private long getTtl(String email) {
         Long expire = redisTemplate.getExpire(email, TimeUnit.SECONDS);
         return expire == null ? -2 : expire;
+    }
+
+    /**
+     * ip 限流
+     * @param ip ip + 标识头
+     * @return 是否拦截
+     */
+    public boolean limitIp (String ip) {
+        Long count = redisTemplate.opsForValue().increment(ip);
+        if (count == null) return false;
+        if (count == 1) redisTemplate.expire(ip, Duration.ofMinutes(1));
+        return count > minuteIpLimit;
     }
 }

@@ -1,7 +1,5 @@
 package com.jxcia.blog.service.util;
 
-import com.jxcia.blog.common.constant.EmailExceptionConstant;
-import com.jxcia.blog.common.exception.EmailException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

@@ -12,6 +12,7 @@ import com.jxcia.blog.pojo.entity.*;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.mapper.user.*;
 import com.jxcia.blog.service.service.user.UserService;
+import com.jxcia.blog.service.util.IpUtil;
 import com.jxcia.blog.service.util.SampleMailUtil;
 import com.jxcia.blog.service.util.VerificationCodeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -357,18 +358,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendVerificationCode(String email) {
         String codeHead = VerificationCodeConstant.VERIFICATION_CODE_REGISTER_PRO + email;
-        // TODO 节流检查
         // 账号检查，同一账号一分钟只能发送一次
-        long ttl = verificationCodeUtil.getTtl(codeHead);
-        if (ttl > VerificationCodeConstant.VERIFICATION_CODE_RESET_TIME)
-            throw new UserRegisterException(UserRegisterExceptionConstant.VERIFICATION_CODE_SEND_EXCESSIVE);
+        if (!verificationCodeUtil.setCode(codeHead))
+            throw new UserRegisterException(VerificationCodeConstant.VERIFICATION_CODE_SEND_EXCESSIVE);
 
-        verificationCodeUtil.setCode(codeHead);
         String code = verificationCodeUtil.getCode(codeHead);
-
-//        boolean result = sampleMailUtil.send(email, code);
-
-//        if (!result) throw new UserRegisterException(UserRegisterExceptionConstant.VERIFICATION_CODE_SEND_ERROR);
+        boolean result = sampleMailUtil.send(email, code);
+        if (!result) throw new UserRegisterException(VerificationCodeConstant.VERIFICATION_CODE_SEND_ERROR);
     }
 
 
