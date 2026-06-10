@@ -43,8 +43,8 @@ public class DynamicAuthorizationManager implements AuthorizationManager<Request
         if (CollectionUtils.isEmpty(configAttribute)) {
             return new AuthorizationDecision(true);
         } else  {
-            // 移动端在没有登录的情况访问非白名单接口时禁止访问
-            if (uri.startsWith(PermissionVerificationConstant.ADMIN_URI_START) && SecurityContextUtil.isValid(authentication)) {
+            // 用户端在没有登录的情况访问非白名单接口时禁止访问
+            if (uri.startsWith(PermissionVerificationConstant.USER_URI_START) && SecurityContextUtil.isValid(authentication)) {
                 return new AuthorizationDecision(false);
             }
         }

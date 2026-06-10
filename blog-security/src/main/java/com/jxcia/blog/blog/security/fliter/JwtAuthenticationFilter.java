@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,15 +89,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             userDetails = CustomUserDetails.builder()
                     .id(id)
                     .email(email)
+                    .authorities(new ArrayList<>())
                     .build();
         }
 
-        if (userDetails == null) {
-            // TODO 抛出没有该用户异常
-            return null;
-        } else {
-            return userDetails;
-        }
+        return userDetails;
     }
 
     /**

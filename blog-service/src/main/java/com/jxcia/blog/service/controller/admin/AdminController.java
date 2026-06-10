@@ -5,6 +5,7 @@ import com.jxcia.blog.pojo.dto.AdminDto;
 import com.jxcia.blog.pojo.dto.AdminRegisterDto;
 import com.jxcia.blog.pojo.dto.AdminLoginDto;
 import com.jxcia.blog.pojo.entity.Admin;
+import com.jxcia.blog.pojo.entity.Menu;
 import com.jxcia.blog.pojo.vo.AdminLoginVo;
 import com.jxcia.blog.pojo.vo.AdminRegisterVo;
 import com.jxcia.blog.pojo.vo.AdminVo;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 管理员 controller
@@ -69,5 +72,15 @@ public class AdminController {
     public Result<AdminVo> update(@RequestBody AdminDto adminDto) {
         log.info("admin update: {}", adminDto);
         return Result.success(adminService.update(adminDto));
+    }
+
+    /**
+     * 获取管理员展示菜单
+     * @return 菜单列表
+     */
+    @GetMapping("/menus")
+    public Result<List<Menu>> menus() {
+        log.info("admin menus");
+        return Result.success(adminService.menuList());
     }
 }

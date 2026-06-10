@@ -3,9 +3,12 @@ package com.jxcia.blog.service.service.admin;
 import com.jxcia.blog.pojo.dto.AdminDto;
 import com.jxcia.blog.pojo.dto.AdminRegisterDto;
 import com.jxcia.blog.pojo.dto.AdminLoginDto;
+import com.jxcia.blog.pojo.entity.Menu;
 import com.jxcia.blog.pojo.vo.AdminLoginVo;
 import com.jxcia.blog.pojo.vo.AdminRegisterVo;
 import com.jxcia.blog.pojo.vo.AdminVo;
+
+import java.util.List;
 
 /**
  * 管理员 service
@@ -39,4 +42,10 @@ public interface AdminService {
      * @return 管理员信息
      */
     AdminVo update(AdminDto adminDto);
+
+    /**
+     * 获取管理员菜单列表
+     * @return 菜单列表
+     */
+    List<Menu> menuList();
 }

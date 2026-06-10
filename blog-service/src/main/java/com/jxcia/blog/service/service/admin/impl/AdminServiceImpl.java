@@ -7,10 +7,12 @@ import com.jxcia.blog.common.constant.AdminConstant;
 import com.jxcia.blog.common.constant.AdminExceptionConstant;
 import com.jxcia.blog.common.constant.AdminRegisterExceptionConstant;
 import com.jxcia.blog.common.exception.AdminRegisterException;
+import com.jxcia.blog.mapper.admin.MenuMapper;
 import com.jxcia.blog.pojo.dto.AdminDto;
 import com.jxcia.blog.pojo.dto.AdminRegisterDto;
 import com.jxcia.blog.pojo.entity.Admin;
 import com.jxcia.blog.pojo.dto.AdminLoginDto;
+import com.jxcia.blog.pojo.entity.Menu;
 import com.jxcia.blog.pojo.vo.AdminLoginVo;
 import com.jxcia.blog.pojo.vo.AdminRegisterVo;
 import com.jxcia.blog.pojo.vo.AdminVo;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 管理员 serviceImpl
@@ -33,6 +36,8 @@ public class AdminServiceImpl implements AdminService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private MenuMapper menuMapper;
 
     /**
      * 管理员登录
@@ -125,5 +130,16 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.update(admin);
 
         return adminMapper.getById(admin.getId());
+    }
+
+    /**
+     * 获取管理员菜单列表
+     *
+     * @return 菜单列表
+     */
+    @Override
+    public List<Menu> menuList() {
+        Integer adminId = SecurityContextUtil.getId();
+        return menuMapper.getByAdminId(adminId);
     }
 }
