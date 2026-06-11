@@ -1,5 +1,6 @@
 package com.jxcia.blog.service.controller.user;
 
+import com.jxcia.blog.blog.security.annotation.Anonymous;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.entity.Category;
 import com.jxcia.blog.service.service.user.CategoryService;
@@ -26,6 +27,7 @@ public class CategoryController {
      * 获取文章分类
      * @return 文章分类列表
      */
+    @Anonymous
     @GetMapping("/list")
     public Result<List<Category>> list() {
         log.info("category list");

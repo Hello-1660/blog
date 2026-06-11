@@ -1,4 +1,4 @@
-package com.jxcia.blog.service.config;
+package com.jxcia.blog.blog.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

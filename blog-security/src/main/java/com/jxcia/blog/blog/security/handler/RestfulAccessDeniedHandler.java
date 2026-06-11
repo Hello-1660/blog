@@ -1,4 +1,4 @@
-package com.jxcia.blog.blog.security.component;
+package com.jxcia.blog.blog.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jxcia.blog.common.constant.AdminConstant;

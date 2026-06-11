@@ -1,8 +1,7 @@
-package com.jxcia.blog.blog.security.component;
+package com.jxcia.blog.blog.security.handler;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jxcia.blog.common.constant.AccountConstant;
 import com.jxcia.blog.common.constant.AdminConstant;
 import com.jxcia.blog.common.result.Result;
 import jakarta.servlet.ServletException;

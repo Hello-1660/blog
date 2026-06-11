@@ -24,4 +24,6 @@ public class UserLoginVo {
     private Integer likeShowStatus;
     // token
     private String token;
+    // refreshToken
+    private String refreshToken;
 }

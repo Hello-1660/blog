@@ -1,5 +1,6 @@
 package com.jxcia.blog.blog.security.util;
 
+import com.jxcia.blog.blog.security.enums.AccountType;
 import com.jxcia.blog.pojo.entity.Admin;
 import com.jxcia.blog.pojo.entity.User;
 import io.jsonwebtoken.*;
@@ -11,9 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * jwt 工具类
@@ -24,20 +23,18 @@ public class JwtTokenUtil {
     private static final String ID = "sub";
     // 用户邮箱键名
     private static final String EMAIL = "email";
-    private static final String TYPE = "T";
-    // 用户类型值
-    private static final String USER = "u";
-    // 管理员类型值
-    private static final String ADMIN = "a";
+    // 用户身份键名
+    private static final String IDENTIFY = "type";
+    // 用户角色列表
+    private static final String ROLES = "roles";
     // 密钥
     @Value("${jwt.secret}")
     private String secret;
     // 过期时间
-    @Value("${jwt.expiration}")
-    private Long expiration;
-    // 负载头
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
+    @Value("${jwt.refreshExpiration}")
+    private Long refreshExpiration;
+    @Value("${jwt.accessExpiration}")
+    private Long accessExpiration;
     // 对称密钥
     private Key key;
 
@@ -53,51 +50,14 @@ public class JwtTokenUtil {
      * @param claims 负载
      * @return token
      */
-    private String generateToken(Map<String, Object> claims) {
+    private String generateToken(Map<String, Object> claims, Long expirationMs) {
         return Jwts.builder()
                 .claims(claims)
-                .expiration(generateExpiration(expiration))
+                .id(UUID.randomUUID().toString())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(key)
                 .compact();
-    }
-
-    /**
-     * 生成 token 过期日期
-     * @param expiration 有效时间
-     * @return 过期日期
-     */
-    private Date generateExpiration(Long expiration) {
-        return new Date(System.currentTimeMillis() + expiration);
-    }
-
-    /**
-     * 生成用户 token
-     * @param user 用户
-     * @return token
-     */
-    public String generateUserToken(User user) {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put(ID, user.getId().toString());
-        claims.put(TYPE, USER);
-        claims.put(EMAIL, user.getEmail());
-
-        return generateToken(claims);
-    }
-
-    /**
-     * 生成管理员 token
-     * @param admin 管理员
-     * @return token
-     */
-    public String generateAdminToken(Admin admin) {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put(ID, admin.getId().toString());
-        claims.put(TYPE, ADMIN);
-        claims.put(EMAIL, admin.getEmail());
-
-        return generateToken(claims);
     }
 
     /**
@@ -128,7 +88,7 @@ public class JwtTokenUtil {
      * @return 身份
      */
     public String getClaimsTypeFromToken(String token) {
-        return getClaimsFromToken(token).get(TYPE, String.class);
+        return getClaimsFromToken(token).get(IDENTIFY, String.class);
     }
 
     /**
@@ -138,6 +98,16 @@ public class JwtTokenUtil {
      */
     public String getClaimsEmailFromToken(String token) {
         return getClaimsFromToken(token).get(EMAIL, String.class);
+    }
+
+    /**
+     * 获取角色权限列表
+     *
+     * @param token token
+     * @return 权限列表
+     */
+    public List<String> getClaimsRolesFromToken(String token) {
+        return getClaimsFromToken(token).get(ROLES, List.class);
     }
 
     /**
@@ -165,55 +135,12 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 判断 token 是否过期
-     * @param token token
-     */
-    public boolean isTokenExpired(String token) {
-        try {
-            Date expiration = getClaimsFromToken(token).getExpiration();
-            return expiration.before(new Date());
-        } catch (ExpiredJwtException e) {
-            return true;
-        }
-    }
-
-    /**
-     * 刷新 token
-     * @param token 旧 token
-     * @return 新 token
-     */
-    public String refreshToken(String token) {
-        if (!validateToken(token) || isTokenExpired(token)) return null;
-
-        // 重新生成 claims
-        Integer id = getClaimsIdFromToken(token);
-        String type = getClaimsTypeFromToken(token);
-
-        if (USER.equals(type)) {
-            return generateUserToken(User.builder().id(id).build());
-        } else if (ADMIN.equals(type)) {
-            return generateAdminToken(Admin.builder().build());
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 提取 token，去除 tokenHead
-     * @param token 原始 token
-     * @return 处理后 token
-     */
-    public String processToken(String token) {
-        return token.substring(tokenHead.length());
-    }
-
-    /**
      * 判断是否是管理员账号
      * @param type 账号类型
      * @return 是返回 true, 否返回 false
      */
     public static boolean isAdmin (String type) {
-        return ADMIN.equals(type);
+        return AccountType.ADMIN.toString().equals(type);
     }
 
     /**
@@ -222,6 +149,68 @@ public class JwtTokenUtil {
      * @return 是返回 true, 否返回 false
      */
     public static boolean isUser (String type) {
-        return USER.equals(type);
+        return AccountType.USER.toString().equals(type);
+    }
+
+    /**
+     * 生成 AccessToken
+     * @param user 用户信息
+     * @return AccessToken
+     */
+    public String generateUserAccessToken(User user) {
+        HashMap<String, Object> claims = new HashMap<>();
+
+        claims.put(ID, user.getId().toString());
+        claims.put(IDENTIFY, AccountType.USER.toString());
+        claims.put(EMAIL, user.getEmail());
+        claims.put(ROLES, List.of("ROLE_USER"));
+
+        return generateToken(claims, accessExpiration);
+    }
+
+    public String generateAdminAccessToken(Admin admin) {
+        HashMap<String, Object> claims = new HashMap<>();
+
+        claims.put(ID, admin.getId().toString());
+        claims.put(IDENTIFY, AccountType.ADMIN.toString());
+        claims.put(EMAIL, admin.getEmail());
+        claims.put(ROLES, List.of("ROLE_ADMIN"));
+
+        return generateToken(claims, accessExpiration);
+    }
+
+    /**
+     * 生成 Refresh Token
+     * @param id 用户编号
+     * @param email 用户邮箱
+     * @param type 用户类型
+     * @return refresh token
+     */
+    public String generateRefreshToken(Integer id, String email, AccountType type) {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put(ID, id.toString());
+        claims.put(IDENTIFY, type.toString());
+        claims.put(EMAIL, email);
+
+        return generateToken(claims, refreshExpiration);
+    }
+
+    /**
+     * 从 token 中提取 jti
+     * @param token token
+     * @return jtl
+     */
+    public String getClaimsJtiFromToken(String token) {
+        return getClaimsFromToken(token).getId();
+    }
+
+    /**
+     * 获取 token 过期时间
+     * @param token token
+     * @return 过期时间
+     */
+    public Date getExpirationDateFromToken(String token) {
+        return getClaimsFromToken(token).getExpiration();
     }
 }

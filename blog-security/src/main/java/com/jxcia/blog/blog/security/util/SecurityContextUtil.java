@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,43 +16,56 @@ public class SecurityContextUtil {
 
     /**
      * 获取 id
-     * @return
+     * @return 用户 id
      */
     public static Integer getId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) return null;
 
         Object principal = auth.getPrincipal();
         // 当存在用户信息时返回 id, 没有则返回 null
-        if (principal instanceof CustomUserDetails) {
-            return ((CustomUserDetails) principal).getId();
+        if (principal instanceof CustomUserDetails user) {
+            return user.getId();
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * 获取用户邮箱
+     * @return 用户邮箱
+     */
+    public static String getEmail() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) return null;
+
+        Object principal = auth.getPrincipal();
+        // 当存在用户信息时返回 id, 没有则返回 null
+        if (principal instanceof CustomUserDetails user) {
+            return user.getEmail();
         } else {
             return null;
         }
     }
 
     /**
-     * 判断是否存储数据
-     * @param auth 用户详细
-     * @return 是否含有信息
+     * 获取用户权限集合
+     * @return 用户权限集合
      */
-    public static boolean isValid(Authentication auth) {
-        if (auth == null) return true;
-        return !(auth.getPrincipal() instanceof CustomUserDetails);
+    public static List<GrantedAuthority> getAuthorities() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !(auth.getPrincipal() instanceof CustomUserDetails user)) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(user.getAuthorities());
     }
 
     /**
-     * 获取用户权限
-     * @param auth 用户详细
-     * @return 详情列表
+     * 判断是否存有用户信息
+     * @return 是否存有用户信息
      */
-    public static List<GrantedAuthority> getAuthorities(Authentication auth) {
-        if (isValid(auth)) return new ArrayList<>();
-        CustomUserDetails principal = (CustomUserDetails) auth.getPrincipal();
-
-        if (principal == null)  {
-            return new ArrayList<>();
-        } else {
-            return new ArrayList<>(principal.getAuthorities());
-        }
+    public static boolean isAuthenticated() {
+        return getId() != null;
     }
 }

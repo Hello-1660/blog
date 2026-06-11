@@ -1,6 +1,5 @@
-package com.jxcia.blog.blog.security.component;
+package com.jxcia.blog.blog.security.service;
 
-import com.jxcia.blog.blog.security.service.CustomUserDetails;
 import com.jxcia.blog.common.constant.RoleConstant;
 import com.jxcia.blog.mapper.admin.AdminMapper;
 import com.jxcia.blog.mapper.admin.PermissionMapper;
@@ -8,7 +7,6 @@ import com.jxcia.blog.mapper.admin.RoleMapper;
 import com.jxcia.blog.pojo.entity.Admin;
 import com.jxcia.blog.pojo.entity.Permission;
 import com.jxcia.blog.pojo.entity.Role;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Component
 public class AdminUserDetailService implements UserDetailsService {
     @Autowired
@@ -33,7 +30,8 @@ public class AdminUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Admin admin = adminMapper.getByEmail(email);
-        if (admin == null) return null;
+
+        if (admin == null) throw new UsernameNotFoundException("管理员 " + email + " 不存在");
 
         // 查询角色
         List<Role> roleList = roleMapper.getByAdminId(admin.getId());

@@ -14,6 +14,7 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
     @Getter
     private Integer id;
+    @Getter
     private String email;
     private String password;
     private List<GrantedAuthority> authorities;

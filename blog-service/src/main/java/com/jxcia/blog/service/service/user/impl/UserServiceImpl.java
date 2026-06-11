@@ -1,6 +1,7 @@
 package com.jxcia.blog.service.service.user.impl;
 
 import com.jxcia.blog.blog.security.crypto.PasswordEncoder;
+import com.jxcia.blog.blog.security.enums.AccountType;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.constant.*;
@@ -13,10 +14,8 @@ import com.jxcia.blog.pojo.entity.*;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.mapper.user.*;
 import com.jxcia.blog.service.service.user.UserService;
-import com.jxcia.blog.service.util.IpUtil;
 import com.jxcia.blog.service.util.SampleMailUtil;
 import com.jxcia.blog.service.util.VerificationCodeUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -108,10 +107,13 @@ public class UserServiceImpl implements UserService {
         if (!matches) throw new UserLoginException(UserLoginExceptionConstant.PASSWORD_ERROR);
 
         // 返回登录信息
-        String token = jwtTokenUtil.generateUserToken(user);
+        String accessToken = jwtTokenUtil.generateUserAccessToken(user);
+        String refreshToken = jwtTokenUtil.generateRefreshToken(user.getId(), user.getEmail(), AccountType.USER);
         UserLoginVo userLoginVo = new UserLoginVo();
         BeanUtils.copyProperties(user, userLoginVo);
-        userLoginVo.setToken(token);
+
+        userLoginVo.setToken(accessToken);
+        userLoginVo.setRefreshToken(refreshToken);
 
         return userLoginVo;
     }

@@ -1,10 +1,12 @@
 package com.jxcia.blog.service.controller.admin;
 
+import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.entity.Menu;
 import com.jxcia.blog.service.service.admin.MenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,8 @@ public class MenuController {
      * @param menu 菜单信息
      * @return 无
      */
+    @AuthRequired
+    @GetMapping("/save")
     public Result<Void> save(@RequestBody Menu menu) {
         log.info("新增菜单");
         menuService.save(menu);

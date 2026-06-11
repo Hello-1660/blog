@@ -1,6 +1,7 @@
 package com.jxcia.blog.service.service.admin.impl;
 
 import com.jxcia.blog.blog.security.crypto.PasswordEncoder;
+import com.jxcia.blog.blog.security.enums.AccountType;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.constant.AdminConstant;
@@ -56,7 +57,8 @@ public class AdminServiceImpl implements AdminService {
         if (AdminConstant.DISABLE == admin.getStatus()) throw new AdminRegisterException(AdminExceptionConstant.ACCOUNT_DISABLE);
 
         // token
-        String token = jwtTokenUtil.generateAdminToken(admin);
+        String accessToken = jwtTokenUtil.generateAdminAccessToken(admin);
+        String refreshToken = jwtTokenUtil.generateRefreshToken(admin.getId(), admin.getEmail(), AccountType.ADMIN);
 
         return AdminLoginVo.builder()
                 .id(admin.getId())
@@ -66,7 +68,8 @@ public class AdminServiceImpl implements AdminService {
                 .icon(admin.getIcon())
                 .createTime(admin.getCreateTime())
                 .status(admin.getStatus())
-                .token(token)
+                .token(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 
