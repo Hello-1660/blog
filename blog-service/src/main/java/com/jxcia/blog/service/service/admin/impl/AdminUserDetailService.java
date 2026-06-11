@@ -1,5 +1,6 @@
-package com.jxcia.blog.blog.security.service;
+package com.jxcia.blog.service.service.admin.impl;
 
+import com.jxcia.blog.blog.security.service.CustomUserDetails;
 import com.jxcia.blog.common.constant.RoleConstant;
 import com.jxcia.blog.mapper.admin.AdminMapper;
 import com.jxcia.blog.mapper.admin.PermissionMapper;
@@ -13,12 +14,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class AdminUserDetailService implements UserDetailsService {
     @Autowired
     private AdminMapper adminMapper;

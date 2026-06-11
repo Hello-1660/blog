@@ -1,6 +1,5 @@
 package com.jxcia.blog.blog.security.filter;
 
-import com.jxcia.blog.blog.security.service.AdminUserDetailService;
 import com.jxcia.blog.blog.security.service.CustomUserDetails;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
@@ -15,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
-    private AdminUserDetailService adminUserDetailService;
+    private UserDetailsService userDetailService;
     @Value("${jwt.tokenHeader}")
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
@@ -46,6 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 从请求头中提取 token
         String token = parseJwt(request);
 
+        // 检查黑名单
         if (jwtTokenUtil.validateToken(token)) {
             String jti = jwtTokenUtil.getClaimsJtiFromToken(token);
             if (Boolean.TRUE.equals(redisTemplate.hasKey(BLACKLIST_PREFIX + jti))) {
@@ -59,6 +60,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String type = jwtTokenUtil.getClaimsTypeFromToken(token);
             Integer id = jwtTokenUtil.getClaimsIdFromToken(token);
             List<String> roles = jwtTokenUtil.getClaimsRolesFromToken(token);
+
+            if (roles == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             // 根据邮箱从数据中中查询用户
             log.info("checked email: {}", email);
             // 获取账号详情
@@ -83,7 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     private UsernamePasswordAuthenticationToken createAuthentication(String type, String email, Integer id, List<String> roles) {
        if (JwtTokenUtil.isAdmin(type)) {
-           CustomUserDetails userDetails = (CustomUserDetails) adminUserDetailService.loadUserByUsername(email);
+           CustomUserDetails userDetails = (CustomUserDetails) userDetailService.loadUserByUsername(email);
            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
        }
 
