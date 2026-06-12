@@ -43,7 +43,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void save(CommentDto commentDto) {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
 
         // 补充评论信息
         Comment comment = new Comment();
@@ -63,14 +62,13 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void delete(Long commentId) {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
 
         Comment comment = commentMapper.get(commentId);
         if (comment == null) throw new CommentException(CommentExceptionConstant.COMMENT_NOT_FOND);
         Article article = articleMapper.getById(comment.getArticleId());
 
         // 只有作者和本人可以删除评论
-        if (userId.equals(article.getUserId()) || userId.equals(comment.getUserId())) {
+        if (article.getUserId().equals(userId) || comment.getUserId().equals(userId)) {
             // 删除评论
             commentMapper.delete(commentId);
             // 删除点赞信息
@@ -88,7 +86,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void like(Long commentId) {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
 
         Comment comment = commentMapper.get(commentId);
         if (comment == null) throw new CommentException(CommentExceptionConstant.COMMENT_NOT_FOND);

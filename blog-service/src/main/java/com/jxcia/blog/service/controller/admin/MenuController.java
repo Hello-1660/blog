@@ -26,7 +26,6 @@ public class MenuController {
      * @param menu 菜单信息
      * @return 无
      */
-    @AuthRequired
     @GetMapping("/save")
     public Result<Void> save(@RequestBody Menu menu) {
         log.info("新增菜单");

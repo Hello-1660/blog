@@ -3,9 +3,11 @@ package com.jxcia.blog.service;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication(scanBasePackages = "com.jxcia.blog")
 @MapperScan("com.jxcia.blog.mapper")
+@ConfigurationPropertiesScan("com.jxcia.blog")
 public class BlogServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(BlogServiceApplication.class, args);

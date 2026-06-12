@@ -41,7 +41,6 @@ public class AdminController {
      * @param adminLoginDto 管理员登录信息
      * @return 管理员信息
      */
-    @Anonymous
     @PostMapping("/login")
     public Result<AdminLoginVo> login(@RequestBody AdminLoginDto adminLoginDto) {
         log.info("admin login: {}", adminLoginDto);
@@ -53,7 +52,6 @@ public class AdminController {
      * @param adminRegisterDto 管理员注册信息
      * @return 管理员信息
      */
-    @AuthRequired
     @PostMapping("/save")
     public Result<AdminRegisterVo> save(@RequestBody @Valid AdminRegisterDto adminRegisterDto) {
         log.info("admin save: {}", adminRegisterDto);
@@ -65,7 +63,6 @@ public class AdminController {
      * @param id 管理员编号
      * @return 管理员详细
      */
-    @AuthRequired
     @GetMapping("/detail/{id}")
     public Result<AdminVo> detail(@PathVariable Integer id) {
         log.info("admin detail: {}", id);
@@ -77,7 +74,6 @@ public class AdminController {
      * @param adminDto 管理员信息
      * @return 管理员信息
      */
-    @AuthRequired
     @PostMapping("/update")
     public Result<AdminVo> update(@RequestBody AdminDto adminDto) {
         log.info("admin update: {}", adminDto);
@@ -88,7 +84,6 @@ public class AdminController {
      * 获取管理员展示菜单
      * @return 菜单列表
      */
-    @AuthRequired
     @GetMapping("/menus")
     public Result<List<Menu>> menus() {
         log.info("admin menus");
@@ -99,7 +94,6 @@ public class AdminController {
      * 刷新缓存
      * @return 无
      */
-    @AuthRequired
     @GetMapping("/permission/refresh")
     public Result<String> refreshPermission() {
         dynamicSecurityMetadataSource.clearDataSource();

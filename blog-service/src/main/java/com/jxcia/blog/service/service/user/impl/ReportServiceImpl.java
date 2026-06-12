@@ -29,7 +29,6 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void save(ReportDto reportDto) {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
 
         Report report = Report.builder()
                 .objectType(reportDto.getObjectType())

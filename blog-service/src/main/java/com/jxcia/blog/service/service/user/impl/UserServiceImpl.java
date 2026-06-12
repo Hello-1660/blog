@@ -203,7 +203,6 @@ public class UserServiceImpl implements UserService {
     public void likeArticle(Integer articleId) {
         Integer userId = SecurityContextUtil.getId();
 
-        if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
         if (articleId == null) throw new UserException(UserExceptionConstant.ARTICLE_NOT_EXISTS);
 
         UserLikeArticle userLikeArticle = UserLikeArticle.builder()
@@ -266,9 +265,8 @@ public class UserServiceImpl implements UserService {
         if (user == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
 
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
 
-        if (userId.equals(subUserId)) throw new SubscribeException(SubScribeExceptionConstant.CANNOT_SUBSCRIBE_ONESELF);
+        if (subUserId.equals(userId)) throw new SubscribeException(SubScribeExceptionConstant.CANNOT_SUBSCRIBE_ONESELF);
 
         Subscribe subscribe = Subscribe.builder()
                 .userId(userId)
@@ -296,7 +294,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<SubscribeVo> subscribeList() {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
 
         return subscribeMapper.getSubscribeVoByUserId(userId);
     }
@@ -308,7 +305,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<SubscribeVo> fansList() {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
 
         return subscribeMapper.getSubscribeVoBySubscribeId(userId);
     }
@@ -322,7 +318,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVo update(UserUpdateDto userUpdateDto) {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
 
         // 原对象
         User user = userMapper.getUserById(userId);
@@ -351,7 +346,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Email> emailList() {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
 
         return emailMapper.getListByUserId(userId);
     }
@@ -381,7 +375,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserIdentifyVo identify() {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_LOGIN);
 
         return identifyMapper.getIdentifyVoByUserId(userId);
     }
@@ -403,9 +396,9 @@ public class UserServiceImpl implements UserService {
             throw new UserException(UserRegisterExceptionConstant.CONFIRM_PASSWORD_NOT_EQUALS);
 
         // 修改用户密码
-        User findUser = userMapper.findByEmail(userResetPasswordDto.getEmail());
+        Integer userId = SecurityContextUtil.getId();
         User build = User.builder()
-                .id(findUser.getId())
+                .id(userId)
                 .password(userResetPasswordDto.getPassword())
                 .build();
 

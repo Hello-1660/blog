@@ -38,7 +38,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public void save(FavoriteDto favoriteDto) {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
 
         if (favoriteDto.getName() == null || favoriteDto.getName().isEmpty())
             throw new FavoriteException(FavoriteExceptionConstant.NAME_CANNOT_NULL);
@@ -65,7 +64,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public void delete(Long favoriteId) {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
 
         Favorite favorite = favoriteMapper.getById(favoriteId);
 
@@ -112,7 +110,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public void update(Favorite favorite) {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
         if (favorite.getId() == null) throw new FavoriteException(FavoriteExceptionConstant.FAVORITE_NOT_FOUND);
 
         favorite.setUserId(userId);
