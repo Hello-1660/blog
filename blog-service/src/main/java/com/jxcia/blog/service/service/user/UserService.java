@@ -37,13 +37,13 @@ public interface UserService {
      * 获取用户详情信息
      * @return 用户信息
      */
-    UserVo getUser();
+    UserVo getUser(Integer id);
 
     /**
      * 获取用户文章列表
      * @return 文章列表
      */
-    List<Article> getArticleList();
+    List<Article> getArticleList(Integer id);
 
     /**
      * 用户浏览文章
@@ -80,7 +80,7 @@ public interface UserService {
      * 获取关注列表
      * @return 关注列表
      */
-    List<SubscribeVo> subscribeList();
+    List<SubscribeVo> subscribeList(Integer id);
 
     /**
      * 获取粉丝列表
@@ -112,7 +112,7 @@ public interface UserService {
      * 获取用户身份
      * @return 用户身份
      */
-    UserIdentifyVo identify();
+    UserIdentifyVo identify(Integer id);
 
     /**
      * 用户重置密码

@@ -4,6 +4,7 @@ import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ReportDto;
 import com.jxcia.blog.service.service.user.ReportService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +29,7 @@ public class ReportController {
      */
     @AuthRequired
     @PostMapping("/save")
-    public Result<Void> save(@RequestBody ReportDto reportDto) {
+    public Result<Void> save(@RequestBody @Valid ReportDto reportDto) {
         log.info("report save: {}", reportDto);
 
         reportService.save(reportDto);

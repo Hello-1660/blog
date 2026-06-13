@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -57,10 +58,6 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserRegisterVo register(UserRegisterDto userRegisterDto) {
-        // 两次密码不一致
-        if (!userRegisterDto.getPassword().equals(userRegisterDto.getConfirmPassword()))
-            throw new UserRegisterException(UserRegisterExceptionConstant.CONFIRM_PASSWORD_NOT_EQUALS);
-
         // 处理验证码
         boolean verify = verificationCodeUtil.verify(
                 VerificationCodeConstant.VERIFICATION_CODE_REGISTER_PRO + userRegisterDto.getEmail(),
@@ -124,10 +121,13 @@ public class UserServiceImpl implements UserService {
      * @return 用户信息
      */
     @Override
-    public UserVo getUser() {
-        Integer id = SecurityContextUtil.getId();
+    public UserVo getUser(Integer id) {
+        // 判断是否为查看自己
+        if (id == null) id = SecurityContextUtil.getId();
+        // 如果是查看自己，必须登录
+        if (id == null) throw new UserLoginException(UserLoginExceptionConstant.USER_NOT_FIND);
+
         User user = userMapper.getUserById(id);
-        if (user == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
 
         UserVo userVo = new UserVo();
         BeanUtils.copyProperties(user, userVo);
@@ -141,10 +141,19 @@ public class UserServiceImpl implements UserService {
      * @return 文章列表
      */
     @Override
-    public List<Article> getArticleList() {
-        Integer userId = SecurityContextUtil.getId();
-
-        return articleMapper.getByUserId(userId);
+    public List<Article> getArticleList(Integer id) {
+        // 查看自己
+        if (id == null) {
+            id = SecurityContextUtil.getId();
+            // 查看自己必须登录
+            if (id == null) throw new UserLoginException(UserLoginExceptionConstant.USER_NOT_FIND);
+            return articleMapper.getByUserId(id);
+        } else {
+            // 访问其他用户只返回已发布作品
+            return articleMapper.getByUserId(id).stream()
+                    .filter(a -> a.getStatus().equals(ArticleStatusConstant.PUBLIC))
+                    .toList();
+        }
     }
 
     /**
@@ -172,11 +181,32 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserLikeArticleVo> likeList(Integer userId) {
-        if (userId == null) userId = SecurityContextUtil.getId();
+        // 是否查看自己
+        if (userId == null) {
+            userId = SecurityContextUtil.getId();
+            // 查看自己必修登录
+            if (userId == null) throw new UserLoginException(UserLoginExceptionConstant.USER_NOT_FIND);
+            return getUserLikeArticleVoList(userId);
+        } else {
+            // 查看其他用户
+            User user = userMapper.getUserById(userId);
+            // 不展示喜欢列表返回空列表
+            if (user.getLikeShowStatus() == 0) return Collections.emptyList();
+            // 否则返回喜欢列表
+            return getUserLikeArticleVoList(userId);
+        }
+    }
+
+    /**
+     * 获取用户喜欢列表
+     * @param userId 用户编号
+     * @return 用户喜欢列表
+     */
+    private List<UserLikeArticleVo> getUserLikeArticleVoList(Integer userId) {
         // 查询用户点赞文章编号
         List<UserLikeArticle> userLikeArticleList = userLikeArticleMapper.getArticleIdsByUserId(userId);
 
-        if (userLikeArticleList == null || userLikeArticleList.isEmpty()) return null;
+        if (userLikeArticleList == null || userLikeArticleList.isEmpty()) return Collections.emptyList();
 
         List<Integer> articleIdList = userLikeArticleList.stream().map(UserLikeArticle::getArticleId).toList();
         List<Article> articleList = articleMapper.getByArticleIds(articleIdList);
@@ -292,10 +322,12 @@ public class UserServiceImpl implements UserService {
      * @return 关注列表
      */
     @Override
-    public List<SubscribeVo> subscribeList() {
-        Integer userId = SecurityContextUtil.getId();
+    public List<SubscribeVo> subscribeList(Integer id) {
+        // 查看自己
+        if (id == null) id = SecurityContextUtil.getId();
+        if (id == null) throw new SubscribeException(SubScribeExceptionConstant.SUBSCRIBE_USER_NOT_FOUND);
 
-        return subscribeMapper.getSubscribeVoByUserId(userId);
+        return subscribeMapper.getSubscribeVoByUserId(id);
     }
 
     /**
@@ -373,10 +405,12 @@ public class UserServiceImpl implements UserService {
      * @return 用户身份
      */
     @Override
-    public UserIdentifyVo identify() {
-        Integer userId = SecurityContextUtil.getId();
+    public UserIdentifyVo identify(Integer id) {
+        // 查看自己
+        if (id == null) id = SecurityContextUtil.getId();
+        if (id == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
 
-        return identifyMapper.getIdentifyVoByUserId(userId);
+        return identifyMapper.getIdentifyVoByUserId(id);
     }
 
     /**
@@ -392,8 +426,6 @@ public class UserServiceImpl implements UserService {
 
         // 校验数据
         if (!verify) throw new UserException(VerificationCodeConstant.VERIFICATION_CODE_ERROR);
-        if (!userResetPasswordDto.getPassword().equals(userResetPasswordDto.getConfirmPassword()))
-            throw new UserException(UserRegisterExceptionConstant.CONFIRM_PASSWORD_NOT_EQUALS);
 
         // 修改用户密码
         Integer userId = SecurityContextUtil.getId();

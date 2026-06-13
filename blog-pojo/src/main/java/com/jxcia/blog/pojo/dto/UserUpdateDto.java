@@ -1,5 +1,6 @@
 package com.jxcia.blog.pojo.dto;
 
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 
 @Data
@@ -9,6 +10,7 @@ public class UserUpdateDto {
     // 用户头像
     private String icon;
     // 用户邮箱
+    @Email
     private String email;
     // 用户简介
     private String description;

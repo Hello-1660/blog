@@ -16,6 +16,7 @@ import com.jxcia.blog.mapper.user.FavoriteMapper;
 import com.jxcia.blog.service.service.user.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,10 +40,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     public void save(FavoriteDto favoriteDto) {
         Integer userId = SecurityContextUtil.getId();
 
-        if (favoriteDto.getName() == null || favoriteDto.getName().isEmpty())
-            throw new FavoriteException(FavoriteExceptionConstant.NAME_CANNOT_NULL);
-
-
         List<Favorite> f = favoriteMapper.getByFavoriteDto(favoriteDto);
         if (!f.isEmpty()) throw new FavoriteException(FavoriteExceptionConstant.NAME_CANNOT_EQUALS);
 
@@ -61,6 +58,7 @@ public class FavoriteServiceImpl implements FavoriteService {
      *
      * @param favoriteId 收藏夹编号
      */
+    @Transactional
     @Override
     public void delete(Long favoriteId) {
         Integer userId = SecurityContextUtil.getId();
@@ -72,7 +70,10 @@ public class FavoriteServiceImpl implements FavoriteService {
         if (!favorite.getUserId().equals(userId))
             throw new FavoriteException(FavoriteExceptionConstant.CANNOT_OTHER_USER_DELETE_FAVORITE);
 
+        // 删除收藏夹
         favoriteMapper.deleteById(favoriteId);
+        // 删除收藏夹文章关系
+        favoriteMapper.deleteFavoriteArticleByFavoriteId(favoriteId);
     }
 
     /**
@@ -82,9 +83,6 @@ public class FavoriteServiceImpl implements FavoriteService {
      */
     @Override
     public void addArticle(FavoriteArticle favoriteArticle) {
-        if (favoriteArticle.getArticleId() == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
-        if (favoriteArticle.getFavoriteId() == null) throw new FavoriteException(FavoriteExceptionConstant.FAVORITE_NOT_FOUND);
-
         Article article = articleMapper.getById(favoriteArticle.getArticleId());
         if (article == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
 
@@ -124,7 +122,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public List<Favorite> favoriteList() {
         Integer userId = SecurityContextUtil.getId();
-        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
 
         return favoriteMapper.getListByUserId(userId);
     }

@@ -1,6 +1,7 @@
 package com.jxcia.blog.service.controller.user;
 
 import com.jxcia.blog.blog.security.annotation.Anonymous;
+import com.jxcia.blog.blog.security.annotation.AuthOptional;
 import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.common.constant.VerificationCodeConstant;
 import com.jxcia.blog.common.result.Result;
@@ -62,24 +63,24 @@ public class UserController {
      * 查看用户详细
      * @return 用户详细
      */
-    @Anonymous
-    @GetMapping("/detail")
-    public Result<UserVo> detail() {
-        log.info("user detail");
+    @AuthOptional
+    @GetMapping({"/detail/{id}", "/detail"})
+    public Result<UserVo> detail(@PathVariable(required = false) Integer id) {
+        log.info("user detail: {}", id);
 
-        return Result.success(userService.getUser());
+        return Result.success(userService.getUser(id));
     }
 
     /**
      * 获取用户文章列表
      * @return 文章列表
      */
-    @AuthRequired
-    @GetMapping("/articleList")
-    public Result<List<Article>> articleList() {
-        log.info("article list");
+    @AuthOptional
+    @GetMapping({"/articleList/{id}", "/articleList"})
+    public Result<List<Article>> articleList(@PathVariable(required = false) Integer id) {
+        log.info("user article list: {}", id);
 
-        return Result.success(userService.getArticleList());
+        return Result.success(userService.getArticleList(id));
     }
 
     /**
@@ -87,7 +88,7 @@ public class UserController {
      * @param articleId 文章编号
      * @return 无
      */
-    @AuthRequired
+    @Anonymous
     @PostMapping("/browse")
     public Result<Void> browse(@NotNull Integer articleId) {
         log.info("browse article: {}", articleId);
@@ -101,12 +102,12 @@ public class UserController {
      * 用户喜欢列表
      * @return 文章列表
      */
-    @Anonymous
-    @GetMapping("/likeList")
-    public Result<List<UserLikeArticleVo>> likeList() {
-        log.info("like list");
+    @AuthOptional
+    @GetMapping({"/likeList/{id}", "/likeList"})
+    public Result<List<UserLikeArticleVo>> likeList(@PathVariable Integer id) {
+        log.info("user like list:{}", id);
 
-        return Result.success(userService.likeList(null));
+        return Result.success(userService.likeList(id));
     }
 
     /**
@@ -156,12 +157,12 @@ public class UserController {
      * 查看关注列表
      * @return 关注列表
      */
-    @AuthRequired
-    @GetMapping("/subscribeList")
-    public Result<List<SubscribeVo>> subscribeList() {
-        log.info("subscribe list");
+    @AuthOptional
+    @GetMapping({"/subscribeList/{id}", "/subscribeList"})
+    public Result<List<SubscribeVo>> subscribeList(@PathVariable(required = false) Integer id) {
+        log.info("user subscribe list: {}", id);
 
-        return Result.success(userService.subscribeList());
+        return Result.success(userService.subscribeList(id));
     }
 
     /**
@@ -183,7 +184,7 @@ public class UserController {
      */
     @AuthRequired
     @PostMapping("/update")
-    public Result<UserVo> update(@RequestBody UserUpdateDto userUpdateDto) {
+    public Result<UserVo> update(@RequestBody @Valid UserUpdateDto userUpdateDto) {
         log.info("update user: {}", userUpdateDto);
 
         return Result.success(userService.update(userUpdateDto));
@@ -222,12 +223,12 @@ public class UserController {
      * 获取用户身份
      * @return 用户身份
      */
-    @AuthRequired
-    @GetMapping("/identify")
-    public Result<UserIdentifyVo> identify() {
-        log.info("identify");
+    @AuthOptional
+    @GetMapping({"/identify/{id}", "/identify"})
+    public Result<UserIdentifyVo> identify(@PathVariable(required = false) Integer id) {
+        log.info("identify id: {}", id);
 
-        return Result.success(userService.identify());
+        return Result.success(userService.identify(id));
     }
 
     /**
@@ -237,7 +238,7 @@ public class UserController {
      */
     @AuthRequired
     @PostMapping("/resetPassword")
-    public Result<Void> resetPassword(@RequestBody UserResetPasswordDto userResetPasswordDto) {
+    public Result<Void> resetPassword(@RequestBody @Valid UserResetPasswordDto userResetPasswordDto) {
         log.info("reset password: {}", userResetPasswordDto);
 
         userService.resetPassword(userResetPasswordDto);

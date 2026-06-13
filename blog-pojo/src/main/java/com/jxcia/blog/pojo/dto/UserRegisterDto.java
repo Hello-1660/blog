@@ -1,10 +1,12 @@
 package com.jxcia.blog.pojo.dto;
 
+import com.jxcia.blog.pojo.validation.PasswordMatch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
+@PasswordMatch
 public class UserRegisterDto {
     // 用户昵称
     @NotBlank

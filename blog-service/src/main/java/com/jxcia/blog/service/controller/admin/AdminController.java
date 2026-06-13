@@ -42,7 +42,7 @@ public class AdminController {
      * @return 管理员信息
      */
     @PostMapping("/login")
-    public Result<AdminLoginVo> login(@RequestBody AdminLoginDto adminLoginDto) {
+    public Result<AdminLoginVo> login(@RequestBody @Valid AdminLoginDto adminLoginDto) {
         log.info("admin login: {}", adminLoginDto);
         return Result.success(adminService.login(adminLoginDto));
     }

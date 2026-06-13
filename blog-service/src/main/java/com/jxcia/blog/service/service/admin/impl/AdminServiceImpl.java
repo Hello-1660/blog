@@ -84,8 +84,6 @@ public class AdminServiceImpl implements AdminService {
         Admin admin = adminMapper.getByEmail(adminRegisterDto.getEmail());
 
         if (admin != null) throw new AdminRegisterException(AdminRegisterExceptionConstant.EMAIL_EXIST);
-        if (!adminRegisterDto.getPassword().equals(adminRegisterDto.getConfirmPassword()))
-            throw new AdminRegisterException(AdminRegisterExceptionConstant.CONFIRM_PASSWORD_NOT_EQUALS);
 
         Admin build = Admin.builder()
                 .nickname(adminRegisterDto.getNickname())

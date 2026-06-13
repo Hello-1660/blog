@@ -8,6 +8,7 @@ import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Favorite;
 import com.jxcia.blog.pojo.entity.FavoriteArticle;
 import com.jxcia.blog.service.service.user.FavoriteService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class FavoriteController {
      */
     @AuthRequired
     @PostMapping("/save")
-    public Result<Void> save(@RequestBody FavoriteDto favoriteDto) {
+    public Result<Void> save(@RequestBody @Valid FavoriteDto favoriteDto) {
         log.info("save favorite: {}", favoriteDto);
 
         favoriteService.save(favoriteDto);
@@ -61,7 +62,7 @@ public class FavoriteController {
      */
     @AuthRequired
     @PostMapping("/addArticle")
-    public Result<Void> addArticle(@RequestBody FavoriteArticle favoriteArticle) {
+    public Result<Void> addArticle(@RequestBody @Valid FavoriteArticle favoriteArticle) {
         log.info("addArticle favorite: {}", favoriteArticle);
 
         favoriteService.addArticle(favoriteArticle);
@@ -88,7 +89,7 @@ public class FavoriteController {
      * 查看收藏夹列表
      * @return 收藏夹列表
      */
-    @Anonymous
+    @AuthRequired
     @GetMapping("/list")
     public Result<List<Favorite>> list() {
         log.info("favorite list");

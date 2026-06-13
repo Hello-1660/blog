@@ -92,4 +92,11 @@ public interface FavoriteMapper {
             "from favorite_article_relation far " +
             "left join article a on far.article_id = a.id")
     List<Article> getArticleByFavoriteId(Integer favoriteId);
+
+    /**
+     * 根据收藏夹编号删除收藏夹文章关系
+     * @param favoriteId 收藏夹编号
+     */
+    @Delete("delete from favorite_article_relation where favorite_id = #{favoriteId}")
+    void deleteFavoriteArticleByFavoriteId(Long favoriteId);
 }
