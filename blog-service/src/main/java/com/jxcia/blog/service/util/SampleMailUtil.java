@@ -1,5 +1,6 @@
 package com.jxcia.blog.service.util;
 
+import com.jxcia.blog.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,7 @@ public class SampleMailUtil {
     protected String genMessageID(String mailFrom) {
         // 生成Message-ID:
         if (!mailFrom.contains("@")) {
-            throw new IllegalArgumentException("Invalid email format: " + mailFrom);
+            throw new ServiceException("Invalid email format: " + mailFrom);
         }
         String domain = mailFrom.split("@")[1];
         UUID uuid = UUID.randomUUID();

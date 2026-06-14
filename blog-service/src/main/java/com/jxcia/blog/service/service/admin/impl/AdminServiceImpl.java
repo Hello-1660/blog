@@ -7,6 +7,7 @@ import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.constant.AdminConstant;
 import com.jxcia.blog.common.constant.AdminExceptionConstant;
 import com.jxcia.blog.common.constant.AdminRegisterExceptionConstant;
+import com.jxcia.blog.common.exception.AdminException;
 import com.jxcia.blog.common.exception.AdminRegisterException;
 import com.jxcia.blog.mapper.admin.MenuMapper;
 import com.jxcia.blog.pojo.dto.AdminDto;
@@ -51,10 +52,10 @@ public class AdminServiceImpl implements AdminService {
         Admin admin = adminMapper.getByEmail(adminLoginDto.getEmail());
 
         // 账号校验
-        if (admin == null) throw new AdminRegisterException(AdminExceptionConstant.ACCOUNT_NOT_FUND);
+        if (admin == null) throw new AdminException(AdminExceptionConstant.ACCOUNT_NOT_FUND);
         if (!passwordEncoder.matches(adminLoginDto.getPassword(), admin.getPassword()))
-            throw new AdminRegisterException(AdminExceptionConstant.PASSWORD_ERROR);
-        if (AdminConstant.DISABLE == admin.getStatus()) throw new AdminRegisterException(AdminExceptionConstant.ACCOUNT_DISABLE);
+            throw new AdminException(AdminExceptionConstant.PASSWORD_ERROR);
+        if (AdminConstant.DISABLE == admin.getStatus()) throw new AdminException(AdminExceptionConstant.ACCOUNT_DISABLE);
 
         // token
         String accessToken = jwtTokenUtil.generateAdminAccessToken(admin);
