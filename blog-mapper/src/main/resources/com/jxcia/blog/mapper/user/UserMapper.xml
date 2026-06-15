@@ -23,4 +23,12 @@
             <if test="email != null and email != ''">email = #{email}</if>
         </where>
     </select>
+
+    <delete id="deleteByIdList">
+        delete from email
+        where id in
+        <foreach collection="idList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

@@ -1,6 +1,7 @@
 package com.jxcia.blog.mapper.user;
 
 import com.jxcia.blog.pojo.entity.User;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -46,4 +47,10 @@ public interface UserMapper {
      * @param user 用户信息
      */
     void update(User user);
+
+    /**
+     * 批量删除邮件
+     * @param idList 邮寄列表
+     */
+    void deleteByIdList(List<Integer> idList);
 }

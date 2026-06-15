@@ -66,4 +66,20 @@ public interface SubscribeMapper {
      */
     @Select("select user_id from subscribe where sub_user_id = #{userId}")
     List<Integer> getUserIdListBySubscribeId(Integer userId);
+
+    /**
+     * 获取关注数量
+     * @param id 用户编号
+     * @return 用户关注数量
+     */
+    @Select("select count(*) from subscribe where user_id = #{id}")
+    Integer getSubscribeNumberByUserId(Integer id);
+
+    /**
+     * 获取粉丝数量
+     * @param id 关注用户编号
+     * @return 粉丝数量
+     */
+    @Select("select count(*) from subscribe where sub_user_id = #{id}")
+    Integer getUserNumberBySubUserId(Integer id);
 }

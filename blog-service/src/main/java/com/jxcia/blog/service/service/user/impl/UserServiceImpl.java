@@ -265,8 +265,10 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.getUserById(id);
         if (user == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
 
-        // 获取用户关注列表
-        List<SubscribeVo> subscribeVoList = subscribeMapper.getSubscribeVoByUserId(user.getId());
+        // 获取关注数
+        Integer subscribeNumber = subscribeMapper.getSubscribeNumberByUserId(user.getId());
+        // 获取粉丝数
+        Integer fansNumber = subscribeMapper.getUserNumberBySubUserId(user.getId());
 
         List<UserLikeArticleVo> userLikeArticleVoList = null;
         // 查看用户喜欢是否公开，公开则返回，私密则不返回
@@ -276,7 +278,8 @@ public class UserServiceImpl implements UserService {
 
         UserVisitVo userVisitVo = new UserVisitVo();
         BeanUtils.copyProperties(user, userVisitVo);
-        userVisitVo.setSubscribeList(subscribeVoList);
+        userVisitVo.setSubscribeNumber(subscribeNumber);
+        userVisitVo.setFansNumber(fansNumber);
         userVisitVo.setUserLikeArticleList(userLikeArticleVoList);
 
         return userVisitVo;

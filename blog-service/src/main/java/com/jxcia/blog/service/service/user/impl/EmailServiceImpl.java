@@ -2,6 +2,8 @@ package com.jxcia.blog.service.service.user.impl;
 
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.constant.EmailConstant;
+import com.jxcia.blog.common.constant.EmailExceptionConstant;
+import com.jxcia.blog.common.exception.EmailException;
 import com.jxcia.blog.mapper.user.ArticleMapper;
 import com.jxcia.blog.mapper.user.EmailMapper;
 import com.jxcia.blog.mapper.user.SubscribeMapper;
@@ -12,6 +14,7 @@ import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.service.service.user.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,6 +69,50 @@ public class EmailServiceImpl implements EmailService {
         emailMapper.insertByEmailList(emailList);
     }
 
+    /**
+     * 阅读邮件
+     *
+     * @param id 邮件编号
+     * @return 邮件
+     */
+    @Override
+    public Email read(Integer id) {
+        Email email = emailMapper.getById(id);
+        if (email == null) throw new EmailException(EmailExceptionConstant.NOT_FOUND);
+
+        // 设为已读
+        Email setEmail = Email.builder().id(id).status(EmailConstant.READ).build();
+        emailMapper.update(setEmail);
+
+        return email;
+    }
+
+    /**
+     * 全部已读
+     */
+    @Override
+    public void allRead() {
+        Integer userId = SecurityContextUtil.getId();
+        emailMapper.UpdateStatusByUserId(userId, EmailConstant.READ);
+    }
+
+    /**
+     * 批量删除邮件
+     *
+     * @param ids 邮件列表
+     */
+    @Transactional
+    @Override
+    public void deleteByEmailList(List<Integer> ids) {
+        userMapper.deleteByIdList(ids);
+    }
+
+    /**
+     * 获取推送文章邮件内容
+     * @param user 作者
+     * @param article 文章
+     * @return 邮件内容
+     */
     private String emailContent2Json(User user, Article article) {
         return  "[" +
                 "{\"type\": \"text\", \"value\": \"您关注的\"}," +

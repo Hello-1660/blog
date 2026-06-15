@@ -9,4 +9,14 @@
             (#{e.title}, #{e.content}, #{e.receiverId}, #{e.senderId}, #{e.createTime}, #{e.status})
         </foreach>
     </insert>
+    
+    <update id="update">
+        update email 
+        <set>
+            <if test="title != null and title != ''">title = #{title}, </if>
+            <if test="content != null and content != ''">content = #{content}, </if>
+            <if test="status != null">status = #{status}</if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>
