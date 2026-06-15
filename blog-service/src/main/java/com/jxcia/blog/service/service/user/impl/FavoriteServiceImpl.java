@@ -2,17 +2,18 @@ package com.jxcia.blog.service.service.user.impl;
 
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.constant.ArticleExceptionConstant;
+import com.jxcia.blog.common.constant.FavoriteConstant;
 import com.jxcia.blog.common.constant.FavoriteExceptionConstant;
 import com.jxcia.blog.common.constant.UserExceptionConstant;
-import com.jxcia.blog.common.exception.ArticleException;
-import com.jxcia.blog.common.exception.FavoriteException;
-import com.jxcia.blog.common.exception.UserLoginException;
+import com.jxcia.blog.common.exception.*;
+import com.jxcia.blog.mapper.user.UserMapper;
 import com.jxcia.blog.pojo.dto.FavoriteDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Favorite;
 import com.jxcia.blog.pojo.entity.FavoriteArticle;
 import com.jxcia.blog.mapper.user.ArticleMapper;
 import com.jxcia.blog.mapper.user.FavoriteMapper;
+import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.service.service.user.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     private FavoriteMapper favoriteMapper;
     @Autowired
     private ArticleMapper articleMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 新增收藏夹
@@ -120,10 +123,18 @@ public class FavoriteServiceImpl implements FavoriteService {
      * @return 收藏夹列表
      */
     @Override
-    public List<Favorite> favoriteList() {
-        Integer userId = SecurityContextUtil.getId();
-
-        return favoriteMapper.getListByUserId(userId);
+    public List<Favorite> favoriteList(Integer id) {
+        if (id == null) {
+            // 查看自己
+            id = SecurityContextUtil.getId();
+            if (id == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+            return favoriteMapper.getListByUserId(id);
+        } else {
+            // 查看其他用户
+            List<Favorite> favoriteList = favoriteMapper.getListByUserId(id);
+            // 返回公共列表
+            return favoriteList.stream().filter(f -> f.getStatus() == FavoriteConstant.PUBLIC).toList();
+        }
     }
 
     /**

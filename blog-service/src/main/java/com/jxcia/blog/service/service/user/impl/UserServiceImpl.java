@@ -186,15 +186,14 @@ public class UserServiceImpl implements UserService {
             userId = SecurityContextUtil.getId();
             // 查看自己必修登录
             if (userId == null) throw new UserNotLoginException(UserExceptionConstant.USER_NOT_LOGIN);
-            return getUserLikeArticleVoList(userId);
         } else {
             // 查看其他用户
             User user = userMapper.getUserById(userId);
             // 不展示喜欢列表返回空列表
-            if (user.getLikeShowStatus() == 0) return Collections.emptyList();
+            if (user.getLikeShowStatus() == UserStatusConstant.USER_LIKE_PRIVATE) return Collections.emptyList();
             // 否则返回喜欢列表
-            return getUserLikeArticleVoList(userId);
         }
+        return getUserLikeArticleVoList(userId);
     }
 
     /**

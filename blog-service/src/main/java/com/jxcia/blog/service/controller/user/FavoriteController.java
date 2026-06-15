@@ -90,11 +90,11 @@ public class FavoriteController {
      * @return 收藏夹列表
      */
     @AuthRequired
-    @GetMapping("/list")
-    public Result<List<Favorite>> list() {
-        log.info("favorite list");
+    @GetMapping({"/list/{id}", "/list"})
+    public Result<List<Favorite>> list(@PathVariable Integer id) {
+        log.info("favorite list: {}", id);
 
-        return Result.success(favoriteService.favoriteList());
+        return Result.success(favoriteService.favoriteList(id));
     }
 
     /**

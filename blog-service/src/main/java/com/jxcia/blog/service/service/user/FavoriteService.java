@@ -40,7 +40,7 @@ public interface FavoriteService {
      * 查看收藏夹列表
      * @return 收藏夹列表
      */
-    List<Favorite> favoriteList();
+    List<Favorite> favoriteList(Integer id);
 
     /**
      * 查看收藏夹文章列表
