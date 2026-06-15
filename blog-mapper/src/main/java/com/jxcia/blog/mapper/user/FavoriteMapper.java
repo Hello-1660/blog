@@ -90,7 +90,8 @@ public interface FavoriteMapper {
      */
     @Select("select a.* " +
             "from favorite_article_relation far " +
-            "left join article a on far.article_id = a.id")
+            "left join article a on far.article_id = a.id " +
+            "where far.favorite_id = #{favoriteId}")
     List<Article> getArticleByFavoriteId(Integer favoriteId);
 
     /**

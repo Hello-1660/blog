@@ -48,4 +48,17 @@ public interface FavoriteService {
      * @return 收藏夹文章列表
      */
     List<Article> listArticle(Integer favoriteId);
+
+    /**
+     * 移除收藏夹中的文章
+     * @param favoriteId 收藏夹编号
+     * @param articleId 文章编号
+     */
+    void removeArticle(Long favoriteId, Integer articleId);
+
+    /**
+     * 移除收藏夹中所有文章
+     * @param favoriteId 收藏夹编号
+     */
+    void removeAllArticles(Long favoriteId);
 }

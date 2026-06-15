@@ -102,8 +102,16 @@ public class ArticleServiceImpl implements ArticleService {
         articleVo.setUserNickname(user.getNickname());
         articleVo.setUserIcon(user.getIcon());
 
-        // 用户可以查看自己的文章，其他用户只能查看公开文章
+        // 查询当前用户是否点赞该文章
         Integer userId = SecurityContextUtil.getId();
+        if (userId != null) {
+            UserLikeArticle ula = userLikeArticleMapper.getByUserLikeArticle(
+                UserLikeArticle.builder().userId(userId).articleId(id).build()
+            );
+            articleVo.setIsLiked(ula != null);
+        }
+
+        // 用户可以查看自己的文章，其他用户只能查看公开文章
         if (articleVo.getUserId().equals(userId)) {
             return articleVo;
         } else {

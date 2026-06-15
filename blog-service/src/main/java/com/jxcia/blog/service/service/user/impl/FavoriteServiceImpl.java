@@ -149,4 +149,42 @@ public class FavoriteServiceImpl implements FavoriteService {
 
         return favoriteMapper.getArticleByFavoriteId(favoriteId);
     }
+
+    /**
+     * 移除收藏夹中的文章
+     *
+     * @param favoriteId 收藏夹编号
+     * @param articleId 文章编号
+     */
+    @Override
+    public void removeArticle(Long favoriteId, Integer articleId) {
+        Integer userId = SecurityContextUtil.getId();
+
+        Favorite favorite = favoriteMapper.getById(favoriteId);
+        if (favorite == null) throw new FavoriteException(FavoriteExceptionConstant.FAVORITE_NOT_FOUND);
+        if (!favorite.getUserId().equals(userId))
+            throw new FavoriteException(FavoriteExceptionConstant.CANNOT_OTHER_USER_DELETE_FAVORITE);
+
+        FavoriteArticle fa = new FavoriteArticle();
+        fa.setFavoriteId(favoriteId);
+        fa.setArticleId(articleId);
+        favoriteMapper.deleteFavoriteArticleByFavoriteArticle(fa);
+    }
+
+    /**
+     * 移除收藏夹中所有文章
+     *
+     * @param favoriteId 收藏夹编号
+     */
+    @Override
+    public void removeAllArticles(Long favoriteId) {
+        Integer userId = SecurityContextUtil.getId();
+
+        Favorite favorite = favoriteMapper.getById(favoriteId);
+        if (favorite == null) throw new FavoriteException(FavoriteExceptionConstant.FAVORITE_NOT_FOUND);
+        if (!favorite.getUserId().equals(userId))
+            throw new FavoriteException(FavoriteExceptionConstant.CANNOT_OTHER_USER_DELETE_FAVORITE);
+
+        favoriteMapper.deleteFavoriteArticleByFavoriteId(favoriteId);
+    }
 }

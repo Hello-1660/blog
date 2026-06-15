@@ -91,7 +91,7 @@ public class FavoriteController {
      */
     @AuthRequired
     @GetMapping({"/list/{id}", "/list"})
-    public Result<List<Favorite>> list(@PathVariable Integer id) {
+    public Result<List<Favorite>> list(@PathVariable(required = false) Integer id) {
         log.info("favorite list: {}", id);
 
         return Result.success(favoriteService.favoriteList(id));
@@ -108,5 +108,36 @@ public class FavoriteController {
         log.info("favorite listArticle: {}", favoriteId);
 
         return Result.success(favoriteService.listArticle(favoriteId));
+    }
+
+    /**
+     * 移除收藏夹中的文章
+     * @param favoriteId 收藏夹编号
+     * @param articleId 文章编号
+     * @return 无
+     */
+    @AuthRequired
+    @DeleteMapping("/removeArticle")
+    public Result<Void> removeArticle(Long favoriteId, Integer articleId) {
+        log.info("removeArticle favorite: {} article: {}", favoriteId, articleId);
+
+        favoriteService.removeArticle(favoriteId, articleId);
+
+        return Result.success();
+    }
+
+    /**
+     * 移除收藏夹中所有文章
+     * @param favoriteId 收藏夹编号
+     * @return 无
+     */
+    @AuthRequired
+    @DeleteMapping("/removeAllArticles/{favoriteId}")
+    public Result<Void> removeAllArticles(@PathVariable Long favoriteId) {
+        log.info("removeAllArticles favorite: {}", favoriteId);
+
+        favoriteService.removeAllArticles(favoriteId);
+
+        return Result.success();
     }
 }

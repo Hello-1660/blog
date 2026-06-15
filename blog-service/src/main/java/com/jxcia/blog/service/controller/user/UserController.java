@@ -104,7 +104,7 @@ public class UserController {
      */
     @AuthOptional
     @GetMapping({"/likeList/{id}", "/likeList"})
-    public Result<List<UserLikeArticleVo>> likeList(@PathVariable Integer id) {
+    public Result<List<UserLikeArticleVo>> likeList(@PathVariable(required = false) Integer id) {
         log.info("user like list:{}", id);
 
         return Result.success(userService.likeList(id));

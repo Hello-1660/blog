@@ -30,4 +30,6 @@ public class ArticleVo {
     private Integer status;
     // 文章分类编号
     private Integer categoryId;
+    // 当前用户是否已点赞
+    private Boolean isLiked;
 }
