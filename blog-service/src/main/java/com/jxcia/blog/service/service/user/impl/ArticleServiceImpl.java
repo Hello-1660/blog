@@ -12,6 +12,7 @@ import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
+import com.jxcia.blog.pojo.dto.ArticleUpdateDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.entity.UserLikeArticle;
@@ -129,17 +130,24 @@ public class ArticleServiceImpl implements ArticleService {
     /**
      * 更新文章
      *
-     * @param article 更新文章信息
-     * @return 文章信息
+     * @param dto 更新文章信息
      */
     @Override
-    public Article update(Article article) {
-        if (article.getId() == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+    public void update(ArticleUpdateDto dto) {
+        if (dto.getId() == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
 
+        Article article = articleMapper.getById(dto.getId());
+        if (article == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+
+        article.setIcon(dto.getIcon());
+        article.setTitle(dto.getTitle());
+        article.setContent(dto.getContent());
+        article.setSort(dto.getSort());
+        article.setStatus(dto.getStatus());
+        article.setCategoryId(dto.getCategoryId());
         article.setUpdateTime(LocalDateTime.now());
-        articleMapper.update(article);
 
-        return article;
+        articleMapper.update(article);
     }
 
     /**

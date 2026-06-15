@@ -9,7 +9,7 @@
             <if test="content != null and content != ''">content = #{content},</if>
             <if test="sort != null">sort = #{sort},</if>
             <if test="status != null">status = #{status},</if>
-            <if test="categoryId != null">categoryId = #{categoryId},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
             update_time = #{updateTime}
         </set>
         where id = #{id}

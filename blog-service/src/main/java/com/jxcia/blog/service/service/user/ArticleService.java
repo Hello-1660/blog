@@ -4,7 +4,7 @@ import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
-import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.dto.ArticleUpdateDto;
 import com.jxcia.blog.pojo.vo.ArticleSearchVo;
 import com.jxcia.blog.pojo.vo.ArticleVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
@@ -51,8 +51,7 @@ public interface ArticleService {
 
     /**
      * 更新文章
-     * @param article 更新文章信息
-     * @return 文章信息
+     * @param articleUpdateDto 更新文章信息
      */
-    Article update(Article article);
+    void update(ArticleUpdateDto articleUpdateDto);
 }
