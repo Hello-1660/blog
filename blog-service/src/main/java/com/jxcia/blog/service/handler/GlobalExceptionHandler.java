@@ -1,7 +1,10 @@
 package com.jxcia.blog.service.handler;
 
+import com.jxcia.blog.common.constant.UserExceptionConstant;
 import com.jxcia.blog.common.exception.BaseException;
 import com.jxcia.blog.common.exception.ServiceException;
+import com.jxcia.blog.common.exception.UserNotLoginException;
+import com.jxcia.blog.common.exception.UserNotPermissionException;
 import com.jxcia.blog.common.result.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -13,6 +16,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+    @ExceptionHandler(UserNotLoginException.class)
+    public Result<Void> userNotLogin(UserNotLoginException e) {
+        log.error(e.getMessage());
+        return Result.unauthorized(e.getMessage());
+    }
+
+    @ExceptionHandler(UserNotPermissionException.class)
+    public Result<Void> userNotPermission(UserNotPermissionException e) {
+        log.error(e.getMessage());
+        return Result.forbidden(e.getMessage());
+    }
 
     @ExceptionHandler(BaseException.class)
     public Result<Void> handleBaseException(BaseException e, HttpServletRequest request) {

@@ -1,6 +1,7 @@
 package com.jxcia.blog.mapper.user;
 
 import com.jxcia.blog.pojo.entity.Email;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -15,4 +16,10 @@ public interface EmailMapper {
      */
     @Select("select * from email where receiver_id = #{userId}")
     List<Email> getListByUserId(Integer userId);
+
+    /**
+     * 批量插入邮件数据
+     * @param emailList 邮件列表
+     */
+    void insertByEmailList(List<Email> emailList);
 }

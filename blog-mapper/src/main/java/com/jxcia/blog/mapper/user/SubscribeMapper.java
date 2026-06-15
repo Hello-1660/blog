@@ -58,4 +58,12 @@ public interface SubscribeMapper {
             "inner join user u on s.user_id = u.id " +
             "where s.sub_user_id = #{subscribeId}")
     List<SubscribeVo> getSubscribeVoBySubscribeId(Integer subscribeId);
+
+    /**
+     * 查询粉丝编号列表
+     * @param userId 用户编号
+     * @return 粉丝编号列表
+     */
+    @Select("select user_id from subscribe where sub_user_id = #{userId}")
+    List<Integer> getUserIdListBySubscribeId(Integer userId);
 }

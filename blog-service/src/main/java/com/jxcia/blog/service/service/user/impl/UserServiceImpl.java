@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
         // 判断是否为查看自己
         if (id == null) id = SecurityContextUtil.getId();
         // 如果是查看自己，必须登录
-        if (id == null) throw new UserLoginException(UserLoginExceptionConstant.USER_NOT_FIND);
+        if (id == null) throw new UserNotLoginException(UserExceptionConstant.USER_NOT_LOGIN);
 
         User user = userMapper.getUserById(id);
 
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
         if (id == null) {
             id = SecurityContextUtil.getId();
             // 查看自己必须登录
-            if (id == null) throw new UserLoginException(UserLoginExceptionConstant.USER_NOT_FIND);
+            if (id == null) throw new UserNotLoginException(UserExceptionConstant.USER_NOT_LOGIN);
             return articleMapper.getByUserId(id);
         } else {
             // 访问其他用户只返回已发布作品
@@ -185,7 +185,7 @@ public class UserServiceImpl implements UserService {
         if (userId == null) {
             userId = SecurityContextUtil.getId();
             // 查看自己必修登录
-            if (userId == null) throw new UserLoginException(UserLoginExceptionConstant.USER_NOT_FIND);
+            if (userId == null) throw new UserNotLoginException(UserExceptionConstant.USER_NOT_LOGIN);
             return getUserLikeArticleVoList(userId);
         } else {
             // 查看其他用户
@@ -325,7 +325,7 @@ public class UserServiceImpl implements UserService {
     public List<SubscribeVo> subscribeList(Integer id) {
         // 查看自己
         if (id == null) id = SecurityContextUtil.getId();
-        if (id == null) throw new SubscribeException(SubScribeExceptionConstant.SUBSCRIBE_USER_NOT_FOUND);
+        if (id == null) throw new UserNotLoginException(UserExceptionConstant.USER_NOT_LOGIN);
 
         return subscribeMapper.getSubscribeVoByUserId(id);
     }
@@ -408,7 +408,7 @@ public class UserServiceImpl implements UserService {
     public UserIdentifyVo identify(Integer id) {
         // 查看自己
         if (id == null) id = SecurityContextUtil.getId();
-        if (id == null) throw new UserNotExistsException(UserExceptionConstant.USER_NOT_EXISTS);
+        if (id == null) throw new UserNotLoginException(UserExceptionConstant.USER_NOT_LOGIN);
 
         return identifyMapper.getIdentifyVoByUserId(id);
     }

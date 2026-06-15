@@ -1,7 +1,5 @@
 package com.jxcia.blog.pojo.dto;
 
-import java.time.LocalDateTime;
-
 public class EmailDto {
     // 邮件标题
     private String title;
