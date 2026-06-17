@@ -10,18 +10,17 @@ import com.jxcia.blog.common.exception.ArticleException;
 import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.common.result.PageResult;
+import com.jxcia.blog.mapper.user.*;
 import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.dto.ArticleUpdateDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.entity.UserLikeArticle;
+import com.jxcia.blog.pojo.vo.ArticleMsgVo;
 import com.jxcia.blog.pojo.vo.ArticleSearchVo;
 import com.jxcia.blog.pojo.vo.ArticleVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
-import com.jxcia.blog.mapper.user.ArticleMapper;
-import com.jxcia.blog.mapper.user.UserLikeArticleMapper;
-import com.jxcia.blog.mapper.user.UserMapper;
 import com.jxcia.blog.service.service.user.ArticleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +43,10 @@ public class ArticleServiceImpl implements ArticleService {
     private UserMapper userMapper;
     @Autowired
     private UserLikeArticleMapper userLikeArticleMapper;
+    @Autowired
+    private CommentMapper commentMapper;
+    @Autowired
+    private FavoriteMapper favoriteMapper;
 
     /**
      * 文章搜索
@@ -105,12 +109,6 @@ public class ArticleServiceImpl implements ArticleService {
 
         // 查询当前用户是否点赞该文章
         Integer userId = SecurityContextUtil.getId();
-        if (userId != null) {
-            UserLikeArticle ula = userLikeArticleMapper.getByUserLikeArticle(
-                UserLikeArticle.builder().userId(userId).articleId(id).build()
-            );
-            articleVo.setIsLiked(ula != null);
-        }
 
         // 用户可以查看自己的文章，其他用户只能查看公开文章
         if (articleVo.getUserId().equals(userId)) {
@@ -148,6 +146,39 @@ public class ArticleServiceImpl implements ArticleService {
         article.setUpdateTime(LocalDateTime.now());
 
         articleMapper.update(article);
+    }
+
+    /**
+     * 文章互动信息
+     *
+     * @param id 文章编号
+     * @return 文章信息
+     */
+    @Override
+    public ArticleMsgVo articleMsg(Integer id) {
+        ArticleMsgVo articleMsgVo = new ArticleMsgVo();
+        articleMsgVo.setLiked(false);
+        articleMsgVo.setFavoriteIdList(new ArrayList<>());
+
+        // 查询点赞数量
+        articleMsgVo.setLikedNum(userLikeArticleMapper.getCountByArticleId(id));
+        // 查询评论数量
+        articleMsgVo.setCommentNum(commentMapper.getCountByArticleId(id));
+
+        // 用户没有登录直接返回
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) return articleMsgVo;
+
+        // 查询当前用户是否点赞该文章
+        UserLikeArticle ula = userLikeArticleMapper.getByUserLikeArticle(
+                UserLikeArticle.builder().userId(userId).articleId(id).build()
+        );
+        articleMsgVo.setLiked(ula != null);
+
+        // 查询用户收藏到那几个收藏夹
+        articleMsgVo.setFavoriteIdList(favoriteMapper.getIdsByArticleIdAndUserId(id, userId));
+
+        return articleMsgVo;
     }
 
     /**

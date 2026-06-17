@@ -100,4 +100,15 @@ public interface FavoriteMapper {
      */
     @Delete("delete from favorite_article_relation where favorite_id = #{favoriteId}")
     void deleteFavoriteArticleByFavoriteId(Long favoriteId);
+
+    /**
+     * 根据文章编号和用户编号查询收藏夹编号
+     * @param articleId 文章编号
+     * @param userId 用户编号
+     * @return 用户将文章添加进收藏夹的编号列表
+     */
+    @Select("select favorite_id from favorite_article_relation  " +
+            "where favorite_id in (select id from favorite where user_id = #{userId}) " +
+            "and article_id = #{articleId} ")
+    List<Integer> getIdsByArticleIdAndUserId(Integer articleId, Integer userId);
 }

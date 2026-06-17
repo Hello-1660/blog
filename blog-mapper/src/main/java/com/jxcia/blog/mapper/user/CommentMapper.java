@@ -46,4 +46,12 @@ public interface CommentMapper {
             "left join user u on uc.user_id = u.id " +
             "where uc.article_id = #{articleId}")
     List<CommentWithUserVo> getCommentWithUserVoByArticleId(Integer articleId);
+
+    /**
+     * 根基文章编号查询文章评论记录数
+     * @param id 文章编号
+     * @return 文章评论记录数量
+     */
+    @Select("select count(*) from user_comment where article_id = #{id}")
+    Integer getCountByArticleId(Integer id);
 }

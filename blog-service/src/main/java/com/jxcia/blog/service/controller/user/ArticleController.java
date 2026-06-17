@@ -8,6 +8,7 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.dto.ArticleUpdateDto;
+import com.jxcia.blog.pojo.vo.ArticleMsgVo;
 import com.jxcia.blog.pojo.vo.ArticleSearchVo;
 import com.jxcia.blog.pojo.vo.ArticleVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
@@ -37,7 +38,7 @@ public class ArticleController {
      * @return 文章分数据
      */
     @Anonymous
-    @GetMapping("/search")
+    @PostMapping("/search")
     public Result<PageResult<ArticleSearchVo>> search(@RequestBody ArticleSearchDto articleDto) {
         log.info("article search: {}", articleDto);
 
@@ -111,5 +112,17 @@ public class ArticleController {
         articleService.update(articleUpdateDto);
 
         return Result.success();
+    }
+
+    /**
+     * 查询文章互动信息
+     * @param id 文章编号
+     * @return 文章信息
+     */
+    @Anonymous
+    @GetMapping("/articleMsg/{id}")
+    public Result<ArticleMsgVo> articleMsg(@PathVariable @NotNull Integer id) {
+        log.info("article articleMsg: {}", id);
+        return Result.success(articleService.articleMsg(id));
     }
 }

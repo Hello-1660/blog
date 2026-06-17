@@ -5,6 +5,7 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.dto.ArticleUpdateDto;
+import com.jxcia.blog.pojo.vo.ArticleMsgVo;
 import com.jxcia.blog.pojo.vo.ArticleSearchVo;
 import com.jxcia.blog.pojo.vo.ArticleVo;
 import com.jxcia.blog.pojo.vo.HotArticleVo;
@@ -54,4 +55,11 @@ public interface ArticleService {
      * @param articleUpdateDto 更新文章信息
      */
     void update(ArticleUpdateDto articleUpdateDto);
+
+    /**
+     * 文章互动信息
+     * @param id 文章编号
+     * @return 文章信息
+     */
+    ArticleMsgVo articleMsg(Integer id);
 }
