@@ -119,4 +119,11 @@ public interface UserService {
      * @param userResetPasswordDto 用户重置密码信息
      */
     void resetPassword(UserResetPasswordDto userResetPasswordDto);
+
+    /**
+     * 获取用户互动信息
+     * @param id 用户编号
+     * @return 用户互动信息
+     */
+    UserMsgVo userMsg(Integer id);
 }

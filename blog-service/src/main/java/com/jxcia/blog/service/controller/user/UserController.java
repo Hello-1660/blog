@@ -220,18 +220,6 @@ public class UserController {
     }
 
     /**
-     * 获取用户身份
-     * @return 用户身份
-     */
-    @AuthOptional
-    @GetMapping({"/identify/{id}", "/identify"})
-    public Result<UserIdentifyVo> identify(@PathVariable(required = false) Integer id) {
-        log.info("identify id: {}", id);
-
-        return Result.success(userService.identify(id));
-    }
-
-    /**
      * 用户重置密码
      * @param userResetPasswordDto 用户重置密码信息
      * @return 无
@@ -243,5 +231,17 @@ public class UserController {
 
         userService.resetPassword(userResetPasswordDto);
         return Result.success();
+    }
+
+    /**
+     * 获取用户互动信息
+     * @return 用户互动信息
+     */
+    @AuthOptional
+    @GetMapping({"/userMsg/{id}", "/userMsg"})
+    public Result<UserMsgVo> userMsg(@PathVariable(required = false) Integer id) {
+        log.info("user msg: {}", id);
+
+        return Result.success(userService.userMsg(id));
     }
 }

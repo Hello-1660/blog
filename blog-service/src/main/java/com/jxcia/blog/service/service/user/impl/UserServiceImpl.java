@@ -439,6 +439,29 @@ public class UserServiceImpl implements UserService {
         userMapper.update(build);
     }
 
+    /**
+     * 获取用户互动信息
+     *
+     * @param id 用户编号
+     * @return 用户互动信息
+     */
+    @Override
+    public UserMsgVo userMsg(Integer id) {
+        UserMsgVo userMsgVo = new UserMsgVo();
+
+        // 访问自己
+        if (id == null) id = SecurityContextUtil.getId();
+        // 访问自己必须登录
+        if (id == null) throw new UserNotLoginException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        // 填充粉丝数和关注数
+        userMsgVo.setFansNum(subscribeMapper.getUserNumberBySubUserId(id));
+        userMsgVo.setSubscribeNum(subscribeMapper.getSubscribeNumberByUserId(id));
+        userMsgVo.setUserIdentifyVo(identify(id));
+
+        return userMsgVo;
+    }
+
 
     /**
      * 根据文章编号查询文章点赞记录
