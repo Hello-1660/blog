@@ -4,11 +4,9 @@ import com.jxcia.blog.blog.security.annotation.Anonymous;
 import com.jxcia.blog.blog.security.annotation.AuthOptional;
 import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.common.constant.VerificationCodeConstant;
+import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.common.result.Result;
-import com.jxcia.blog.pojo.dto.UserLoginDto;
-import com.jxcia.blog.pojo.dto.UserRegisterDto;
-import com.jxcia.blog.pojo.dto.UserResetPasswordDto;
-import com.jxcia.blog.pojo.dto.UserUpdateDto;
+import com.jxcia.blog.pojo.dto.*;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Email;
 import com.jxcia.blog.pojo.vo.*;
@@ -243,5 +241,26 @@ public class UserController {
         log.info("user msg: {}", id);
 
         return Result.success(userService.userMsg(id));
+    }
+
+    /**
+     * 用户浏览记录
+     * @return 用户浏览记录列表
+     */
+    @AuthRequired
+    @PostMapping("/history")
+    public Result<PageResult<Article>> history(@RequestBody UserHistoryDto userHistoryDto) {
+        log.info("history");
+
+        return Result.success(userService.history(userHistoryDto));
+    }
+
+    @AuthRequired
+    @PostMapping("/historyDel")
+    public Result<Void> deleteHistory(@RequestBody List<Integer> ids) {
+        log.info("historyDel: {}", ids);
+
+        userService.historyDel(ids);
+        return Result.success();
     }
 }

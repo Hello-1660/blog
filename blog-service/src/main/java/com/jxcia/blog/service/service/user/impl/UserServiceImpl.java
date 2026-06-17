@@ -1,15 +1,15 @@
 package com.jxcia.blog.service.service.user.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jxcia.blog.blog.security.crypto.PasswordEncoder;
 import com.jxcia.blog.blog.security.enums.AccountType;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.constant.*;
 import com.jxcia.blog.common.exception.*;
-import com.jxcia.blog.pojo.dto.UserLoginDto;
-import com.jxcia.blog.pojo.dto.UserRegisterDto;
-import com.jxcia.blog.pojo.dto.UserResetPasswordDto;
-import com.jxcia.blog.pojo.dto.UserUpdateDto;
+import com.jxcia.blog.common.result.PageResult;
+import com.jxcia.blog.pojo.dto.*;
 import com.jxcia.blog.pojo.entity.*;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.mapper.user.*;
@@ -460,6 +460,40 @@ public class UserServiceImpl implements UserService {
         userMsgVo.setUserIdentifyVo(identify(id));
 
         return userMsgVo;
+    }
+
+    /**
+     * 用户浏览记录
+     *
+     * @param userHistoryDto 用户浏览查询信息
+     * @return 用户浏览记录列表
+     */
+    @Override
+    public PageResult<Article> history(UserHistoryDto userHistoryDto) {
+        userHistoryDto.setUserId(SecurityContextUtil.getId());
+        PageHelper.startPage(userHistoryDto.getPageNum(), userHistoryDto.getPageSize());
+
+        // 查询浏览文章编号
+        List<Integer> abIdList = articleBrowseLogMapper.getIdsByUserHistoryDto(userHistoryDto);
+        if (abIdList == null || abIdList.isEmpty()) return new PageResult<>(0, Collections.emptyList());
+
+        // 获取文章内容
+        List<Article> articleList = articleMapper.getByArticleIds(abIdList);
+
+        PageInfo<Article> pageInfo = new PageInfo<>(articleList);
+        return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
+    }
+
+    /**
+     * 删除用户浏览记录
+     *
+     * @param ids 浏览文章编号
+     */
+    @Override
+    public void historyDel(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) return;
+        Integer userId = SecurityContextUtil.getId();
+        articleBrowseLogMapper.updateUserIdByArticleId(ids, userId);
     }
 
 

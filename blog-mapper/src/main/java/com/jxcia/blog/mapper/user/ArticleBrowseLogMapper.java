@@ -1,9 +1,9 @@
 package com.jxcia.blog.mapper.user;
 
+import com.jxcia.blog.pojo.dto.UserHistoryDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleBrowse;
 import com.jxcia.blog.pojo.entity.ArticleWithBrowseCount;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -28,9 +28,16 @@ public interface ArticleBrowseLogMapper {
     void insert(ArticleBrowse articleBrowse);
 
     /**
-     * 根据文章编号删除浏览记录
-     * @param articleId 文章编号
+     * 根据文章编号和用户编号删除浏览记录
+     * @param articleIdList 文章编号
+     * @param userId 用户编号
      */
-    @Delete("delete from user_article_browse_log where article_id = #{articleId}")
-    void deleteByArticleId(Integer articleId);
+    void updateUserIdByArticleId(List<Integer> articleIdList, Integer userId);
+
+    /**
+     * 根据用户编号查询文章编号列表
+     * @param userHistoryDto 用户编号
+     * @return 文章编号列表
+     */
+    List<Integer> getIdsByUserHistoryDto(UserHistoryDto userHistoryDto);
 }

@@ -1,10 +1,7 @@
 package com.jxcia.blog.service.service.user;
 
 import com.jxcia.blog.common.result.PageResult;
-import com.jxcia.blog.pojo.dto.UserLoginDto;
-import com.jxcia.blog.pojo.dto.UserRegisterDto;
-import com.jxcia.blog.pojo.dto.UserResetPasswordDto;
-import com.jxcia.blog.pojo.dto.UserUpdateDto;
+import com.jxcia.blog.pojo.dto.*;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Email;
 import com.jxcia.blog.pojo.entity.User;
@@ -126,4 +123,17 @@ public interface UserService {
      * @return 用户互动信息
      */
     UserMsgVo userMsg(Integer id);
+
+    /**
+     * 用户浏览记录
+     * @param userHistoryDto 用户浏览查询信息
+     * @return 用户浏览记录列表
+     */
+    PageResult<Article> history(UserHistoryDto userHistoryDto);
+
+    /**
+     * 删除用户浏览记录
+     * @param ids 浏览文章编号
+     */
+    void historyDel(List<Integer> ids);
 }

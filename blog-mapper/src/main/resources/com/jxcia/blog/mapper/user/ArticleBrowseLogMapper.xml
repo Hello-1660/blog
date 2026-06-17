@@ -11,4 +11,22 @@
         </foreach>
         group by article_id
     </select>
+
+    <select id="getIdsByUserHistoryDto" resultType="java.lang.Integer">
+        select article_id from user_article_browse_log
+        where user_id = #{userId}
+        <if test="createTime != null">and create_time &gt; #{createTime}</if>
+        group by article_id
+        order by max(create_time) desc
+    </select>
+
+    <update id="updateUserIdByArticleId">
+        update user_article_browse_log
+        set user_id = null
+        where article_id in
+        <foreach collection="articleIdList" item="aId" separator="," open="(" close=")">
+            #{aId}
+        </foreach>
+        and user_id = #{userId}
+    </update>
 </mapper>
