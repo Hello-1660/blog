@@ -43,3 +43,5 @@ application-dev.yml
 
 # 忽略 IDE 或个人配置
 config/secret.properties
+
+reasonix.toml

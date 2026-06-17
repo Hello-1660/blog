@@ -1,5 +1,6 @@
 package com.jxcia.blog.service.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Component
 public class VerificationCodeUtil {
     @Value("${verification-code.length}")
@@ -40,8 +42,13 @@ public class VerificationCodeUtil {
      * @param code 验证码
      */
     private void setVerificationCode(String email, String code) {
-        redisTemplate.opsForValue()
-                .set(email, code, Duration.ofMinutes(ttl));
+        try {
+            redisTemplate.opsForValue()
+                    .set(email, code, Duration.ofMinutes(ttl));
+        } catch (Exception e) {
+            log.warn("Redis 不可用，验证码写入失败: email={}", email);
+            throw new RuntimeException("验证码服务暂时不可用", e);
+        }
     }
 
     /**
@@ -50,7 +57,12 @@ public class VerificationCodeUtil {
      * @return 验证码
      */
     public String getCode(String email) {
-        return redisTemplate.opsForValue().get(email);
+        try {
+            return redisTemplate.opsForValue().get(email);
+        } catch (Exception e) {
+            log.warn("Redis 不可用，验证码读取失败: email={}", email);
+            return null;
+        }
     }
 
     /**
@@ -59,11 +71,16 @@ public class VerificationCodeUtil {
      * @return 是否生成成功
      */
     public boolean setCode(String email) {
-        long remainTime = getTtl(email);
-        if (remainTime > (ttl * 60L - minIntervalTime)) return false;
+        try {
+            long remainTime = getTtl(email);
+            if (remainTime > (ttl * 60L - minIntervalTime)) return false;
 
-        setVerificationCode(email, generateCode(CodeLength));
-        return true;
+            setVerificationCode(email, generateCode(CodeLength));
+            return true;
+        } catch (Exception e) {
+            log.warn("Redis 不可用，验证码发送失败: email={}", email);
+            return false;
+        }
     }
 
     /**
@@ -81,8 +98,13 @@ public class VerificationCodeUtil {
      * @return 剩余时间，如果没有获取过，返回 -2
      */
     private long getTtl(String email) {
-        Long expire = redisTemplate.getExpire(email, TimeUnit.SECONDS);
-        return expire == null ? -2 : expire;
+        try {
+            Long expire = redisTemplate.getExpire(email, TimeUnit.SECONDS);
+            return expire == null ? -2 : expire;
+        } catch (Exception e) {
+            log.warn("Redis 不可用，TTL 查询失败: email={}", email);
+            return -2;
+        }
     }
 
     /**
@@ -91,9 +113,14 @@ public class VerificationCodeUtil {
      * @return 是否拦截
      */
     public boolean limitIp (String ip) {
-        Long count = redisTemplate.opsForValue().increment(ip);
-        if (count == null) return false;
-        if (count == 1) redisTemplate.expire(ip, Duration.ofMinutes(1));
-        return count > minuteIpLimit;
+        try {
+            Long count = redisTemplate.opsForValue().increment(ip);
+            if (count == null) return false;
+            if (count == 1) redisTemplate.expire(ip, Duration.ofMinutes(1));
+            return count > minuteIpLimit;
+        } catch (Exception e) {
+            log.warn("Redis 不可用，IP 限流降级放行: ip={}", ip);
+            return false;
+        }
     }
 }

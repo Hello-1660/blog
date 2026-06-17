@@ -2,6 +2,7 @@ package com.jxcia.blog.blog.security.metadata;
 
 import com.jxcia.blog.blog.security.service.DynamicSecurityService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class DynamicSecurityMetadataSource implements InitializingBean {
     private static final String PERMISSION_CACHE_KEY = "security:permission:cache";
     @Autowired
@@ -53,7 +55,11 @@ public class DynamicSecurityMetadataSource implements InitializingBean {
 
     public void clearDataSource() {
         configAttributeMap.clear();
-        redisTemplate.delete(PERMISSION_CACHE_KEY);
+        try {
+            redisTemplate.delete(PERMISSION_CACHE_KEY);
+        } catch (Exception e) {
+            log.warn("Redis 不可用，清除权限缓存失败，已清除本地缓存");
+        }
     }
 
     /**
@@ -62,15 +68,23 @@ public class DynamicSecurityMetadataSource implements InitializingBean {
      */
     private Map<String, Collection<ConfigAttribute>> loadDataSource() {
         // L1 查 redis
-        Object cache = redisTemplate.opsForValue().get(PERMISSION_CACHE_KEY);
-        if (cache != null) return (Map<String, Collection<ConfigAttribute>>) cache;
+        try {
+            Object cache = redisTemplate.opsForValue().get(PERMISSION_CACHE_KEY);
+            if (cache != null) return (Map<String, Collection<ConfigAttribute>>) cache;
+        } catch (Exception e) {
+            log.warn("Redis 不可用，权限缓存降级直查数据库");
+        }
 
         // L2 查 DB
         if (dynamicSecurityService == null) return Collections.emptyMap();
         Map<String, Collection<ConfigAttribute>> data = dynamicSecurityService.loadDataSource();
         if (data == null) data = Collections.emptyMap();
 
-        redisTemplate.opsForValue().set(PERMISSION_CACHE_KEY, data, 30, TimeUnit.MINUTES);
+        try {
+            redisTemplate.opsForValue().set(PERMISSION_CACHE_KEY, data, 30, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            log.warn("Redis 不可用，权限缓存写入失败，已从数据库加载到本地内存");
+        }
         return data;
     }
 }

@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 检查黑名单
         if (jwtTokenUtil.validateToken(token)) {
             String jti = jwtTokenUtil.getClaimsJtiFromToken(token);
-            if (Boolean.TRUE.equals(redisTemplate.hasKey(BLACKLIST_PREFIX + jti))) {
+            if (isBlacklisted(jti)) {
                 // token 已登出
                 filterChain.doFilter(request, response);
                 return;
@@ -124,5 +124,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         
         return null;
+    }
+
+    /**
+     * 检查 token 是否在黑名单中。
+     * Redis 不可用时降级放行（fail-open），避免影响正常业务。
+     */
+    private boolean isBlacklisted(String jti) {
+        try {
+            return Boolean.TRUE.equals(redisTemplate.hasKey(BLACKLIST_PREFIX + jti));
+        } catch (Exception e) {
+            log.warn("Redis 不可用，黑名单检查降级放行: jti={}", jti);
+            return false;
+        }
     }
 }
