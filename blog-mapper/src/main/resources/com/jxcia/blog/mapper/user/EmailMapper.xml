@@ -11,7 +11,7 @@
     </insert>
     
     <update id="update">
-        update email 
+        update email
         <set>
             <if test="title != null and title != ''">title = #{title}, </if>
             <if test="content != null and content != ''">content = #{content}, </if>
@@ -19,4 +19,11 @@
         </set>
         where id = #{id}
     </update>
+
+    <delete id="deleteByIdList">
+        delete from email where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

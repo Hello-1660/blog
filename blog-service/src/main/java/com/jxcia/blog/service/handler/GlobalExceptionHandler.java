@@ -9,6 +9,7 @@ import com.jxcia.blog.common.result.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,31 +18,31 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotLoginException.class)
-    public Result<Void> userNotLogin(UserNotLoginException e) {
+    public ResponseEntity<Result<Void>> userNotLogin(UserNotLoginException e) {
         log.error(e.getMessage());
-        return Result.unauthorized(e.getMessage());
+        return ResponseEntity.status(401).body(Result.unauthorized(e.getMessage()));
     }
 
     @ExceptionHandler(UserNotPermissionException.class)
-    public Result<Void> userNotPermission(UserNotPermissionException e) {
+    public ResponseEntity<Result<Void>> userNotPermission(UserNotPermissionException e) {
         log.error(e.getMessage());
-        return Result.forbidden(e.getMessage());
+        return ResponseEntity.status(403).body(Result.forbidden(e.getMessage()));
     }
 
     @ExceptionHandler(BaseException.class)
-    public Result<Void> handleBaseException(BaseException e, HttpServletRequest request) {
+    public ResponseEntity<Result<Void>> handleBaseException(BaseException e, HttpServletRequest request) {
         log.warn("business error on path {}: {}", request.getRequestURI(), e.getMessage());
-        return Result.Failed(e.getMessage());
+        return ResponseEntity.status(500).body(Result.Failed(e.getMessage()));
     }
 
     @ExceptionHandler(ServiceException.class)
-    public Result<Void> handleServiceException(ServiceException e, HttpServletRequest request) {
+    public ResponseEntity<Result<Void>> handleServiceException(ServiceException e, HttpServletRequest request) {
         log.error("service error on path {}: {}", request.getRequestURI(), e.getMessage(), e);
-        return Result.Failed(e.getMessage());
+        return ResponseEntity.status(500).body(Result.Failed(e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result<Void> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
+    public ResponseEntity<Result<Void>> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
         String message;
         if (e.getBindingResult().getFieldError() != null) {
             message = e.getBindingResult().getFieldError().getDefaultMessage();
@@ -51,19 +52,19 @@ public class GlobalExceptionHandler {
             message = "参数校验失败";
         }
         log.warn("validation failed on path {}: {}", request.getRequestURI(), message);
-        return Result.validateFailed(message);
+        return ResponseEntity.status(400).body(Result.validateFailed(message));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public Result<Void> handleConstraintViolation(ConstraintViolationException e, HttpServletRequest request) {
+    public ResponseEntity<Result<Void>> handleConstraintViolation(ConstraintViolationException e, HttpServletRequest request) {
         String message = e.getConstraintViolations().iterator().next().getMessage();
         log.warn("validation failed on path {}: {}", request.getRequestURI(), message);
-        return Result.validateFailed(message);
+        return ResponseEntity.status(400).body(Result.validateFailed(message));
     }
 
     @ExceptionHandler(Exception.class)
-    public Result<Void> handleException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<Result<Void>> handleException(Exception e, HttpServletRequest request) {
         log.error("unhandled error on path {}: {}", request.getRequestURI(), e.getMessage(), e);
-        return Result.Failed("服务器内部错误");
+        return ResponseEntity.status(500).body(Result.Failed("服务器内部错误"));
     }
 }

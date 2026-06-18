@@ -44,4 +44,10 @@ public interface EmailMapper {
      */
     @Update("update email set status = #{status} where receiver_id = #{userId}")
     void UpdateStatusByUserId(Integer userId, Integer status);
+
+    /**
+     * 批量删除邮件
+     * @param ids 邮件编号列表
+     */
+    void deleteByIdList(List<Integer> ids);
 }

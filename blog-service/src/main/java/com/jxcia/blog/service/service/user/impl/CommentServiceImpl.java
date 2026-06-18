@@ -1,5 +1,7 @@
 package com.jxcia.blog.service.service.user.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.constant.ArticleExceptionConstant;
 import com.jxcia.blog.common.constant.CommentExceptionConstant;
@@ -7,6 +9,7 @@ import com.jxcia.blog.common.constant.UserExceptionConstant;
 import com.jxcia.blog.common.exception.ArticleException;
 import com.jxcia.blog.common.exception.CommentException;
 import com.jxcia.blog.common.exception.UserException;
+import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.pojo.dto.CommentDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Comment;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,18 +46,24 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 添加用户评论
      * @param commentDto 用户评论信息
+     * @return 新建的评论及用户信息
      */
     @Override
-    public void save(CommentDto commentDto) {
+    public CommentWithUserVo save(CommentDto commentDto) {
         Integer userId = SecurityContextUtil.getId();
 
-        // 补充评论信息
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDto, comment);
         comment.setUserId(userId);
+        comment.setSort(0);
         comment.setCreateTime(LocalDateTime.now());
 
         commentMapper.insert(comment);
+
+        CommentWithUserVo vo = commentMapper.getCommentWithUserVoById(comment.getId());
+        vo.setLikeNum(0);
+        vo.setIsLiked(false);
+        return vo;
     }
 
     /**
@@ -72,12 +82,61 @@ public class CommentServiceImpl implements CommentService {
 
         // 只有作者和本人可以删除评论
         if (article.getUserId().equals(userId) || comment.getUserId().equals(userId)) {
+            // 收集所有后代评论 ID
+            List<Long> descendantIds = new ArrayList<>();
+            collectDescendants(commentId, descendantIds);
+
+            // 删除所有后代的点赞信息
+            for (Long did : descendantIds) {
+                userLikeCommentMapper.deleteByCommentId(did);
+            }
+            // 删除所有后代评论
+            for (Long did : descendantIds) {
+                commentMapper.delete(did);
+            }
+
+            // 删除自己的点赞信息
+            userLikeCommentMapper.deleteByCommentId(commentId);
             // 删除评论
             commentMapper.delete(commentId);
-            // 删除点赞信息
-            userLikeCommentMapper.deleteByCommentId(commentId);
         } else {
             throw new CommentException(CommentExceptionConstant.OTHER_USER_CANNOT_DEL_COMMENT);
+        }
+    }
+
+    /**
+     * 递归收集所有后代评论 ID
+     */
+    private void collectDescendants(Long parentId, List<Long> result) {
+        List<Long> childIds = commentMapper.getIdsByFId(parentId);
+        for (Long childId : childIds) {
+            result.add(childId);
+            collectDescendants(childId, result);
+        }
+    }
+
+    /**
+     * 作者置顶/取消置顶评论
+     *
+     * @param commentId 评论编号
+     * @return true 为已置顶，false 为已取消
+     */
+    @Override
+    public boolean pin(Long commentId) {
+        Integer userId = SecurityContextUtil.getId();
+        Comment comment = commentMapper.get(commentId);
+        if (comment == null) throw new CommentException(CommentExceptionConstant.COMMENT_NOT_FOND);
+
+        Article article = articleMapper.getById(comment.getArticleId());
+        if (!article.getUserId().equals(userId))
+            throw new CommentException(CommentExceptionConstant.OTHER_USER_CANNOT_DEL_COMMENT);
+
+        if (comment.getSort() != null && comment.getSort() > 0) {
+            commentMapper.updateSort(commentId, 0);
+            return false;
+        } else {
+            commentMapper.updateSort(commentId, 1);
+            return true;
         }
     }
 
@@ -115,18 +174,21 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * 查看文章评论
+     * 分页查看文章评论
      *
      * @param articleId 文章编号
-     * @return 文章评论列表
+     * @param pageNum 页码
+     * @param pageSize 每页条数
+     * @return 文章评论分页数据
      */
     @Override
-    public List<CommentWithUserVo> detail(Integer articleId) {
+    public PageResult<CommentWithUserVo> detail(Integer articleId, Integer pageNum, Integer pageSize) {
         if (articleId == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
         Integer userId = SecurityContextUtil.getId();
-        // 评论列表
+
+        PageHelper.startPage(pageNum, pageSize);
         List<CommentWithUserVo> cvoList = commentMapper.getCommentWithUserVoByArticleId(articleId);
-        // 补充点赞量及用户点赞状态
+
         if (!cvoList.isEmpty()) {
             List<Long> cIdList = cvoList.stream().map(CommentWithUserVo::getId).toList();
             List<CommentMsgVo> cmvList = commentMapper.getCommentLikeNumByCommentIds(cIdList, userId);
@@ -144,6 +206,7 @@ public class CommentServiceImpl implements CommentService {
             });
         }
 
-        return cvoList;
+        PageInfo<CommentWithUserVo> pageInfo = new PageInfo<>(cvoList);
+        return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
     }
 }

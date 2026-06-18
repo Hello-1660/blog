@@ -60,6 +60,17 @@ public class EmailController {
     }
 
     /**
+     * 获取当前用户的邮件列表
+     * @return 邮件列表
+     */
+    @AuthRequired
+    @GetMapping("/list")
+    public Result<List<Email>> list() {
+        log.info("list email");
+        return Result.success(emailService.list());
+    }
+
+    /**
      * 批量删除邮件
      * @param ids 邮件列表
      * @return 无

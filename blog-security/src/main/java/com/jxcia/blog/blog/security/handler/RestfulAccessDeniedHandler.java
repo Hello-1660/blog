@@ -23,6 +23,7 @@ public class RestfulAccessDeniedHandler implements AccessDeniedHandler {
         response.setHeader("Cache-Control","no-cache");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.getWriter().println(objectMapper.writeValueAsString(Result.forbidden(AdminConstant.NOT_PERMISSION)));
         response.getWriter().flush();
     }

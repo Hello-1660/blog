@@ -97,6 +97,17 @@ public class EmailServiceImpl implements EmailService {
     }
 
     /**
+     * 获取当前用户的邮件列表
+     *
+     * @return 邮件列表
+     */
+    @Override
+    public List<Email> list() {
+        Integer userId = SecurityContextUtil.getId();
+        return emailMapper.getListByUserId(userId);
+    }
+
+    /**
      * 批量删除邮件
      *
      * @param ids 邮件列表
@@ -104,7 +115,7 @@ public class EmailServiceImpl implements EmailService {
     @Transactional
     @Override
     public void deleteByEmailList(List<Integer> ids) {
-        userMapper.deleteByIdList(ids);
+        emailMapper.deleteByIdList(ids);
     }
 
     /**

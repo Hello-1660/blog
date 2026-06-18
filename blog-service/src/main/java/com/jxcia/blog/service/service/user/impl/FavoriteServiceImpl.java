@@ -50,7 +50,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .userId(userId)
                 .name(favoriteDto.getName())
                 .createTime(LocalDateTime.now())
-                .status(favoriteDto.getStatus())
+                .status(favoriteDto.getStatus() != null ? favoriteDto.getStatus() : 0)
                 .build();
 
         favoriteMapper.insert(favorite);
@@ -133,7 +133,7 @@ public class FavoriteServiceImpl implements FavoriteService {
             // 查看其他用户
             List<Favorite> favoriteList = favoriteMapper.getListByUserId(id);
             // 返回公共列表
-            return favoriteList.stream().filter(f -> f.getStatus() == FavoriteConstant.PUBLIC).toList();
+            return favoriteList.stream().filter(f -> f.getStatus() != null && f.getStatus() == FavoriteConstant.PUBLIC).toList();
         }
     }
 
