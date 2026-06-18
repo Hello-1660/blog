@@ -7,6 +7,7 @@ import com.jxcia.blog.pojo.vo.HotArticleVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public interface ArticleMapper {
      * 插入文章
      * @param article 文章
      */
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("insert into article (user_id, icon, title, content, create_time, update_time, sort, status, category_id) " +
             "value (#{userId}, #{icon}, #{title}, #{content}, #{createTime}, #{updateTime}, #{sort}, #{status}, #{categoryId})")
     void insert(Article article);

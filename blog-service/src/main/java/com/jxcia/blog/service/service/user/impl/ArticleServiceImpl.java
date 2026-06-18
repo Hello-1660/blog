@@ -197,7 +197,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @param articleDto 文章信息
      */
     @Override
-    public void save(ArticleDto articleDto) {
+    public Integer save(ArticleDto articleDto) {
         Integer userId = SecurityContextUtil.getId();
         LocalDateTime now = LocalDateTime.now();
 
@@ -214,5 +214,6 @@ public class ArticleServiceImpl implements ArticleService {
                 .build();
 
         articleMapper.insert(article);
+        return article.getId();
     }
 }

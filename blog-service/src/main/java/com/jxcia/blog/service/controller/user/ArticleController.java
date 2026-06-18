@@ -60,16 +60,14 @@ public class ArticleController {
     /**
      * 新增文章
      * @param articleDto 保存文章信息
-     * @return 无
+     * @return 文章编号
      */
     @AuthRequired
     @PostMapping("/save")
-    public Result<Void> save(@RequestBody @Valid ArticleDto articleDto) {
+    public Result<Integer> save(@RequestBody @Valid ArticleDto articleDto) {
         log.info("article save: {}", articleDto);
 
-        articleService.save(articleDto);
-
-        return Result.success();
+        return Result.success(articleService.save(articleDto));
     }
 
     /**

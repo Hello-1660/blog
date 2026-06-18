@@ -34,8 +34,9 @@ public interface ArticleService {
     /**
      * 新增文章
      * @param articleDto 文章信息
+     * @return 文章编号
      */
-    void save(ArticleDto articleDto);
+    Integer save(ArticleDto articleDto);
 
     /**
      * 删除文章
