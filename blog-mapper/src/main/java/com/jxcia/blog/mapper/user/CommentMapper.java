@@ -1,10 +1,12 @@
 package com.jxcia.blog.mapper.user;
 
 import com.jxcia.blog.pojo.entity.Comment;
+import com.jxcia.blog.pojo.vo.CommentMsgVo;
 import com.jxcia.blog.pojo.vo.CommentWithUserVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -54,4 +56,11 @@ public interface CommentMapper {
      */
     @Select("select count(*) from user_comment where article_id = #{id}")
     Integer getCountByArticleId(Integer id);
+
+    /**
+     * 根据评论编号列表查询用户评论点赞消息
+     * @param cIdList 评论编号列表
+     * @return 用户评论点赞消息
+     */
+    List<CommentMsgVo> getCommentLikeNumByCommentIds(@Param("cIdList") List<Long> cIdList, @Param("userId") Integer userId);
 }

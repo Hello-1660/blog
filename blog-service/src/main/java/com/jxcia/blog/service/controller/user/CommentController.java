@@ -4,8 +4,6 @@ import com.jxcia.blog.blog.security.annotation.Anonymous;
 import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.CommentDto;
-import com.jxcia.blog.pojo.entity.Article;
-import com.jxcia.blog.pojo.entity.Comment;
 import com.jxcia.blog.pojo.vo.CommentWithUserVo;
 import com.jxcia.blog.service.service.user.CommentService;
 import jakarta.validation.Valid;

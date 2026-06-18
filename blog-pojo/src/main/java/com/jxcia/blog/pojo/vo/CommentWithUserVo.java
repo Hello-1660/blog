@@ -24,4 +24,8 @@ public class CommentWithUserVo {
     private Integer sort;
     // 评论创建时间
     private LocalDateTime createTime;
+    // 评论点赞数
+    private Integer likeNum;
+    // 用户是否点赞过评论
+    private Boolean isLiked;
 }

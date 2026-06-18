@@ -11,6 +11,7 @@ import com.jxcia.blog.pojo.dto.CommentDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Comment;
 import com.jxcia.blog.pojo.entity.LikeComment;
+import com.jxcia.blog.pojo.vo.CommentMsgVo;
 import com.jxcia.blog.pojo.vo.CommentWithUserVo;
 import com.jxcia.blog.mapper.user.ArticleMapper;
 import com.jxcia.blog.mapper.user.CommentMapper;
@@ -23,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 评论 serviceImpl
@@ -120,7 +123,27 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentWithUserVo> detail(Integer articleId) {
         if (articleId == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+        Integer userId = SecurityContextUtil.getId();
+        // 评论列表
+        List<CommentWithUserVo> cvoList = commentMapper.getCommentWithUserVoByArticleId(articleId);
+        // 补充点赞量及用户点赞状态
+        if (!cvoList.isEmpty()) {
+            List<Long> cIdList = cvoList.stream().map(CommentWithUserVo::getId).toList();
+            List<CommentMsgVo> cmvList = commentMapper.getCommentLikeNumByCommentIds(cIdList, userId);
+            Map<Long, CommentMsgVo> cmvMap = cmvList.stream().collect(Collectors.toMap(CommentMsgVo::getId, c -> c));
 
-        return commentMapper.getCommentWithUserVoByArticleId(articleId);
+            cvoList.forEach(comment -> {
+                CommentMsgVo msg = cmvMap.get(comment.getId());
+                if (msg != null) {
+                    comment.setLikeNum(msg.getLikeNum());
+                    comment.setIsLiked(msg.getIsLiked() == 1);
+                } else {
+                    comment.setLikeNum(0);
+                    comment.setIsLiked(false);
+                }
+            });
+        }
+
+        return cvoList;
     }
 }

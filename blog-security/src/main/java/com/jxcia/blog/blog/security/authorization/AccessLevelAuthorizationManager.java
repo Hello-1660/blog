@@ -48,7 +48,7 @@ public class AccessLevelAuthorizationManager implements AuthorizationManager<Req
 
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : mapping.getHandlerMethods().entrySet()) {
             HandlerMethod method = entry.getValue();
-            Set<String> patterns = entry.getKey().getDirectPaths();
+            Set<String> patterns = entry.getKey().getPatternValues();
 
             AccessLevel level = findAnnotation(method);
 

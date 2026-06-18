@@ -1,6 +1,5 @@
 package com.jxcia.blog.pojo.vo;
 
-import com.jxcia.blog.pojo.entity.Favorite;
 import lombok.Data;
 
 import java.util.List;
