@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
         user.setCreateTime(LocalDateTime.now());
 
         // 插入数据
+        user.setAccountStatus(UserStatusConstant.USER_ACCOUNT_ENABLE);
         userMapper.insert(user);
 
 
@@ -102,6 +103,11 @@ public class UserServiceImpl implements UserService {
         // 密码错误
         boolean matches = passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword());
         if (!matches) throw new UserLoginException(UserLoginExceptionConstant.PASSWORD_ERROR);
+
+        // 账号已封禁
+        if (user.getAccountStatus() == null || user.getAccountStatus() == UserStatusConstant.USER_ACCOUNT_DISABLE) {
+            throw new UserLoginException("该账号已被封禁");
+        }
 
         // 返回登录信息
         String accessToken = jwtTokenUtil.generateUserAccessToken(user);

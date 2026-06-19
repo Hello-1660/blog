@@ -42,6 +42,9 @@ public interface UserLikeArticleMapper {
     @Delete("delete from user_like_article where user_id = #{userId} and article_id = #{articleId}")
     void delete(UserLikeArticle userLikeArticle);
 
+    @Delete("delete from user_like_article where article_id = #{articleId}")
+    void deleteByArticleId(Integer articleId);
+
     /**
      * 根据文章编号查询文章点赞记录数量
      * @param id 文章编号

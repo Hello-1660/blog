@@ -43,7 +43,7 @@ public interface SubscribeMapper {
     @Select("select " +
             "s.id as id, s.sub_user_id as subUserId, u.nickname as nickname, u.icon as icon, s.sort as sort, s.create_time as createTime " +
             "from subscribe s " +
-            "inner join user u on s.sub_user_id = u.id " +
+            "inner join user u on s.sub_user_id = u.id and u.account_status = 1 " +
             "where s.user_id = #{userId}")
     List<SubscribeVo> getSubscribeVoByUserId(Integer userId);
 
@@ -55,7 +55,7 @@ public interface SubscribeMapper {
     @Select("select " +
             "s.id as id, s.sub_user_id as subUserId, u.nickname as nickname, u.icon as icon, s.sort as sort, s.create_time as createTime " +
             "from subscribe s " +
-            "inner join user u on s.user_id = u.id " +
+            "inner join user u on s.user_id = u.id and u.account_status = 1 " +
             "where s.sub_user_id = #{subscribeId}")
     List<SubscribeVo> getSubscribeVoBySubscribeId(Integer subscribeId);
 

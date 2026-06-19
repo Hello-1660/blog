@@ -65,6 +65,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Result<Void>> handleException(Exception e, HttpServletRequest request) {
         log.error("unhandled error on path {}: {}", request.getRequestURI(), e.getMessage(), e);
-        return ResponseEntity.status(500).body(Result.Failed("服务器内部错误"));
+        return ResponseEntity.status(500).body(Result.Failed("服务器反繁忙，请稍后再试"));
     }
 }
