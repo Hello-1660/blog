@@ -8,6 +8,8 @@ public class UserMsgVo {
     private Integer fansNum;
     // 用户关注数量
     private Integer subscribeNum;
+    // 当前用户是否已关注（未登录时 false）
+    private Boolean isFollowed;
     // 用户账号身份信息
     private UserIdentifyVo userIdentifyVo;
 }

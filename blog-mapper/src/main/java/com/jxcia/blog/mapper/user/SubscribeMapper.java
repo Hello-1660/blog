@@ -82,4 +82,11 @@ public interface SubscribeMapper {
      */
     @Select("select count(*) from subscribe where sub_user_id = #{id}")
     Integer getUserNumberBySubUserId(Integer id);
+
+    /**
+     * 更新关注置顶状态
+     * @param subscribe 关注记录
+     */
+    @org.apache.ibatis.annotations.Update("update subscribe set sort = #{sort} where id = #{id}")
+    void updateSort(Subscribe subscribe);
 }

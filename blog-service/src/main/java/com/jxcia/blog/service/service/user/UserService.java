@@ -86,6 +86,13 @@ public interface UserService {
     List<SubscribeVo> fansList();
 
     /**
+     * 关注置顶/取消置顶
+     * @param id     关注记录 ID
+     * @param sort   0=取消置顶, 1=置顶
+     */
+    void pinSubscribe(Integer id, Integer sort);
+
+    /**
      * 更新用户信息
      * @param userUpdateDto 更新用户信息
      * @return 用户信息
@@ -104,6 +111,12 @@ public interface UserService {
      * @return 验证码
      */
     void sendVerificationCode(String email);
+
+    /**
+     * 发送重置密码验证码
+     * @param email 邮箱
+     */
+    void sendResetPasswordCode(String email);
 
     /**
      * 获取用户身份

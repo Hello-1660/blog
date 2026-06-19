@@ -176,6 +176,20 @@ public class UserController {
     }
 
     /**
+     * 关注置顶/取消置顶
+     * @param id   关注记录 ID
+     * @param sort 0=取消置顶, 1=置顶
+     */
+    @AuthRequired
+    @PostMapping("/subscribePin")
+    public Result<Void> subscribePin(Integer id, Integer sort) {
+        log.info("subscribe pin: id={}, sort={}", id, sort);
+
+        userService.pinSubscribe(id, sort);
+        return Result.success();
+    }
+
+    /**
      * 更新用户，更新完 token 失效，需要重新登录
      * @param userUpdateDto 更新用户信息
      * @return 用户信息
@@ -218,11 +232,28 @@ public class UserController {
     }
 
     /**
+     * 发送重置密码验证码
+     * @param email 用户邮箱
+     */
+    @Anonymous
+    @GetMapping("/resetCode/{email}")
+    public Result<String> resetCode(@PathVariable String email, HttpServletRequest request) {
+        log.info("reset password code: {}", email);
+
+        // ip 拦截
+        String clientIp = IpUtil.getClientIp(request);
+        if (verificationCodeUtil.limitIp(clientIp)) return Result.Failed(VerificationCodeConstant.VERIFICATION_CODE_SEND_EXCESSIVE);
+
+        userService.sendResetPasswordCode(email);
+        return Result.success();
+    }
+
+    /**
      * 用户重置密码
      * @param userResetPasswordDto 用户重置密码信息
      * @return 无
      */
-    @AuthRequired
+    @Anonymous
     @PostMapping("/resetPassword")
     public Result<Void> resetPassword(@RequestBody @Valid UserResetPasswordDto userResetPasswordDto) {
         log.info("reset password: {}", userResetPasswordDto);

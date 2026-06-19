@@ -343,6 +343,15 @@ public class UserServiceImpl implements UserService {
         return subscribeMapper.getSubscribeVoBySubscribeId(userId);
     }
 
+    @Override
+    public void pinSubscribe(Integer id, Integer sort) {
+        Subscribe subscribe = Subscribe.builder()
+                .id(id)
+                .sort(sort == null || sort <= 0 ? SubscribeConstant.NOT_TOP : 1)
+                .build();
+        subscribeMapper.updateSort(subscribe);
+    }
+
     /**
      * 更新用户信息
      *
@@ -401,6 +410,18 @@ public class UserServiceImpl implements UserService {
         if (!result) throw new UserRegisterException(VerificationCodeConstant.VERIFICATION_CODE_SEND_ERROR);
     }
 
+    @Override
+    public void sendResetPasswordCode(String email) {
+        String codeHead = VerificationCodeConstant.VERIFICATION_CODE_RESET_PASSWORD_PRO + email;
+        // 账号检查，同一账号一分钟只能发送一次
+        if (!verificationCodeUtil.setCode(codeHead))
+            throw new UserRegisterException(VerificationCodeConstant.VERIFICATION_CODE_SEND_EXCESSIVE);
+
+        String code = verificationCodeUtil.getCode(codeHead);
+        boolean result = sampleMailUtil.send(email, code);
+        if (!result) throw new UserRegisterException(VerificationCodeConstant.VERIFICATION_CODE_SEND_ERROR);
+    }
+
     /**
      * 获取用户身份
      *
@@ -423,17 +444,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void resetPassword(UserResetPasswordDto userResetPasswordDto) {
         boolean verify = verificationCodeUtil.verify(
-                userResetPasswordDto.getVerificationCode(), VerificationCodeConstant.VERIFICATION_CODE_LIMIT_IP_PRO + userResetPasswordDto.getEmail()
+                VerificationCodeConstant.VERIFICATION_CODE_RESET_PASSWORD_PRO + userResetPasswordDto.getEmail(), userResetPasswordDto.getVerificationCode()
         );
 
-        // 校验数据
+        // 校验验证码
         if (!verify) throw new UserException(VerificationCodeConstant.VERIFICATION_CODE_ERROR);
 
+        // 通过邮箱查找用户（忘记密码时用户未登录，不能从 SecurityContext 取 ID）
+        User user = userMapper.findByEmail(userResetPasswordDto.getEmail());
+        if (user == null) throw new UserException("该邮箱未注册");
+
         // 修改用户密码
-        Integer userId = SecurityContextUtil.getId();
         User build = User.builder()
-                .id(userId)
-                .password(userResetPasswordDto.getPassword())
+                .id(user.getId())
+                .password(passwordEncoder.encode(userResetPasswordDto.getPassword()))
                 .build();
 
         userMapper.update(build);
@@ -458,6 +482,18 @@ public class UserServiceImpl implements UserService {
         userMsgVo.setFansNum(subscribeMapper.getUserNumberBySubUserId(id));
         userMsgVo.setSubscribeNum(subscribeMapper.getSubscribeNumberByUserId(id));
         userMsgVo.setUserIdentifyVo(identify(id));
+
+        // 检查当前登录用户是否已关注目标用户
+        Integer currentUserId = SecurityContextUtil.getId();
+        if (currentUserId != null && !currentUserId.equals(id)) {
+            Subscribe subscribe = Subscribe.builder()
+                    .userId(currentUserId)
+                    .subUserId(id)
+                    .build();
+            userMsgVo.setIsFollowed(subscribeMapper.getBySubscribe(subscribe) != null);
+        } else {
+            userMsgVo.setIsFollowed(false);
+        }
 
         return userMsgVo;
     }

@@ -12,6 +12,7 @@ import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Email;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.service.service.user.EmailService;
+import com.jxcia.blog.service.websocket.EmailWebSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,8 @@ public class EmailServiceImpl implements EmailService {
     private SubscribeMapper subscribeMapper;
     @Autowired
     private EmailMapper emailMapper;
+    @Autowired
+    private EmailWebSocketHandler emailWebSocketHandler;
 
     /**
      * 推送粉丝
@@ -67,6 +70,11 @@ public class EmailServiceImpl implements EmailService {
         }
         // 推送
         emailMapper.insertByEmailList(emailList);
+
+        // WebSocket 通知每个粉丝
+        for (Integer fansId : fansIdList) {
+            emailWebSocketHandler.notifyNewEmail(fansId);
+        }
     }
 
     /**
