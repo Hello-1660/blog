@@ -1,44 +1,31 @@
 package com.jxcia.blog.service.service.user.impl;
 
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
-import com.jxcia.blog.common.constant.ReportStatusConstant;
-import com.jxcia.blog.common.constant.UserExceptionConstant;
-import com.jxcia.blog.common.exception.UserLoginException;
-import com.jxcia.blog.pojo.dto.ReportDto;
-import com.jxcia.blog.pojo.entity.Report;
+import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.mapper.user.ReportMapper;
+import com.jxcia.blog.pojo.entity.Report;
 import com.jxcia.blog.service.service.user.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 
-/**
- * 举报 serviceImpl
- */
 @Service
 public class ReportServiceImpl implements ReportService {
+
     @Autowired
     private ReportMapper reportMapper;
 
-    /**
-     * 添加举报信息
-     *
-     * @param reportDto 举报信息
-     */
     @Override
-    public void save(ReportDto reportDto) {
+    public void report(Integer objectType, Integer objectId, String message) {
         Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserException("请先登录");
 
-        Report report = Report.builder()
-                .objectType(reportDto.getObjectType())
-                .objectId(reportDto.getObjectId())
-                .message(reportDto.getMessage())
+        reportMapper.insert(Report.builder()
                 .userId(userId)
-                .status(ReportStatusConstant.PROCESS)
+                .objectType(objectType)
+                .objectId(objectId)
+                .message(message != null ? message : "")
                 .createTime(LocalDateTime.now())
-                .build();
-
-        reportMapper.insert(report);
+                .build());
     }
 }

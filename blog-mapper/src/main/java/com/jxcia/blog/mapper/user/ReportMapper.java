@@ -3,15 +3,13 @@ package com.jxcia.blog.mapper.user;
 import com.jxcia.blog.pojo.entity.Report;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 
 @Mapper
 public interface ReportMapper {
 
-    /**
-     * 插入举报记录
-     * @param report 举报信息
-     */
-    @Insert("insert into report (object_type, object_id, message, user_id, status, result, result_admin_id, create_time, finish_time) " +
-            "value (#{objectType}, #{objectId}, #{message}, #{userId}, #{status}, #{result}, #{resultAdminId}, #{createTime}, #{finishTime})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Insert("insert into report (user_id, object_type, object_id, message, status, create_time) " +
+            "values (#{userId}, #{objectType}, #{objectId}, #{message}, 0, #{createTime})")
     void insert(Report report);
 }
