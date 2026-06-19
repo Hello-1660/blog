@@ -31,6 +31,8 @@ public interface ArticleService {
      */
     List<HotArticleVo> hotDetail();
 
+    List<HotArticleVo> followedArticles();
+
     /**
      * 新增文章
      * @param articleDto 文章信息

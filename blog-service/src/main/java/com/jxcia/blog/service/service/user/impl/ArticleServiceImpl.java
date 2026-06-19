@@ -85,6 +85,10 @@ public class ArticleServiceImpl implements ArticleService {
         if (!article.getUserId().equals(userId)) throw new UserException(UserExceptionConstant.CANNOT_DELETE_OTHER_USER_ARTICLE);
         // 删除点赞记录
         userLikeArticleMapper.delete(UserLikeArticle.builder().articleId(articleId).userId(userId).build());
+        // 删除评论
+        commentMapper.deleteByArticleId(articleId);
+        // 删除文章
+        articleMapper.deleteByArticleId(articleId);
     }
 
     /**
@@ -190,6 +194,13 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<HotArticleVo> hotDetail() {
         return articleMapper.getHotArticleByArticleSearchDto();
+    }
+
+    @Override
+    public List<HotArticleVo> followedArticles() {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) return List.of();
+        return articleMapper.getFollowedArticles(userId);
     }
 
     /**

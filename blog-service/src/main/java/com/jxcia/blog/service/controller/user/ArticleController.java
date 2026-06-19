@@ -58,6 +58,17 @@ public class ArticleController {
     }
 
     /**
+     * 关注用户的文章列表
+     * @return 文章列表
+     */
+    @AuthRequired
+    @GetMapping("/followed")
+    public Result<List<HotArticleVo>> followed() {
+        log.info("article followed");
+        return Result.success(articleService.followedArticles());
+    }
+
+    /**
      * 新增文章
      * @param articleDto 保存文章信息
      * @return 文章编号

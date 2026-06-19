@@ -53,6 +53,13 @@ public interface CommentMapper {
     void delete(Long commentId);
 
     /**
+     * 根据文章编号删除所有评论
+     * @param articleId 文章编号
+     */
+    @Delete("delete from user_comment where article_id = #{articleId}")
+    void deleteByArticleId(Integer articleId);
+
+    /**
      * 删除父评论的所有子评论
      * @param fId 父评论编号
      */

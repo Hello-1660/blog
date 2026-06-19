@@ -71,6 +71,18 @@ public interface ArticleMapper {
     List<HotArticleVo> getHotArticleByArticleSearchDto();
 
     /**
+     * 获取关注用户的文章列表
+     * @param userId 当前用户编号
+     * @return 文章列表
+     */
+    @Select("select a.id, a.user_id, u.nickname, a.icon, a.title, a.create_time, 0 as value, a.category_id " +
+            "from article a join user u on a.user_id = u.id " +
+            "join subscribe s on a.user_id = s.sub_user_id " +
+            "where s.user_id = #{userId} and a.status = 1 " +
+            "order by a.create_time desc")
+    List<HotArticleVo> getFollowedArticles(Integer userId);
+
+    /**
      * 根据文章编号查询文章
      * @param id 文章编号
      * @return 文章
