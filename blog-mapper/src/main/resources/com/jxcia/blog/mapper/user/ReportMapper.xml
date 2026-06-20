@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxcia.blog.mapper.user.ReportMapper">
+    <select id="getPage" resultType="com.jxcia.blog.pojo.vo.ReportPageVo">
+        select r.id, r.user_id as userId, u.nickname as userName,
+               r.object_type as objectType, r.object_id as objectId,
+               r.message, r.status, r.result,
+               a.nickname as resultAdminName,
+               r.create_time as createTime, r.finish_time as finishTime
+        from report r
+        left join user u on r.user_id = u.id
+        left join admin a on r.result_admin_id = a.id
+        <where>
+            <if test="status != null">and r.status = #{status}</if>
+            <if test="objectType != null">and r.object_type = #{objectType}</if>
+        </where>
+        order by r.create_time desc
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from report r
+        <where>
+            <if test="status != null">and r.status = #{status}</if>
+            <if test="objectType != null">and r.object_type = #{objectType}</if>
+        </where>
+    </select>
+
+    <update id="update">
+        update report
+        <set>
+            <if test="status != null">status = #{status},</if>
+            <if test="result != null">result = #{result},</if>
+            <if test="resultAdminId != null">result_admin_id = #{resultAdminId},</if>
+            <if test="finishTime != null">finish_time = #{finishTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>
