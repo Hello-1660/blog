@@ -150,6 +150,7 @@ CREATE TABLE `identify_type`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '身份类型状态表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- ----------------------------
 -- Table structure for identify_user_relation
 -- ----------------------------
 DROP TABLE IF EXISTS `identify_user_relation`;

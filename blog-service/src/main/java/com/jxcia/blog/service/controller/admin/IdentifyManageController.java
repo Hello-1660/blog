@@ -2,6 +2,7 @@ package com.jxcia.blog.service.controller.admin;
 
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.IdentifyAssignDto;
+import com.jxcia.blog.pojo.dto.IdentifyDto;
 import com.jxcia.blog.pojo.vo.UserIdentifyVo;
 import com.jxcia.blog.service.service.admin.IdentifyManageService;
 import jakarta.validation.Valid;
@@ -21,6 +22,24 @@ public class IdentifyManageController {
     @GetMapping("/list")
     public Result<List<UserIdentifyVo>> list() {
         return Result.success(identifyManageService.list());
+    }
+
+    @PostMapping("/save")
+    public Result<Void> save(@RequestBody @Valid IdentifyDto dto) {
+        identifyManageService.save(dto);
+        return Result.success();
+    }
+
+    @PostMapping("/update")
+    public Result<Void> update(@RequestBody @Valid IdentifyDto dto) {
+        identifyManageService.update(dto);
+        return Result.success();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Result<Void> delete(@PathVariable Integer id) {
+        identifyManageService.delete(id);
+        return Result.success();
     }
 
     @GetMapping("/user/{userId}")

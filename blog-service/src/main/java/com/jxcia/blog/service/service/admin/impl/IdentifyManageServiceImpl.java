@@ -3,6 +3,7 @@ package com.jxcia.blog.service.service.admin.impl;
 import com.jxcia.blog.common.exception.AdminException;
 import com.jxcia.blog.mapper.user.IdentifyMapper;
 import com.jxcia.blog.pojo.dto.IdentifyAssignDto;
+import com.jxcia.blog.pojo.dto.IdentifyDto;
 import com.jxcia.blog.pojo.entity.UserIdentify;
 import com.jxcia.blog.pojo.vo.UserIdentifyVo;
 import com.jxcia.blog.service.service.admin.IdentifyManageService;
@@ -19,6 +20,30 @@ public class IdentifyManageServiceImpl implements IdentifyManageService {
     @Override
     public List<UserIdentifyVo> list() {
         return identifyMapper.getAll();
+    }
+
+    @Override
+    public void save(IdentifyDto dto) {
+        UserIdentify identify = new UserIdentify();
+        identify.setName(dto.getName());
+        identify.setDescription(dto.getDescription());
+        identify.setType(dto.getType());
+        identifyMapper.insert(identify);
+    }
+
+    @Override
+    public void update(IdentifyDto dto) {
+        UserIdentify identify = new UserIdentify();
+        identify.setId(dto.getId());
+        identify.setName(dto.getName());
+        identify.setDescription(dto.getDescription());
+        identify.setType(dto.getType());
+        identifyMapper.update(identify);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        identifyMapper.deleteById(id);
     }
 
     @Override

@@ -84,7 +84,10 @@ INSERT INTO permission (id, name, url, create_time, description) VALUES
 (45, '身份列表',         '/admin/identify/list',             NOW(), '查看身份列表'),
 (46, '用户身份查询',     '/admin/identify/user/**',          NOW(), '查看用户身份'),
 (47, '身份分配',         '/admin/identify/assign',           NOW(), '分配用户身份'),
-(48, '身份移除',         '/admin/identify/remove/**',        NOW(), '移除用户身份');
+(48, '身份移除',         '/admin/identify/remove/**',        NOW(), '移除用户身份'),
+(49, '身份新增',         '/admin/identify/save',             NOW(), '新增身份'),
+(50, '身份更新',         '/admin/identify/update',           NOW(), '更新身份'),
+(51, '身份删除',         '/admin/identify/delete/**',        NOW(), '删除身份');
 
 -- 3. 菜单记录
 INSERT INTO menu (id, p_id, name, level, web_name, icon, sort, status, create_time) VALUES
@@ -99,7 +102,8 @@ INSERT INTO menu (id, p_id, name, level, web_name, icon, sort, status, create_ti
 (8,  5, 'admin/list',   2, '管理员管理', 'Avatar',         1, 1, NOW()),
 (9,  5, 'role/list',    2, '角色管理',   'Lock',           2, 1, NOW()),
 (10, 5, 'menu/list',    2, '菜单管理',   'Menu',           3, 1, NOW()),
-(11, 5, 'permission/list', 2, '权限管理',  'Key',          4, 1, NOW());
+(11, 5, 'permission/list', 2, '权限管理',  'Key',          4, 1, NOW()),
+(13, 5, 'identify/list',  2, '身份管理',  'Medal',         5, 1, NOW());
 
 -- 4. 超级管理员角色拥有全部权限
 INSERT INTO role_permission_relation (role_id, permission_id) VALUES
@@ -112,12 +116,12 @@ INSERT INTO role_permission_relation (role_id, permission_id) VALUES
 (1,25),(1,26),(1,27),(1,28),(1,29),(1,30),
 (1,31),(1,32),(1,33),(1,34),
 (1,35),
-(1,36),(1,37),(1,38),(1,39),(1,40),(1,41),(1,42),(1,43),(1,44),(1,45),(1,46),(1,47),(1,48);
+(1,36),(1,37),(1,38),(1,39),(1,40),(1,41),(1,42),(1,43),(1,44),(1,45),(1,46),(1,47),(1,48),(1,49),(1,50),(1,51);
 
 -- 5. 超级管理员角色拥有全部菜单
 INSERT INTO role_menu_relation (role_id, menu_id) VALUES
 (1,1),(1,2),(1,3),(1,4),(1,5),
-(1,6),(1,7),(1,12),(1,8),(1,9),(1,10),(1,11);
+(1,6),(1,7),(1,12),(1,8),(1,9),(1,10),(1,11),(1,13);
 
 -- 6. 预设超级管理员账户 (密码: admin123)
 INSERT INTO admin (id, nickname, email, password, create_time, status) VALUES
