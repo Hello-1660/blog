@@ -11,6 +11,7 @@
                 <if test="description != null and description != ''">description = #{description},</if>
                 <if test="themeId != null">theme_id = #{themeId},</if>
                 <if test="likeShowStatus != null">like_show_status = #{likeShowStatus},</if>
+                <if test="accountStatus != null">account_status = #{accountStatus},</if>
             </set>
             where id = #{id}
         </update>
@@ -25,7 +26,7 @@
     </select>
 
     <delete id="deleteByIdList">
-        delete from email
+        delete from user
         where id in
         <foreach collection="idList" item="id" open="(" close=")" separator=",">
             #{id}

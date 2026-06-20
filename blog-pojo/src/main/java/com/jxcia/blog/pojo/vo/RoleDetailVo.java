@@ -1,6 +1,7 @@
 package com.jxcia.blog.pojo.vo;
 
 import com.jxcia.blog.pojo.entity.Permission;
+import com.jxcia.blog.pojo.entity.Menu;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +19,5 @@ public class RoleDetailVo {
     private Integer status;
     private String createTime;
     private List<Permission> permissions;
+    private List<Menu> menus;
 }

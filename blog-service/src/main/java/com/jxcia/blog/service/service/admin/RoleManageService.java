@@ -1,6 +1,7 @@
 package com.jxcia.blog.service.service.admin;
 
 import com.jxcia.blog.pojo.dto.RoleDto;
+import com.jxcia.blog.pojo.dto.RoleMenuDto;
 import com.jxcia.blog.pojo.dto.RolePermissionDto;
 import com.jxcia.blog.pojo.entity.Role;
 import com.jxcia.blog.pojo.vo.RoleDetailVo;
@@ -14,4 +15,5 @@ public interface RoleManageService {
     void update(RoleDto dto);
     void delete(Integer id);
     void assignPermission(RolePermissionDto dto);
+    void assignMenu(RoleMenuDto dto);
 }

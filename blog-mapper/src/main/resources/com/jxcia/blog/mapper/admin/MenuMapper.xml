@@ -6,6 +6,22 @@
         <result column="web_name" property="webNme"/>
     </resultMap>
 
+    <select id="getByRoleIdList" resultMap="MenuResultMap">
+        select * from menu
+        <if test="roleIdList != null and roleIdList.size() > 0">
+            where id in (
+                select menu_id from role_menu_relation where role_id in
+                <foreach collection="roleIdList" item="rId" open="(" close=")" separator=",">
+                    #{rId}
+                </foreach>
+            )
+        </if>
+        <if test="roleIdList == null or roleIdList.size() == 0">
+            where 1 = 0
+        </if>
+        order by level, sort
+    </select>
+
     <update id="update">
         update menu
         <set>

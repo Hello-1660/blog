@@ -2,6 +2,7 @@ package com.jxcia.blog.service.controller.admin;
 
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.RoleDto;
+import com.jxcia.blog.pojo.dto.RoleMenuDto;
 import com.jxcia.blog.pojo.dto.RolePermissionDto;
 import com.jxcia.blog.pojo.entity.Role;
 import com.jxcia.blog.pojo.vo.RoleDetailVo;
@@ -51,6 +52,12 @@ public class RoleManageController {
     @PostMapping("/assignPermission")
     public Result<Void> assignPermission(@RequestBody @Valid RolePermissionDto dto) {
         roleManageService.assignPermission(dto);
+        return Result.success();
+    }
+
+    @PostMapping("/assignMenu")
+    public Result<Void> assignMenu(@RequestBody @Valid RoleMenuDto dto) {
+        roleManageService.assignMenu(dto);
         return Result.success();
     }
 }

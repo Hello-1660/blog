@@ -34,6 +34,8 @@ public interface RoleMapper {
     @Delete("delete from role_permission_relation where role_id = #{roleId}")
     void deleteRolePermissions(Integer roleId);
 
+    void insertRoleMenus(@Param("roleId") Integer roleId, @Param("menuIds") List<Integer> menuIds);
+
     @Delete("delete from role_menu_relation where role_id = #{roleId}")
     void deleteRoleMenus(Integer roleId);
 }

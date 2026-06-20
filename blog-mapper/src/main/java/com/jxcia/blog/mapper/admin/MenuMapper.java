@@ -37,4 +37,6 @@ public interface MenuMapper {
     @Select("select * from menu where p_id = #{pId} order by sort")
     @ResultMap("MenuResultMap")
     List<Menu> getChildrenByPid(Integer pId);
+
+    List<Menu> getByRoleIdList(List<Integer> roleIdList);
 }

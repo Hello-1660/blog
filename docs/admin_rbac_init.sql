@@ -61,6 +61,7 @@ INSERT INTO permission (id, name, url, create_time, description) VALUES
 (28, '角色更新',         '/admin/role/update',     NOW(), '更新角色'),
 (29, '角色删除',         '/admin/role/delete/**',  NOW(), '删除角色'),
 (30, '权限分配',         '/admin/role/assignPermission', NOW(), '角色分配权限'),
+(42, '菜单分配',         '/admin/role/assignMenu',       NOW(), '角色分配菜单'),
 -- 菜单管理
 (31, '菜单树',           '/admin/menu/tree',       NOW(), '查看菜单树'),
 (32, '菜单新增',         '/admin/menu/save',       NOW(), '新增菜单'),
@@ -74,7 +75,9 @@ INSERT INTO permission (id, name, url, create_time, description) VALUES
 (38, '权限新增',         '/admin/permission/save',            NOW(), '新增权限'),
 (39, '权限更新',         '/admin/permission/update',          NOW(), '更新权限'),
 (40, '权限删除',         '/admin/permission/delete/**',       NOW(), '删除权限'),
-(41, '角色权限分配',     '/admin/permission/assignPermission', NOW(), '角色分配权限');
+(41, '角色权限分配',     '/admin/permission/assignPermission', NOW(), '角色分配权限'),
+-- 邮件管理
+(43, '邮件发送',         '/admin/email/send',               NOW(), '发送邮件');
 
 -- 3. 菜单记录
 INSERT INTO menu (id, p_id, name, level, web_name, icon, sort, status, create_time) VALUES
@@ -85,6 +88,7 @@ INSERT INTO menu (id, p_id, name, level, web_name, icon, sort, status, create_ti
 (5,  0, 'system',       1, '系统管理',   'Setting',        5, 1, NOW()),
 (6,  4, 'category/list',2, '分类管理',   'Collection',     1, 1, NOW()),
 (7,  4, 'report/list',  2, '举报管理',   'WarningFilled',  2, 1, NOW()),
+(12, 4, 'email/manage', 2, '邮件管理',   'Message',        3, 1, NOW()),
 (8,  5, 'admin/list',   2, '管理员管理', 'Avatar',         1, 1, NOW()),
 (9,  5, 'role/list',    2, '角色管理',   'Lock',           2, 1, NOW()),
 (10, 5, 'menu/list',    2, '菜单管理',   'Menu',           3, 1, NOW()),
@@ -101,12 +105,12 @@ INSERT INTO role_permission_relation (role_id, permission_id) VALUES
 (1,25),(1,26),(1,27),(1,28),(1,29),(1,30),
 (1,31),(1,32),(1,33),(1,34),
 (1,35),
-(1,36),(1,37),(1,38),(1,39),(1,40),(1,41);
+(1,36),(1,37),(1,38),(1,39),(1,40),(1,41),(1,42),(1,43);
 
 -- 5. 超级管理员角色拥有全部菜单
 INSERT INTO role_menu_relation (role_id, menu_id) VALUES
 (1,1),(1,2),(1,3),(1,4),(1,5),
-(1,6),(1,7),(1,8),(1,9),(1,10),(1,11);
+(1,6),(1,7),(1,12),(1,8),(1,9),(1,10),(1,11);
 
 -- 6. 预设超级管理员账户 (密码: admin123)
 INSERT INTO admin (id, nickname, email, password, create_time, status) VALUES

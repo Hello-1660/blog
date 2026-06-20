@@ -56,4 +56,8 @@ public interface UserMapper {
 
     @Select("select * from user where id = #{id}")
     User getEntityById(Integer id);
+
+    @Select("select id, email from user where account_status = 1")
+    List<User> getAllActiveEmails();
 }
+

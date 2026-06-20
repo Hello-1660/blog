@@ -24,7 +24,7 @@
                 and (a.nickname like concat('%', #{keyword}, '%') or a.email like concat('%', #{keyword}, '%'))
             </if>
         </where>
-        group by a.id
+        group by a.id, a.nickname, a.email, a.icon, a.status, a.create_time
         order by a.create_time desc
     </select>
 

@@ -51,21 +51,19 @@ public class SampleMailUtil {
     }
 
     public boolean send(String receiveAddress, String verificationCode) {
-        // 配置发送邮件的环境属性
-        final Properties props = new Properties();
+        return sendHtmlMail(receiveAddress, "信风邮箱验证码", "验证码" + verificationCode);
+    }
 
-        // 表示SMTP发送邮件，需要进行身份验证
+    public boolean sendHtmlMail(String receiveAddress, String subject, String htmlContent) {
+        final Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.host", SMTP_HOST);
-        //设置端口：
-        props.put("mail.smtp.port", SMTP_PORT);//或"25", 如果使用ssl，则去掉使用80或25端口的配置，进行如下配置：
+        props.put("mail.smtp.port", SMTP_PORT);
+        props.put("mail.smtp.from", USER_NAME);
+        props.put("mail.user", USER_NAME);
+        props.put("mail.password", PASSWORD);
+        System.setProperty("mail.mime.splitlongparameters", "false");
 
-        props.put("mail.smtp.from", USER_NAME);    //mailfrom 参数
-        props.put("mail.user", USER_NAME);// 发件人的账号（在控制台创建的发信地址）
-        props.put("mail.password", PASSWORD);// 发信地址的smtp密码（在控制台选择发信地址进行设置）
-        System.setProperty("mail.mime.splitlongparameters", "false");//用于解决附件名过长导致的显示异常
-
-        // 构建授权信息，用于进行SMTP进行身份验证
         Authenticator authenticator = new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -73,9 +71,7 @@ public class SampleMailUtil {
             }
         };
 
-        //使用环境属性和授权信息，创建邮件会话
         Session mailSession = Session.getInstance(props, authenticator);
-
         String messageIDValue = genMessageID(USER_NAME);
         MimeMessage message = new MimeMessage(mailSession) {
             @Override
@@ -85,34 +81,24 @@ public class SampleMailUtil {
         };
 
         try {
-            // 设置发件人邮件地址和名称。填写控制台配置的发信地址。和上面的mail.user保持一致。名称用户可以自定义填写。
-            InternetAddress from = new InternetAddress(USER_NAME, SEND_USERNAME);//from 参数,可实现代发，注意：代发容易被收信方拒信或进入垃圾箱。
+            InternetAddress from = new InternetAddress(USER_NAME, SEND_USERNAME);
             message.setFrom(from);
-
             setRecipients(message, Message.RecipientType.TO, new String[]{receiveAddress});
-
             InternetAddress replyToAddress = new InternetAddress(REPLY);
-            message.setReplyTo(new Address[]{replyToAddress});//可选。设置回信地址
+            message.setReplyTo(new Address[]{replyToAddress});
             message.setSentDate(new Date());
-            message.setSubject("信风邮箱验证码");
+            message.setSubject(subject);
 
-            //发送附件和内容：
-            // 创建多重消息
             Multipart multipart = new MimeMultipart();
-
-            // 创建一个BodyPart用于HTML内容
             BodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent("验证码" + verificationCode, "text/html;charset=UTF-8");//设置邮件的内容，会覆盖前面的message.setContent
+            htmlPart.setContent(htmlContent, "text/html;charset=UTF-8");
             multipart.addBodyPart(htmlPart);
-
-            // 添加完整消息
             message.setContent(multipart);
-            // 发送附件代码，结束
             Transport.send(message);
             return true;
         } catch (MessagingException | UnsupportedEncodingException e) {
+            log.error("send mail failed to {}: {}", receiveAddress, e.getMessage());
             return false;
         }
-
     }
 }
