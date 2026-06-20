@@ -43,10 +43,11 @@ public class AdminUserDetailService implements UserDetailsService {
 
         // 查询权限
         List<Permission> permissionList = permissionMapper.getByRoleIdList(roleIdList);
-        List<GrantedAuthority> grantedAuthorityList = permissionList.stream()
+        List<GrantedAuthority> grantedAuthorityList = new java.util.ArrayList<>(permissionList.stream()
                 .map(Permission::getUrl)
                 .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                .toList());
+        grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 
         return CustomUserDetails.builder()
                 .email(email)

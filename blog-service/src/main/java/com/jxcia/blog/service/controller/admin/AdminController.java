@@ -1,17 +1,11 @@
 package com.jxcia.blog.service.controller.admin;
 
-import com.jxcia.blog.blog.security.annotation.Anonymous;
-import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.blog.security.metadata.DynamicSecurityMetadataSource;
+import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.common.result.Result;
-import com.jxcia.blog.pojo.dto.AdminDto;
-import com.jxcia.blog.pojo.dto.AdminRegisterDto;
-import com.jxcia.blog.pojo.dto.AdminLoginDto;
-import com.jxcia.blog.pojo.entity.Admin;
+import com.jxcia.blog.pojo.dto.*;
 import com.jxcia.blog.pojo.entity.Menu;
-import com.jxcia.blog.pojo.vo.AdminLoginVo;
-import com.jxcia.blog.pojo.vo.AdminRegisterVo;
-import com.jxcia.blog.pojo.vo.AdminVo;
+import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.service.service.admin.AdminService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +69,7 @@ public class AdminController {
      * @return 管理员信息
      */
     @PostMapping("/update")
-    public Result<AdminVo> update(@RequestBody AdminDto adminDto) {
+    public Result<AdminVo> update(@RequestBody @Valid AdminDto adminDto) {
         log.info("admin update: {}", adminDto);
         return Result.success(adminService.update(adminDto));
     }
@@ -90,13 +84,37 @@ public class AdminController {
         return Result.success(adminService.menuList());
     }
 
-    /**
-     * 刷新缓存
-     * @return 无
-     */
     @GetMapping("/permission/refresh")
     public Result<String> refreshPermission() {
         dynamicSecurityMetadataSource.clearDataSource();
         return Result.success();
+    }
+
+    @GetMapping("/list")
+    public Result<PageResult<AdminPageVo>> list(@Valid AdminPageDto dto) {
+        return Result.success(adminService.list(dto));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Result<Void> delete(@PathVariable Integer id) {
+        adminService.delete(id);
+        return Result.success();
+    }
+
+    @PostMapping("/toggleStatus/{id}")
+    public Result<Void> toggleStatus(@PathVariable Integer id) {
+        adminService.toggleStatus(id);
+        return Result.success();
+    }
+
+    @PostMapping("/assignRole")
+    public Result<Void> assignRole(@RequestBody @Valid AdminAssignRoleDto dto) {
+        adminService.assignRole(dto);
+        return Result.success();
+    }
+
+    @GetMapping("/roles/{id}")
+    public Result<List<Integer>> getRoleIds(@PathVariable Integer id) {
+        return Result.success(adminService.getRoleIds(id));
     }
 }

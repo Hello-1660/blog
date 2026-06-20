@@ -1,21 +1,26 @@
 package com.jxcia.blog.mapper.user;
 
 import com.jxcia.blog.pojo.entity.Category;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-/**
- * 分类 mapper
- */
 @Mapper
 public interface CategoryMapper {
 
-    /**
-     * 获取文章分类
-     * @return
-     */
     @Select("select * from category")
     List<Category> get();
+
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Insert("insert into category (name) values (#{name})")
+    void insert(Category category);
+
+    @Update("update category set name = #{name} where id = #{id}")
+    void update(Category category);
+
+    @Delete("delete from category where id = #{id}")
+    void deleteById(Integer id);
+
+    @Select("select * from category where name = #{name}")
+    Category getByName(String name);
 }

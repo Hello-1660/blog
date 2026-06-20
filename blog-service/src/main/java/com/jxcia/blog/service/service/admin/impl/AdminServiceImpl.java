@@ -10,14 +10,11 @@ import com.jxcia.blog.common.constant.AdminRegisterExceptionConstant;
 import com.jxcia.blog.common.exception.AdminException;
 import com.jxcia.blog.common.exception.AdminRegisterException;
 import com.jxcia.blog.mapper.admin.MenuMapper;
-import com.jxcia.blog.pojo.dto.AdminDto;
-import com.jxcia.blog.pojo.dto.AdminRegisterDto;
+import com.jxcia.blog.common.result.PageResult;
+import com.jxcia.blog.pojo.dto.*;
 import com.jxcia.blog.pojo.entity.Admin;
-import com.jxcia.blog.pojo.dto.AdminLoginDto;
 import com.jxcia.blog.pojo.entity.Menu;
-import com.jxcia.blog.pojo.vo.AdminLoginVo;
-import com.jxcia.blog.pojo.vo.AdminRegisterVo;
-import com.jxcia.blog.pojo.vo.AdminVo;
+import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.mapper.admin.AdminMapper;
 import com.jxcia.blog.service.service.admin.AdminService;
 import org.springframework.beans.BeanUtils;
@@ -134,14 +131,48 @@ public class AdminServiceImpl implements AdminService {
         return adminMapper.getById(admin.getId());
     }
 
-    /**
-     * 获取管理员菜单列表
-     *
-     * @return 菜单列表
-     */
     @Override
     public List<Menu> menuList() {
         Integer adminId = SecurityContextUtil.getId();
         return menuMapper.getByAdminId(adminId);
+    }
+
+    @Override
+    public PageResult<AdminPageVo> list(AdminPageDto dto) {
+        com.github.pagehelper.PageHelper.startPage(dto.getPage(), dto.getSize());
+        List<AdminPageVo> list = adminMapper.getPage(dto);
+        long total = ((com.github.pagehelper.Page<AdminPageVo>) list).getTotal();
+        return new PageResult<>(total, list);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        Integer currentId = SecurityContextUtil.getId();
+        if (currentId.equals(id)) throw new AdminException("不能删除自己");
+        adminMapper.deleteAdminRoles(id);
+        adminMapper.deleteById(id);
+    }
+
+    @Override
+    public void toggleStatus(Integer id) {
+        Integer currentId = SecurityContextUtil.getId();
+        if (currentId.equals(id)) throw new AdminException("不能禁用自己");
+        Admin admin = adminMapper.getEntityById(id);
+        if (admin == null) throw new AdminException(AdminExceptionConstant.ACCOUNT_NOT_FUND);
+        admin.setStatus(admin.getStatus() == AdminConstant.ENABLE ? AdminConstant.DISABLE : AdminConstant.ENABLE);
+        adminMapper.update(admin);
+    }
+
+    @Override
+    public void assignRole(AdminAssignRoleDto dto) {
+        adminMapper.deleteAdminRoles(dto.getAdminId());
+        if (dto.getRoleIds() != null && !dto.getRoleIds().isEmpty()) {
+            adminMapper.insertAdminRole(dto.getAdminId(), dto.getRoleIds());
+        }
+    }
+
+    @Override
+    public List<Integer> getRoleIds(Integer adminId) {
+        return adminMapper.getRoleIdsByAdminId(adminId);
     }
 }

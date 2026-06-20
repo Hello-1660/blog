@@ -90,9 +90,9 @@ public interface ArticleMapper {
     @Select("select * from article where id = #{id}")
     Article getById(Integer id);
 
-    /**
-     * 修改文章记录信息
-     * @param article 修改文章信息
-     */
     void update(Article article);
+
+    List<com.jxcia.blog.pojo.vo.ArticlePageVo> getPage(com.jxcia.blog.pojo.dto.ArticlePageDto dto);
+
+    Integer count(com.jxcia.blog.pojo.dto.ArticlePageDto dto);
 }

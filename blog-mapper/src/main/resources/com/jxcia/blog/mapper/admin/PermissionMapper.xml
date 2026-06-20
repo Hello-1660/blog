@@ -3,13 +3,27 @@
 <mapper namespace="com.jxcia.blog.mapper.admin.PermissionMapper">
 
     <select id="getByRoleIdList" resultType="com.jxcia.blog.pojo.entity.Permission">
-        select distinct url from permission
-        where id in (
-            select permission_id from role_permission_relation where role_id in (
+        select * from permission
+        <if test="roleIdList != null and roleIdList.size() > 0">
+            where id in (
+                select permission_id from role_permission_relation where role_id in
                 <foreach collection="roleIdList" item="rId" open="(" close=")" separator=",">
                     #{rId}
                 </foreach>
-                )
             )
+        </if>
+        <if test="roleIdList == null or roleIdList.size() == 0">
+            where 1 = 0
+        </if>
     </select>
+
+    <update id="update">
+        update permission
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="url != null and url != ''">url = #{url},</if>
+            <if test="description != null">description = #{description},</if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

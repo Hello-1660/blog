@@ -31,4 +31,32 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="getPage" resultType="com.jxcia.blog.pojo.vo.UserPageVo">
+        select u.id, u.nickname, u.email, u.icon, u.account_status as accountStatus,
+               u.create_time as createTime,
+               (select count(*) from article a where a.user_id = u.id) as articleCount
+        from user u
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and (u.nickname like concat('%', #{keyword}, '%') or u.email like concat('%', #{keyword}, '%'))
+            </if>
+            <if test="status != null">
+                and u.account_status = #{status}
+            </if>
+        </where>
+        order by u.create_time desc
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from user u
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and (u.nickname like concat('%', #{keyword}, '%') or u.email like concat('%', #{keyword}, '%'))
+            </if>
+            <if test="status != null">
+                and u.account_status = #{status}
+            </if>
+        </where>
+    </select>
 </mapper>

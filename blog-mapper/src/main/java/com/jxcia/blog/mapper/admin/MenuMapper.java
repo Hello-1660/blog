@@ -1,30 +1,40 @@
 package com.jxcia.blog.mapper.admin;
 
 import com.jxcia.blog.pojo.entity.Menu;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-/**
- * 菜单 mapper
- */
 @Mapper
 public interface MenuMapper {
 
     @Select("select * from menu " +
             "where id in " +
             "(select menu_id from role_menu_relation where role_id in " +
-            "(select distinct id from admin_role_relation where admin_id = 1)) " +
-            "and `status` = #{adminId}")
+            "(select distinct role_id from admin_role_relation where admin_id = #{adminId})) " +
+            "and status = 1")
+    @ResultMap("MenuResultMap")
     List<Menu> getByAdminId(Integer adminId);
 
-    /**
-     * 插入菜单记录
-     * @param menu 菜单信息
-     */
     @Insert("insert into menu (p_id, name, level, web_name, icon, sort, status, create_time) " +
-            "value ()")
+            "values (#{pId}, #{name}, #{level}, #{webNme}, #{icon}, #{sort}, #{status}, #{createTime})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(Menu menu);
+
+    @Select("select * from menu order by level, sort")
+    @ResultMap("MenuResultMap")
+    List<Menu> getAll();
+
+    @Select("select * from menu where id = #{id}")
+    @ResultMap("MenuResultMap")
+    Menu getById(Integer id);
+
+    void update(Menu menu);
+
+    @Delete("delete from menu where id = #{id}")
+    void deleteById(Integer id);
+
+    @Select("select * from menu where p_id = #{pId} order by sort")
+    @ResultMap("MenuResultMap")
+    List<Menu> getChildrenByPid(Integer pId);
 }

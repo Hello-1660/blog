@@ -48,9 +48,12 @@ public interface UserMapper {
      */
     void update(User user);
 
-    /**
-     * 批量删除邮件
-     * @param idList 邮寄列表
-     */
     void deleteByIdList(List<Integer> idList);
+
+    List<com.jxcia.blog.pojo.vo.UserPageVo> getPage(com.jxcia.blog.pojo.dto.UserPageDto dto);
+
+    Integer count(com.jxcia.blog.pojo.dto.UserPageDto dto);
+
+    @Select("select * from user where id = #{id}")
+    User getEntityById(Integer id);
 }

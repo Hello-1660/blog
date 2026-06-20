@@ -45,6 +45,42 @@
         </foreach>
     </select>
 
+    <select id="getPage" resultType="com.jxcia.blog.pojo.vo.ArticlePageVo">
+        select a.id, a.title, a.user_id as userId, a.status,
+               u.nickname as authorName, c.name as categoryName,
+               a.create_time as createTime, a.update_time as updateTime
+        from article a
+        left join user u on a.user_id = u.id
+        left join category c on a.category_id = c.id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and a.title like concat('%', #{keyword}, '%')
+            </if>
+            <if test="status != null">
+                and a.status = #{status}
+            </if>
+            <if test="categoryId != null">
+                and a.category_id = #{categoryId}
+            </if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from article a
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and a.title like concat('%', #{keyword}, '%')
+            </if>
+            <if test="status != null">
+                and a.status = #{status}
+            </if>
+            <if test="categoryId != null">
+                and a.category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
+
     <select id="getHotArticleByArticleSearchDto" resultType="com.jxcia.blog.pojo.vo.HotArticleVo">
         select
             a.id,

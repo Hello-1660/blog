@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jxcia.blog.mapper.admin.AdminMapper">
     <update id="update">
-        update admin 
+        update admin
         <set>
             <if test="nickname != null and nickname != ''">nickname = #{nickname},</if>
             <if test="email != null and email != ''">email = #{email},</if>
@@ -12,4 +12,35 @@
         </set>
         where id = #{id}
     </update>
+
+    <select id="getPage" resultType="com.jxcia.blog.pojo.vo.AdminPageVo">
+        select a.id, a.nickname, a.email, a.icon, a.status, a.create_time as createTime,
+               group_concat(r.name separator ',') as roles
+        from admin a
+        left join admin_role_relation arr on a.id = arr.admin_id
+        left join `role` r on arr.role_id = r.id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and (a.nickname like concat('%', #{keyword}, '%') or a.email like concat('%', #{keyword}, '%'))
+            </if>
+        </where>
+        group by a.id
+        order by a.create_time desc
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from admin
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and (nickname like concat('%', #{keyword}, '%') or email like concat('%', #{keyword}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertAdminRole">
+        insert into admin_role_relation (admin_id, role_id) values
+        <foreach collection="roleIds" item="roleId" separator=",">
+            (#{adminId}, #{roleId})
+        </foreach>
+    </insert>
 </mapper>
