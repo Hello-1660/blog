@@ -6,6 +6,7 @@ import com.jxcia.blog.pojo.entity.ArticleBrowse;
 import com.jxcia.blog.pojo.entity.ArticleWithBrowseCount;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -40,4 +41,7 @@ public interface ArticleBrowseLogMapper {
      * @return 文章编号列表
      */
     List<Integer> getIdsByUserHistoryDto(UserHistoryDto userHistoryDto);
+
+    @Select("select count(*) from user_article_browse_log")
+    Integer countTotal();
 }

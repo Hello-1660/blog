@@ -77,7 +77,14 @@ INSERT INTO permission (id, name, url, create_time, description) VALUES
 (40, '权限删除',         '/admin/permission/delete/**',       NOW(), '删除权限'),
 (41, '角色权限分配',     '/admin/permission/assignPermission', NOW(), '角色分配权限'),
 -- 邮件管理
-(43, '邮件发送',         '/admin/email/send',               NOW(), '发送邮件');
+(43, '邮件发送',         '/admin/email/send',               NOW(), '发送邮件'),
+-- 仪表盘
+(44, '仪表盘数据',       '/admin/dashboard',                NOW(), '查看仪表盘数据'),
+-- 身份管理
+(45, '身份列表',         '/admin/identify/list',             NOW(), '查看身份列表'),
+(46, '用户身份查询',     '/admin/identify/user/**',          NOW(), '查看用户身份'),
+(47, '身份分配',         '/admin/identify/assign',           NOW(), '分配用户身份'),
+(48, '身份移除',         '/admin/identify/remove/**',        NOW(), '移除用户身份');
 
 -- 3. 菜单记录
 INSERT INTO menu (id, p_id, name, level, web_name, icon, sort, status, create_time) VALUES
@@ -105,7 +112,7 @@ INSERT INTO role_permission_relation (role_id, permission_id) VALUES
 (1,25),(1,26),(1,27),(1,28),(1,29),(1,30),
 (1,31),(1,32),(1,33),(1,34),
 (1,35),
-(1,36),(1,37),(1,38),(1,39),(1,40),(1,41),(1,42),(1,43);
+(1,36),(1,37),(1,38),(1,39),(1,40),(1,41),(1,42),(1,43),(1,44),(1,45),(1,46),(1,47),(1,48);
 
 -- 5. 超级管理员角色拥有全部菜单
 INSERT INTO role_menu_relation (role_id, menu_id) VALUES
@@ -118,3 +125,14 @@ INSERT INTO admin (id, nickname, email, password, create_time, status) VALUES
 
 -- 7. 超级管理员关联角色
 INSERT INTO admin_role_relation (admin_id, role_id) VALUES (1, 1);
+
+-- 8. 身份类型初始化
+INSERT INTO identify_type (id, type_value, status) VALUES
+(1, '蓝标', 1),
+(2, '黄标', 1);
+
+-- 9. 用户身份初始化
+INSERT INTO user_identify (id, name, description, type) VALUES
+(1, '官方认证', '平台官方认证用户', 1),
+(2, '优质创作者', '持续输出优质内容的创作者', 1),
+(3, '资深用户', '长期活跃的社区成员', 2);

@@ -26,4 +26,10 @@ public interface ReportMapper {
     Report getById(Integer id);
 
     void update(Report report);
+
+    @Select("select count(*) from report")
+    Integer countTotal();
+
+    @Select("select count(*) from report where status = #{status}")
+    Integer countByStatus(Integer status);
 }

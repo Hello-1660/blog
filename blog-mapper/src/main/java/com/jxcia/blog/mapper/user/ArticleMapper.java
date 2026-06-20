@@ -95,4 +95,16 @@ public interface ArticleMapper {
     List<com.jxcia.blog.pojo.vo.ArticlePageVo> getPage(com.jxcia.blog.pojo.dto.ArticlePageDto dto);
 
     Integer count(com.jxcia.blog.pojo.dto.ArticlePageDto dto);
+
+    @Select("select count(*) from article")
+    Integer countTotal();
+
+    @Select("select count(*) from article where status = #{status}")
+    Integer countByStatus(Integer status);
+
+    List<java.util.Map<String, Object>> countByCategory();
+
+    @Select("select date_format(create_time, '%Y-%m') as month, count(*) as count from article " +
+            "where create_time >= date_sub(now(), interval 6 month) group by month order by month")
+    List<java.util.Map<String, Object>> countByMonth();
 }

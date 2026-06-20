@@ -59,5 +59,11 @@ public interface UserMapper {
 
     @Select("select id, email from user where account_status = 1")
     List<User> getAllActiveEmails();
+
+    @Select("select count(*) from user")
+    Integer countTotal();
+
+    @Select("select count(*) from user where account_status = #{status}")
+    Integer countByStatus(Integer status);
 }
 

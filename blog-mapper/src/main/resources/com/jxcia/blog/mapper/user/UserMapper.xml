@@ -36,8 +36,12 @@
     <select id="getPage" resultType="com.jxcia.blog.pojo.vo.UserPageVo">
         select u.id, u.nickname, u.email, u.icon, u.account_status as accountStatus,
                u.create_time as createTime,
-               (select count(*) from article a where a.user_id = u.id) as articleCount
+               (select count(*) from article a where a.user_id = u.id) as articleCount,
+               ui.name as identifyName, it.type_value as identifyTypeValue
         from user u
+        left join identify_user_relation iur on u.id = iur.user_id
+        left join user_identify ui on iur.identify_id = ui.id
+        left join identify_type it on ui.type = it.id and it.status = 1
         <where>
             <if test="keyword != null and keyword != ''">
                 and (u.nickname like concat('%', #{keyword}, '%') or u.email like concat('%', #{keyword}, '%'))

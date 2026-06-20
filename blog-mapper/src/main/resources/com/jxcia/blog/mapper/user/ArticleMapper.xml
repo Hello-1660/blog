@@ -98,4 +98,12 @@
         group by a.id, a.user_id, u.nickname, a.icon, a.title, a.create_time, a.category_id
         order by value desc
     </select>
+
+    <select id="countByCategory" resultType="java.util.HashMap">
+        select c.name, count(*) as value
+        from article a join category c on a.category_id = c.id
+        where a.status != 2
+        group by c.id, c.name
+        order by value desc
+    </select>
 </mapper>

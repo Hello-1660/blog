@@ -18,4 +18,6 @@ public class UserPageVo {
     private Integer accountStatus;
     private LocalDateTime createTime;
     private Integer articleCount;
+    private String identifyName;
+    private String identifyTypeValue;
 }
