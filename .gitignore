@@ -36,6 +36,7 @@ build/
 # 忽略 Spring Boot 配置文件（含敏感信息）
 application.yml
 application-dev.yml
+application-pro.yml
 
 # 忽略环境变量文件
 .env
