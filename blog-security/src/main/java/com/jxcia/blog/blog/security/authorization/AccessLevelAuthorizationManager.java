@@ -42,7 +42,7 @@ public class AccessLevelAuthorizationManager implements AuthorizationManager<Req
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         LinkedHashMap<String, AccessLevel> levels = new LinkedHashMap<>();
         RequestMappingHandlerMapping mapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
 

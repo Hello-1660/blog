@@ -1,9 +1,9 @@
 package com.jxcia.blog.blog.security.config;
 
 import com.jxcia.blog.blog.security.authorization.DynamicAuthorizationManager;
+import com.jxcia.blog.blog.security.filter.JwtAuthenticationFilter;
 import com.jxcia.blog.blog.security.handler.RestAuthenticationEntryPoint;
 import com.jxcia.blog.blog.security.handler.RestfulAccessDeniedHandler;
-import com.jxcia.blog.blog.security.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

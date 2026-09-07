@@ -26,7 +26,7 @@
         from article a
         left join user u on a.user_id = u.id
         <where>
-            <if test="categoryId != null">and a.category_id = #{categoryId}</if>
+            <if test="categoryId != null and categoryId != 0">and a.category_id = #{categoryId}</if>
             <if test="title != null and title != ''">and a.title like concat('%', #{title}, '%')</if>
             <if test="createTime != null">and a.create_time &gt; #{createTime}</if>
             <if test="userNickname != null and userNickname != ''">and u.nickname like concat('%', #{userNickname}, '%')</if>

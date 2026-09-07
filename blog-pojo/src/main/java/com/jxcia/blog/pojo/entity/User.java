@@ -32,4 +32,6 @@ public class User {
     private Integer likeShowStatus;
     // 用户账号状态 0禁用 1启用
     private Integer accountStatus;
+    // 用户账号解封日期
+    private LocalDateTime banExpireAt;
 }

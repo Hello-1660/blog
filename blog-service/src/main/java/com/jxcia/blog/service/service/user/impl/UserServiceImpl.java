@@ -3,7 +3,6 @@ package com.jxcia.blog.service.service.user.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jxcia.blog.blog.security.crypto.PasswordEncoder;
-import com.jxcia.blog.blog.security.enums.AccountType;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
 import com.jxcia.blog.common.constant.*;
@@ -72,6 +71,10 @@ public class UserServiceImpl implements UserService {
         if (!userList.isEmpty())
             throw new UserRegisterException(UserRegisterExceptionConstant.EMAIL_EXISTENT);
 
+        // 两次密码不一致
+        if (!userRegisterDto.getPassword().equals(userRegisterDto.getConfirmPassword()))
+            throw new UserRegisterException(UserRegisterExceptionConstant.CONFIRM_PASSWORD_NOT_EQUALS);
+
         user.setNickname(userRegisterDto.getNickname());
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
         user.setCreateTime(LocalDateTime.now());
@@ -106,17 +109,32 @@ public class UserServiceImpl implements UserService {
 
         // 账号已封禁
         if (user.getAccountStatus() == null || user.getAccountStatus() == UserStatusConstant.USER_ACCOUNT_DISABLE) {
-            throw new UserLoginException("该账号已被封禁");
+            LocalDateTime banExpireAt = user.getBanExpireAt();
+            if (banExpireAt == null) throw new UserLoginException(UserLoginExceptionConstant.ACCOUNT_DISABLE);
+
+            // 是否到解封时间
+            if (banExpireAt.isAfter(LocalDateTime.now())) {
+                String tipMsg = UserLoginExceptionConstant.ACCOUNT_DISABLE + "，至" +
+                        banExpireAt.getYear() + "年" + banExpireAt.getMonthValue() + "月" + banExpireAt.getDayOfMonth() + "日"
+                        + banExpireAt.getHour() + "时" + banExpireAt.getMinute() + "分"
+                        + "解封";
+                throw new UserLoginException(tipMsg);
+            } else {
+                // 到解封时间账号解禁
+                // 因为 update 是多个接口共用，如果将解封日期设为可以为 null 会导致部分情况解封时间被刷新，所以不重置解封实时间
+                userMapper.update(User.builder()
+                        .id(user.getId())
+                        .accountStatus(UserStatusConstant.USER_ACCOUNT_ENABLE)
+                        .build());
+            }
         }
 
         // 返回登录信息
         String accessToken = jwtTokenUtil.generateUserAccessToken(user);
-        String refreshToken = jwtTokenUtil.generateRefreshToken(user.getId(), user.getEmail(), AccountType.USER);
         UserLoginVo userLoginVo = new UserLoginVo();
         BeanUtils.copyProperties(user, userLoginVo);
 
         userLoginVo.setToken(accessToken);
-        userLoginVo.setRefreshToken(refreshToken);
 
         return userLoginVo;
     }

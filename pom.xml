@@ -29,7 +29,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <lombok.version>1.18.42</lombok.version>
         <mysql.version>8.0.33</mysql.version>
         <mybatis.version>3.0.4</mybatis.version>

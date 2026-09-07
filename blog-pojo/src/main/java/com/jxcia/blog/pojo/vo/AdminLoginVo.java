@@ -24,6 +24,4 @@ public class AdminLoginVo {
     private Integer status;
     // token
     private String token;
-    // refreshToken
-    private String refreshToken;
 }

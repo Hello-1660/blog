@@ -28,6 +28,7 @@ public class UserManageController {
         return Result.success(userManageService.detail(id));
     }
 
+    // TODO 添加解封时间
     @PostMapping("/toggleStatus/{id}")
     public Result<Void> toggleStatus(@PathVariable Integer id) {
         userManageService.toggleStatus(id);

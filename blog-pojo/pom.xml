@@ -13,9 +13,6 @@
     <name>blog-pojo</name>
     <description>blog-pojo</description>
 
-    <properties>
-        <java.version>17</java.version>
-    </properties>
 
     <dependencies>
         <dependency>

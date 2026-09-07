@@ -30,9 +30,7 @@ public class JwtTokenUtil {
     // 密钥
     @Value("${jwt.secret}")
     private String secret;
-    // 过期时间
-    @Value("${jwt.refreshExpiration}")
-    private Long refreshExpiration;
+    // 过期时间（一周）
     @Value("${jwt.accessExpiration}")
     private Long accessExpiration;
     // 对称密钥
@@ -177,23 +175,6 @@ public class JwtTokenUtil {
         claims.put(ROLES, List.of("ROLE_ADMIN"));
 
         return generateToken(claims, accessExpiration);
-    }
-
-    /**
-     * 生成 Refresh Token
-     * @param id 用户编号
-     * @param email 用户邮箱
-     * @param type 用户类型
-     * @return refresh token
-     */
-    public String generateRefreshToken(Integer id, String email, AccountType type) {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put(ID, id.toString());
-        claims.put(IDENTIFY, type.toString());
-        claims.put(EMAIL, email);
-
-        return generateToken(claims, refreshExpiration);
     }
 
     /**

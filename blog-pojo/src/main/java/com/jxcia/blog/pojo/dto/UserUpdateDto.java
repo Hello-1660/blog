@@ -1,9 +1,15 @@
 package com.jxcia.blog.pojo.dto;
 
 import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserUpdateDto {
     // 用户昵称
     private String nickname;

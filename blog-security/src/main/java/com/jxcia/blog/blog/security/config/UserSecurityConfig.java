@@ -31,6 +31,7 @@ public class UserSecurityConfig {
     public SecurityFilterChain userFilterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/ws/**").permitAll()
                         .anyRequest().access(accessLevelAuthorizationManager)
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))

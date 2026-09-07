@@ -31,7 +31,7 @@ public interface UserMapper {
      * @param email 用户邮箱
      * @return 用户信息
      */
-    @Select("select * from user where email = #{email} and account_status = 1")
+    @Select("select * from user where email = #{email}")
     User findByEmail(String email);
 
     /**

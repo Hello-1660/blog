@@ -28,6 +28,7 @@ public class UserManageServiceImpl implements UserManageService {
 
     @Override
     public void toggleStatus(Integer id) {
+        // TODO 添加解封时间
         User user = userMapper.getEntityById(id);
         if (user == null) throw new UserException(UserExceptionConstant.USER_NOT_EXISTS);
         user.setAccountStatus(user.getAccountStatus() == 1 ? 0 : 1);
