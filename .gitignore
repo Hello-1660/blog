@@ -44,5 +44,5 @@ application-pro.yml
 
 # 忽略 IDE 或个人配置
 config/secret.properties
-
+*.yml
 reasonix.toml
