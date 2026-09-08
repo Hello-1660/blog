@@ -46,4 +46,10 @@ public interface MaterialService {
      * @param userId 用户编号
      */
     void folderDelete(Integer id, Integer userId);
+
+    /**
+     * 更新素材
+     * @param material 素材
+     */
+    void update(Material material, Integer userId);
 }

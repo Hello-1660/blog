@@ -109,11 +109,11 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     /**
-     * 获取素材文件夹
-     * @param folderId 素材文件夹编号
-     * @return 素材文件夹
+     * 更新素材
+     * @param material 素材
      */
-    public MaterialFolder getFolder(Integer folderId) {
-        return materialMapper.getById(folderId);
+    @Override
+    public void update(Material material, Integer userId) {
+        materialMapper.update(material, userId);
     }
 }

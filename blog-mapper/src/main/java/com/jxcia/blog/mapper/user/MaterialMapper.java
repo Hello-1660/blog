@@ -5,6 +5,7 @@ import com.jxcia.blog.pojo.entity.MaterialFolder;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -50,4 +51,12 @@ public interface MaterialMapper {
      */
     @Select("select * from material where group_id = #{id} and user_id = #{userId}")
     List<Material> getByFolderId(Integer id, Integer userId);
+
+    /**
+     * 更新素材
+     * @param material 素材
+     */
+    @Update("update material set name = #{material.name}, group_id = #{material.groupId} " +
+            "where id = #{material.id} and user_id = #{userId}")
+    void update(Material material, Integer userId);
 }

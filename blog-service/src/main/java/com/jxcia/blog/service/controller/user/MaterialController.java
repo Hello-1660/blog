@@ -125,4 +125,22 @@ public class MaterialController {
 
         return Result.success();
     }
+
+    /**
+     * 跟新素材
+     * @param material 素材
+     * @return 无
+     */
+    @PostMapping("/update")
+    public Result<Void> update(@RequestBody Material material) {
+        log.info("update material: {}", material);
+
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+        if (material.getId() == null) throw new MaterialException(MaterialExceptionConstant.MATERIAL_IS_NULL);
+
+        material.setUserId(userId);
+        materialService.update(material, userId);
+        return Result.success();
+    }
 }
