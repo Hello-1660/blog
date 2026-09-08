@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class AppealServiceImpl implements AppealService {
@@ -31,5 +32,15 @@ public class AppealServiceImpl implements AppealService {
                 .build();
 
         appealMapper.insert(appeal);
+    }
+
+    /**
+     * 申诉列表
+     * @param userId 用户编号
+     * @return 申诉列表
+     */
+    @Override
+    public List<Appeal> list(Integer userId) {
+        return appealMapper.getByUserId(userId);
     }
 }

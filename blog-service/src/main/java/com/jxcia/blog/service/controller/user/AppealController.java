@@ -5,13 +5,13 @@ import com.jxcia.blog.common.constant.UserExceptionConstant;
 import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.AppealDto;
+import com.jxcia.blog.pojo.entity.Appeal;
 import com.jxcia.blog.service.service.user.AppealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/appeal")
@@ -37,5 +37,19 @@ public class AppealController {
         appealDto.setUserId(userId);
         appealService.save(appealDto);
         return Result.success();
+    }
+
+    /**
+     * 用户查询申诉列表
+     * @return 申诉列表
+     */
+    @GetMapping("/list")
+    public Result<List<Appeal>> list() {
+        log.info("list");
+
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        return Result.success(appealService.list(userId));
     }
 }
