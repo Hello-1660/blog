@@ -1,9 +1,12 @@
 package com.jxcia.blog.service.controller.user;
 
 import com.jxcia.blog.blog.security.util.SecurityContextUtil;
+import com.jxcia.blog.common.constant.MaterialExceptionConstant;
 import com.jxcia.blog.common.constant.UserExceptionConstant;
+import com.jxcia.blog.common.exception.MaterialException;
 import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.result.Result;
+import com.jxcia.blog.pojo.dto.MaterialFolderDto;
 import com.jxcia.blog.pojo.entity.Material;
 import com.jxcia.blog.service.service.user.MaterialService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +43,7 @@ public class MaterialController {
      * @param ids 素材编号列表
      * @return 无
      */
+    @DeleteMapping("/delete")
     public Result<Void> delete(@RequestBody List<Integer> ids) {
         log.info("delete material: {}", ids);
 
@@ -47,6 +51,25 @@ public class MaterialController {
         if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
 
         materialService.delete(userId, ids);
+        return Result.success();
+    }
+
+    /**
+     * 创建素材文件夹
+     * @param materialFolderDto 素材文件夹
+     * @return 无
+     */
+    @PostMapping("createFolder")
+    public Result<Void> createFolder(@RequestBody MaterialFolderDto materialFolderDto) {
+        log.info("create folder");
+        Integer userId = SecurityContextUtil.getId();
+
+        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+        if (materialFolderDto.getName().isEmpty()) throw new MaterialException(MaterialExceptionConstant.NAME_IS_NULL);
+        if (materialFolderDto.getType() == null) throw new MaterialException(MaterialExceptionConstant.TYPE_IS_NULL);
+
+        materialService.createFolder(materialFolderDto, userId);
+
         return Result.success();
     }
 }

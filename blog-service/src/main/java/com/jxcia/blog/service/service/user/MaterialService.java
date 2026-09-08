@@ -1,5 +1,6 @@
 package com.jxcia.blog.service.service.user;
 
+import com.jxcia.blog.pojo.dto.MaterialFolderDto;
 import com.jxcia.blog.pojo.entity.Material;
 
 import java.util.List;
@@ -17,4 +18,10 @@ public interface MaterialService {
      * @param ids 素材编号列表
      */
     void delete(Integer userId, List<Integer> ids);
+
+    /**
+     * 用户创建素材文件夹
+     * @param materialFolderDto 素材文件夹
+     */
+    void createFolder(MaterialFolderDto materialFolderDto, Integer userId);
 }
