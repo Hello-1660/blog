@@ -34,4 +34,20 @@ public interface MaterialMapper {
      */
     @Select("select * from material_folder where id = #{folderId}")
     MaterialFolder getById(Integer folderId);
+
+    /**
+     * 根据素材编号列表批量查询
+     * @param ids 素材编号列表
+     * @return 素材列表
+     */
+    List<Material> getByIds(List<Integer> ids);
+
+    /**
+     * 根据文件夹编号查询素材
+     * @param id 文件夹编号
+     * @param userId 用户编号
+     * @return 素材列表
+     */
+    @Select("select * from material where group_id = #{id} and user_id = #{userId}")
+    List<Material> getByFolderId(Integer id, Integer userId);
 }

@@ -9,4 +9,11 @@
         </foreach>
         and user_id = #{userId}
     </delete>
+
+    <select id="getByIds" resultType="com.jxcia.blog.pojo.entity.Material">
+        select * from material where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

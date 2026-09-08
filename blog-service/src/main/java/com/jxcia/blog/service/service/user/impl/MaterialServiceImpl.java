@@ -1,5 +1,7 @@
 package com.jxcia.blog.service.service.user.impl;
 
+import com.jxcia.blog.common.constant.MaterialExceptionConstant;
+import com.jxcia.blog.common.exception.MaterialException;
 import com.jxcia.blog.mapper.user.MaterialFolderMapper;
 import com.jxcia.blog.mapper.user.MaterialMapper;
 import com.jxcia.blog.pojo.dto.MaterialFolderDto;
@@ -41,8 +43,17 @@ public class MaterialServiceImpl implements MaterialService {
      */
     @Override
     public void delete(Integer userId, List<Integer> ids) {
+        List<Material> materialList = materialMapper.getByIds(ids);
+
+        // 防止越权
+        materialList.forEach(m -> {
+            if (!m.getUserId().equals(userId))
+                throw new MaterialException(MaterialExceptionConstant.CANNOT_DEL_OTHER_MATERIAL);
+        });
+
         materialMapper.deleteByIds(userId, ids);
-        // TODO 删除 oss 文件
+        //删除 oss 文件
+        materialList.forEach(m -> ossService.deleteImage(m.getUrl()));
     }
 
     /**
@@ -70,6 +81,17 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public void updateFolder(MaterialFolderDto materialFolderDto, Integer userId) {
         materialFolderMapper.updateById(materialFolderDto, userId);
+    }
+
+    /**
+     * 文件夹素材
+     * @param id 文件夹编号
+     * @param userId 用户编号
+     * @return 素材列表
+     */
+    @Override
+    public List<Material> folderDetail(Integer id, Integer userId) {
+        return materialMapper.getByFolderId(id, userId);
     }
 
     /**

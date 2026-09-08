@@ -91,4 +91,20 @@ public class MaterialController {
 
         return Result.success();
     }
+
+    /**
+     * 获取文件夹内素材详情
+     * @param id 文件夹编号
+     * @return 素材列表
+     */
+    @GetMapping("/folderDetail/{id}")
+    public Result<List<Material>> folderDetail(@PathVariable Integer id) {
+        log.info("folder detail: {}", id);
+
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+        if (id == null) throw new MaterialException(MaterialExceptionConstant.MATERIAL_IS_NULL);
+
+        return Result.success(materialService.folderDetail(id, userId));
+    }
 }

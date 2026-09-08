@@ -31,4 +31,12 @@ public interface MaterialService {
      * @param userId 用户编号
      */
     void updateFolder(MaterialFolderDto materialFolderDto, Integer userId);
+
+    /**
+     * 获取文件夹素材列表
+     * @param id 文件夹编号
+     * @param userId 用户编号
+     * @return 素材列表
+     */
+    List<Material> folderDetail(Integer id, Integer userId);
 }
