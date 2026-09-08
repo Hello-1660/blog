@@ -1,5 +1,9 @@
 package com.jxcia.blog.service.controller.user;
 
+import com.jxcia.blog.blog.security.util.SecurityContextUtil;
+import com.jxcia.blog.common.constant.UserExceptionConstant;
+import com.jxcia.blog.common.exception.UserException;
+import com.jxcia.blog.common.exception.UserLoginException;
 import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleDto;
@@ -83,7 +87,13 @@ public class ArticleController {
     public Result<Void> delete(@NotNull Integer articleId) {
         log.info("article delete: {}", articleId);
 
-        articleService.delete(articleId);
+        Integer userId = SecurityContextUtil.getId();
+
+        // 参数校验
+        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
+        if (articleId == null) throw new UserException(UserExceptionConstant.ARTICLE_NOT_EXISTS);
+
+        articleService.delete(articleId, userId);
 
         return Result.success();
     }

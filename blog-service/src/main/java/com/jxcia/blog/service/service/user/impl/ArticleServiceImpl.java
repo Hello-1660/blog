@@ -73,12 +73,7 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Integer articleId) {
-        Integer userId = SecurityContextUtil.getId();
-
-        if (userId == null) throw new UserLoginException(UserExceptionConstant.USER_NOT_LOGIN);
-        if (articleId == null) throw new UserException(UserExceptionConstant.ARTICLE_NOT_EXISTS);
-
+    public void delete(Integer articleId, Integer userId) {
         Article article = articleMapper.getByArticleId(articleId);
 
         // 不能删除其他用户文章

@@ -44,7 +44,7 @@ public interface ArticleService {
      * 删除文章
      * @param articleId 文章编号
      */
-    void delete(Integer articleId);
+    void delete(Integer articleId, Integer userId);
 
     /**
      * 根据文章编号查询文章

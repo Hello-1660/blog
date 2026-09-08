@@ -32,10 +32,28 @@ public class DynamicAuthorizationManager implements AuthorizationManager<Request
         // 未登录，拒绝
         if (auth == null || !(auth.getPrincipal() instanceof CustomUserDetails)) return new AuthorizationDecision(false);
         // 检查是否是管理员
-        if (!hasAdmin(auth)) return new AuthorizationDecision(false);
+        if (hasAdmin(auth)) {
+            // 检查管理员权限
+            return adminDecision(auth, context);
+        } else {
+            // 用户直接放行
+            return new AuthorizationDecision(true);
+        }
+    }
 
-        // 检查权限
+    /**
+     * 判断是否是管理员
+     * @param auth
+     * @return
+     */
+    private boolean hasAdmin(Authentication auth) {
+        return auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    private AuthorizationDecision adminDecision (Authentication auth, RequestAuthorizationContext context) {
         Collection<ConfigAttribute> requiredAttrs = dynamicSecurityMetadataSource.getAllConfigAttributes(context.getRequest());
+
         // 不在权限表里，登录直接访问
         if (CollectionUtils.isEmpty(requiredAttrs)) return new AuthorizationDecision(true);
         // 匹配权限
@@ -47,17 +65,6 @@ public class DynamicAuthorizationManager implements AuthorizationManager<Request
                 }
             }
         }
-
         return new AuthorizationDecision(false);
-    }
-
-    /**
-     * 判断是否是管理员
-     * @param auth
-     * @return
-     */
-    private boolean hasAdmin(Authentication auth) {
-        return auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 }
