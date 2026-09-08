@@ -107,4 +107,22 @@ public class MaterialController {
 
         return Result.success(materialService.folderDetail(id, userId));
     }
+
+    /**
+     * 删除素材文件夹
+     * @param id 文件夹编号
+     * @return 无
+     */
+    @DeleteMapping("/folderDelete/{id}")
+    public Result<Void> folderDelete(@PathVariable Integer id) {
+        log.info("folder delete: {}", id);
+
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+        if (id == null) throw new MaterialException(MaterialExceptionConstant.MATERIAL_FOLDER_IS_NULL);
+
+        materialService.folderDelete(id, userId);
+
+        return Result.success();
+    }
 }

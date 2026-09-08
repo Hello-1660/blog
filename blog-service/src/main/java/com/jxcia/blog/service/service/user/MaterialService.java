@@ -39,4 +39,11 @@ public interface MaterialService {
      * @return 素材列表
      */
     List<Material> folderDetail(Integer id, Integer userId);
+
+    /**
+     * 删除素材文件夹
+     * @param id 文件夹编号
+     * @param userId 用户编号
+     */
+    void folderDelete(Integer id, Integer userId);
 }

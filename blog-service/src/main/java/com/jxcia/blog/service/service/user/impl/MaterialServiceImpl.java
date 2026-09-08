@@ -95,6 +95,20 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     /**
+     * 删除素材文件夹
+     * @param id 文件夹编号
+     * @param userId 用户编号
+     */
+    @Override
+    public void folderDelete(Integer id, Integer userId) {
+        List<Material> materials = folderDetail(id, userId);
+
+        if (!materials.isEmpty()) throw new MaterialException(MaterialExceptionConstant.CANNOT_DEL_OTHER_MATERIAL_FOLDER);
+
+        materialFolderMapper.deleteById(id, userId);
+    }
+
+    /**
      * 获取素材文件夹
      * @param folderId 素材文件夹编号
      * @return 素材文件夹

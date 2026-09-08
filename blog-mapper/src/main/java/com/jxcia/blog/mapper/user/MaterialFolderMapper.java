@@ -2,10 +2,7 @@ package com.jxcia.blog.mapper.user;
 
 import com.jxcia.blog.pojo.dto.MaterialFolderDto;
 import com.jxcia.blog.pojo.entity.MaterialFolder;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface MaterialFolderMapper {
@@ -23,4 +20,12 @@ public interface MaterialFolderMapper {
     @Update("update material_folder set name = #{dto.name} " +
             "where id = #{dto.id} and user_id = #{userId}")
     void updateById(MaterialFolderDto dto, Integer userId);
+
+    /**
+     * 删除素材文件夹
+     * @param id 文件夹编号
+     * @param userId 用户编号
+     */
+    @Delete("delete from material_folder where id = #{id} and user_id = #{userId}")
+    void deleteById(Integer id, Integer userId);
 }
