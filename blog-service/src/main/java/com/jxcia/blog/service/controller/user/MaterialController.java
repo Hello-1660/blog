@@ -61,7 +61,7 @@ public class MaterialController {
      */
     @PostMapping("createFolder")
     public Result<Void> createFolder(@RequestBody MaterialFolderDto materialFolderDto) {
-        log.info("create folder");
+        log.info("create folder: {}", materialFolderDto);
         Integer userId = SecurityContextUtil.getId();
 
         if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
@@ -69,6 +69,25 @@ public class MaterialController {
         if (materialFolderDto.getType() == null) throw new MaterialException(MaterialExceptionConstant.TYPE_IS_NULL);
 
         materialService.createFolder(materialFolderDto, userId);
+
+        return Result.success();
+    }
+
+    /**
+     * 用户更新素材文件夹
+     * @param materialFolderDto 素材文件夹
+     * @return 无
+     */
+    @PostMapping("folderUpdate")
+    public Result<Void> folderUpdate(@RequestBody MaterialFolderDto materialFolderDto) {
+        log.info("update folder: {}", materialFolderDto);
+        Integer userId = SecurityContextUtil.getId();
+
+        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+        if (materialFolderDto.getName().isEmpty()) throw new MaterialException(MaterialExceptionConstant.NAME_IS_NULL);
+        if (materialFolderDto.getType() == null) throw new MaterialException(MaterialExceptionConstant.TYPE_IS_NULL);
+
+        materialService.updateFolder(materialFolderDto, userId);
 
         return Result.success();
     }

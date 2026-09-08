@@ -61,4 +61,23 @@ public class MaterialServiceImpl implements MaterialService {
 
         materialFolderMapper.insert(folder);
     }
+
+    /**
+     * 用户跟新素材文件夹
+     * @param materialFolderDto 素材文件夹
+     * @param userId 用户编号
+     */
+    @Override
+    public void updateFolder(MaterialFolderDto materialFolderDto, Integer userId) {
+        materialFolderMapper.updateById(materialFolderDto, userId);
+    }
+
+    /**
+     * 获取素材文件夹
+     * @param folderId 素材文件夹编号
+     * @return 素材文件夹
+     */
+    public MaterialFolder getFolder(Integer folderId) {
+        return materialMapper.getById(folderId);
+    }
 }

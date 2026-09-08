@@ -24,4 +24,11 @@ public interface MaterialService {
      * @param materialFolderDto 素材文件夹
      */
     void createFolder(MaterialFolderDto materialFolderDto, Integer userId);
+
+    /**
+     * 用户更新素材文件夹
+     * @param materialFolderDto 素材文件夹
+     * @param userId 用户编号
+     */
+    void updateFolder(MaterialFolderDto materialFolderDto, Integer userId);
 }

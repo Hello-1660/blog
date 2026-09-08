@@ -1,8 +1,10 @@
 package com.jxcia.blog.mapper.user;
 
 import com.jxcia.blog.pojo.entity.Material;
+import com.jxcia.blog.pojo.entity.MaterialFolder;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -24,4 +26,12 @@ public interface MaterialMapper {
      * @param ids 素材编号列表
      */
     void deleteByIds(Integer userId, List<Integer> ids);
+
+    /**
+     * 根据素材文件夹编号获取素材文件夹
+     * @param folderId 素材文件夹编号
+     * @return 素材文件夹
+     */
+    @Select("select * from material_folder where id = #{folderId}")
+    MaterialFolder getById(Integer folderId);
 }
