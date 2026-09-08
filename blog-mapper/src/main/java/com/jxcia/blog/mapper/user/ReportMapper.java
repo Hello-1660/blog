@@ -32,4 +32,12 @@ public interface ReportMapper {
 
     @Select("select count(*) from report where status = #{status}")
     Integer countByStatus(Integer status);
+
+    /**
+     * 根据用户编号获取举报列表
+     * @param userId 用户编号
+     * @return 举报列表
+     */
+    @Select("select * from report where user_id = #{userId}")
+    List<Report> getByUserId(Integer userId);
 }

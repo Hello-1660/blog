@@ -99,8 +99,6 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleMapper.getById(id);
         if (article == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
 
-
-
         // 获取文章返回对象
         User user = userMapper.getUserById(article.getUserId());
         ArticleVo articleVo = new ArticleVo();
