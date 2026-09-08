@@ -1,6 +1,5 @@
 package com.jxcia.blog.service.controller.token;
 
-import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.blog.security.util.JwtTokenUtil;
 import com.jxcia.blog.common.constant.TokenConstant;
 import com.jxcia.blog.common.result.Result;
@@ -27,7 +26,6 @@ public class TokenController {
     @Value("${jwt.tokenHead}")
     private String head;
 
-    @AuthRequired
     @PostMapping("/logout")
     public Result<Void> logout(@RequestHeader("Authorization") String authHeader) {
         String accessToken = authHeader.replace(head, "");

@@ -1,8 +1,5 @@
 package com.jxcia.blog.service.controller.user;
 
-import com.jxcia.blog.blog.security.annotation.Anonymous;
-import com.jxcia.blog.blog.security.annotation.AuthOptional;
-import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleDto;
@@ -37,7 +34,6 @@ public class ArticleController {
      * @param articleDto 文章搜索信息
      * @return 文章分数据
      */
-    @Anonymous
     @PostMapping("/search")
     public Result<PageResult<ArticleSearchVo>> search(@RequestBody ArticleSearchDto articleDto) {
         log.info("article search: {}", articleDto);
@@ -49,7 +45,6 @@ public class ArticleController {
      * 推荐文章详情列表
      * @return 推荐文章列表
      */
-    @Anonymous
     @GetMapping("/detail")
     public Result<List<HotArticleVo>> hotDetail() {
         log.info("article hotDetail");
@@ -61,7 +56,6 @@ public class ArticleController {
      * 关注用户的文章列表
      * @return 文章列表
      */
-    @AuthRequired
     @GetMapping("/followed")
     public Result<List<HotArticleVo>> followed() {
         log.info("article followed");
@@ -73,7 +67,6 @@ public class ArticleController {
      * @param articleDto 保存文章信息
      * @return 文章编号
      */
-    @AuthRequired
     @PostMapping("/save")
     public Result<Integer> save(@RequestBody @Valid ArticleDto articleDto) {
         log.info("article save: {}", articleDto);
@@ -86,7 +79,6 @@ public class ArticleController {
      * @param articleId 文章编号
      * @return 无
      */
-    @AuthRequired
     @DeleteMapping("/delete")
     public Result<Void> delete(@NotNull Integer articleId) {
         log.info("article delete: {}", articleId);
@@ -101,7 +93,6 @@ public class ArticleController {
      * @param id 文章编号
      * @return 文章
      */
-    @AuthOptional
     @GetMapping("/browse/{id}")
     public Result<ArticleVo> browse (@PathVariable @NotNull Integer id) {
         log.info("article browse: {}", id);
@@ -113,7 +104,6 @@ public class ArticleController {
      * 更新文章
      * @param articleUpdateDto 更新文章信息
      */
-    @AuthRequired
     @PostMapping("/update")
     public Result<Void> update(@RequestBody @Valid ArticleUpdateDto articleUpdateDto) {
         log.info("article update: {}", articleUpdateDto);
@@ -128,7 +118,6 @@ public class ArticleController {
      * @param id 文章编号
      * @return 文章信息
      */
-    @Anonymous
     @GetMapping("/articleMsg/{id}")
     public Result<ArticleMsgVo> articleMsg(@PathVariable @NotNull Integer id) {
         log.info("article articleMsg: {}", id);

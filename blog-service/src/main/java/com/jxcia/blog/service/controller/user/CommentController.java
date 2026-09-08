@@ -1,7 +1,5 @@
 package com.jxcia.blog.service.controller.user;
 
-import com.jxcia.blog.blog.security.annotation.Anonymous;
-import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.CommentDto;
@@ -32,7 +30,6 @@ public class CommentController {
      * @param commentDto 用户评论信息
      * @return 无
      */
-    @AuthRequired
     @PostMapping("/save")
     public Result<CommentWithUserVo> save(@RequestBody @Valid CommentDto commentDto) {
         log.info("comment save: {}", commentDto);
@@ -45,7 +42,6 @@ public class CommentController {
      * @param commentId 评论编号
      * @return 无
      */
-    @AuthRequired
     @DeleteMapping("/delete/{commentId}")
     public Result<Void> delete(@PathVariable Long commentId) {
         log.info("comment delete: {}", commentId);
@@ -60,7 +56,6 @@ public class CommentController {
      * @param commentId 用户评论编号
      * @return 无
      */
-    @AuthRequired
     @PostMapping("/like")
     public Result<Void> like(@NotNull Long commentId) {
         log.info("comment like: {}", commentId);
@@ -75,7 +70,6 @@ public class CommentController {
      * @param commentId 评论编号
      * @return true 已置顶，false 已取消
      */
-    @AuthRequired
     @PostMapping("/pin/{commentId}")
     public Result<Boolean> pin(@PathVariable Long commentId) {
         log.info("comment pin: {}", commentId);
@@ -90,7 +84,6 @@ public class CommentController {
      * @param pageSize 每页条数
      * @return 文章评论分页数据
      */
-    @Anonymous
     @GetMapping("/detail/{articleId}")
     public Result<PageResult<CommentWithUserVo>> detail(
             @PathVariable Integer articleId,

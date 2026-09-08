@@ -26,7 +26,7 @@ public class DynamicSecurityMetadataSource implements InitializingBean {
     private Map<String, Collection<ConfigAttribute>> configAttributeMap = new HashMap<>();
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (dynamicSecurityService != null) {
             configAttributeMap = dynamicSecurityService.loadDataSource();
         }

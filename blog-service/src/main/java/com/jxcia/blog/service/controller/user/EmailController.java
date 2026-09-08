@@ -1,6 +1,5 @@
 package com.jxcia.blog.service.controller.user;
 
-import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.entity.Email;
 import com.jxcia.blog.service.service.user.EmailService;
@@ -27,7 +26,6 @@ public class EmailController {
      * @param articleId 文章编号
      * @return json
      */
-    @AuthRequired
     @GetMapping("/massSendFans/{articleId}")
     public Result<Void> massSendFans(@PathVariable Integer articleId) {
         log.info("mass send fans article id: {}", articleId);
@@ -40,7 +38,6 @@ public class EmailController {
      * @param id 邮件编号
      * @return 邮件
      */
-    @AuthRequired
     @GetMapping("/read/{id}")
     public Result<Email> read(@PathVariable Integer id) {
         log.info("read email id: {}", id);
@@ -51,7 +48,6 @@ public class EmailController {
      * 全部已读
      * @return 无
      */
-    @AuthRequired
     @GetMapping("/allRead")
     public Result<Void> allRead() {
         log.info("all read email");
@@ -63,7 +59,6 @@ public class EmailController {
      * 获取当前用户的邮件列表
      * @return 邮件列表
      */
-    @AuthRequired
     @GetMapping("/list")
     public Result<List<Email>> list() {
         log.info("list email");
@@ -75,7 +70,6 @@ public class EmailController {
      * @param ids 邮件列表
      * @return 无
      */
-    @AuthRequired
     @PostMapping("/delete")
     public Result<Void> delete(@RequestBody List<Integer> ids) {
         log.info("delete email ids: {}", ids);

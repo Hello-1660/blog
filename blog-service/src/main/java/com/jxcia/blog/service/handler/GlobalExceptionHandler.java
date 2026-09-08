@@ -1,6 +1,5 @@
 package com.jxcia.blog.service.handler;
 
-import com.jxcia.blog.common.constant.UserExceptionConstant;
 import com.jxcia.blog.common.exception.BaseException;
 import com.jxcia.blog.common.exception.ServiceException;
 import com.jxcia.blog.common.exception.UserNotLoginException;

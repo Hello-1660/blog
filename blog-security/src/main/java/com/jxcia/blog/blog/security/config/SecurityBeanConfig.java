@@ -1,6 +1,5 @@
 package com.jxcia.blog.blog.security.config;
 
-import com.jxcia.blog.blog.security.authorization.AccessLevelAuthorizationManager;
 import com.jxcia.blog.blog.security.authorization.DynamicAuthorizationManager;
 import com.jxcia.blog.blog.security.crypto.PasswordEncoder;
 import com.jxcia.blog.blog.security.crypto.Pbkdf2PasswordEncoder;
@@ -14,11 +13,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SecurityBeanConfig {
-    @Bean
-    public AccessLevelAuthorizationManager accessDecisionManager() {
-        return new AccessLevelAuthorizationManager();
-    }
-
     @Bean
     public DynamicAuthorizationManager dynamicAuthorizationManager() {
         return new DynamicAuthorizationManager();

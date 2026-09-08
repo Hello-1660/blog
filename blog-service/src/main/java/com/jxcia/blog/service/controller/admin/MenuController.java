@@ -1,6 +1,5 @@
 package com.jxcia.blog.service.controller.admin;
 
-import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.entity.Menu;
 import com.jxcia.blog.service.service.admin.MenuService;

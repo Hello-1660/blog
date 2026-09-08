@@ -1,6 +1,5 @@
 package com.jxcia.blog.service.controller.test;
 
-import com.jxcia.blog.blog.security.annotation.Anonymous;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.entity.TestMessage;
 import com.jxcia.blog.service.service.test.TestService;
@@ -21,7 +20,6 @@ public class TestController {
      * 获取测试信息
      * @return 测试对象
      */
-    @Anonymous
     @GetMapping
     public Result<TestMessage> test() {
         log.info("获取测试信息");

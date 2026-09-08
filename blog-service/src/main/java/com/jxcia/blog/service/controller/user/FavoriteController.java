@@ -1,7 +1,5 @@
 package com.jxcia.blog.service.controller.user;
 
-import com.jxcia.blog.blog.security.annotation.Anonymous;
-import com.jxcia.blog.blog.security.annotation.AuthRequired;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.FavoriteDto;
 import com.jxcia.blog.pojo.entity.Article;
@@ -30,7 +28,6 @@ public class FavoriteController {
      * @param favoriteDto 收藏夹
      * @return 无
      */
-    @AuthRequired
     @PostMapping("/save")
     public Result<Void> save(@RequestBody @Valid FavoriteDto favoriteDto) {
         log.info("save favorite: {}", favoriteDto);
@@ -45,7 +42,6 @@ public class FavoriteController {
      * @param favoriteId 收藏夹编号
      * @return 无
      */
-    @AuthRequired
     @DeleteMapping("/delete/{favoriteId}")
     public Result<Void> delete(@PathVariable Long favoriteId) {
         log.info("delete favorite: {}", favoriteId);
@@ -60,7 +56,6 @@ public class FavoriteController {
      * @param favoriteArticle 收藏夹文章信息
      * @return 无
      */
-    @AuthRequired
     @PostMapping("/addArticle")
     public Result<Void> addArticle(@RequestBody @Valid FavoriteArticle favoriteArticle) {
         log.info("addArticle favorite: {}", favoriteArticle);
@@ -75,7 +70,6 @@ public class FavoriteController {
      * @param favorite 收藏夹信息
      * @return 收藏夹
      */
-    @AuthRequired
     @PostMapping("/update")
     public Result<Void> update(@RequestBody Favorite favorite) {
         log.info("update favorite: {}", favorite);
@@ -89,7 +83,6 @@ public class FavoriteController {
      * 查看收藏夹列表
      * @return 收藏夹列表
      */
-    @AuthRequired
     @GetMapping({"/list/{id}", "/list"})
     public Result<List<Favorite>> list(@PathVariable(required = false) Integer id) {
         log.info("favorite list: {}", id);
@@ -102,7 +95,6 @@ public class FavoriteController {
      * @param favoriteId 收藏夹编号
      * @return 文章列表
      */
-    @AuthRequired
     @GetMapping("/listArticle/{favoriteId}")
     public Result<List<Article>> listArticle(@PathVariable Integer favoriteId) {
         log.info("favorite listArticle: {}", favoriteId);
@@ -116,7 +108,6 @@ public class FavoriteController {
      * @param articleId 文章编号
      * @return 无
      */
-    @AuthRequired
     @DeleteMapping("/removeArticle")
     public Result<Void> removeArticle(Long favoriteId, Integer articleId) {
         log.info("removeArticle favorite: {} article: {}", favoriteId, articleId);
@@ -131,7 +122,6 @@ public class FavoriteController {
      * @param favoriteId 收藏夹编号
      * @return 无
      */
-    @AuthRequired
     @DeleteMapping("/removeAllArticles/{favoriteId}")
     public Result<Void> removeAllArticles(@PathVariable Long favoriteId) {
         log.info("removeAllArticles favorite: {}", favoriteId);

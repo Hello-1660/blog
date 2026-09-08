@@ -1,6 +1,5 @@
 package com.jxcia.blog.blog.security.config;
 
-import com.jxcia.blog.blog.security.authorization.AccessLevelAuthorizationManager;
 import com.jxcia.blog.blog.security.handler.RestAuthenticationEntryPoint;
 import com.jxcia.blog.blog.security.handler.RestfulAccessDeniedHandler;
 import com.jxcia.blog.blog.security.filter.JwtAuthenticationFilter;
@@ -23,8 +22,6 @@ public class UserSecurityConfig {
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-    @Autowired
-    private AccessLevelAuthorizationManager accessLevelAuthorizationManager;
 
     @Bean
     @Order(2)
@@ -32,7 +29,6 @@ public class UserSecurityConfig {
         http.securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/ws/**").permitAll()
-                        .anyRequest().access(accessLevelAuthorizationManager)
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))
                 .exceptionHandling(ex -> ex
