@@ -1,6 +1,8 @@
 package com.jxcia.blog.service.util;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.lionsoul.ip2region.service.Ip2Region;
+import org.lionsoul.ip2region.service.Config;
 
 /**
  * ip 工具类
@@ -8,6 +10,46 @@ import jakarta.servlet.http.HttpServletRequest;
 public class IpUtil {
 
     private static final String UNKNOWN = "unknown";
+    private static final Ip2Region IP_2_REGION;
+
+    static {
+        try {// 1, 创建 v4 的配置：指定缓存策略和 v4 的 xdb 文件路径
+            final Config v4Config = Config.custom()
+                    .setCachePolicy(Config.BufferCache)     // 指定缓存策略:  NoCache / VIndexCache / BufferCache
+                    .setSearchers(15)                       // 设置初始化的查询器数量
+                    // .setCacheSliceBytes(int)             // 设置缓存的分片字节数，默认为 50MiB
+                    // .setXdbInputStream(InputStream)      // 设置 v4 xdb 文件的 inputstream 对象
+                    // .setXdbFile(File)                    // 设置 v4 xdb File 对象
+                    // .setFairLock(boolean)                // 设置 ReentrantLock 是否使用公平锁
+                    .setXdbInputStream(
+                            Thread.currentThread()
+                                    .getContextClassLoader()
+                                    .getResourceAsStream("ip2region_v4.xdb")
+                    )    // 设置 v4 xdb 文件的路径
+                    .asV4();    // 指定为 v4 配置
+
+
+            // 2, 创建 v6 的配置：指定缓存策略和 v6 的 xdb 文件路径
+            final Config v6Config = Config.custom()
+                    .setCachePolicy(Config.BufferCache)     // 指定缓存策略: NoCache / VIndexCache / BufferCache
+                    .setSearchers(15)                       // 设置初始化的查询器数量
+                    // .setCacheSliceBytes(int)             // 设置缓存的分片字节数，默认为 50MiB
+                    // .setXdbInputStream(InputStream)      // 设置 v6 xdb 文件的 inputstream 对象
+                    // .setXdbFile(File)                    // 设置 v6 xdb File 对象
+                    // .setFairLock(boolean)                // 设置 ReentrantLock 是否使用公平锁
+                    .setXdbInputStream(
+                            Thread.currentThread()
+                                    .getContextClassLoader()
+                                    .getResourceAsStream("ip2region_v6.xdb")
+                    )    // 设置 v6 xdb 文件的路径
+                    .asV6();    // 指定为 v6 配置
+
+            IP_2_REGION = Ip2Region.create(v4Config, v6Config);
+        } catch (Exception e) {
+            throw new RuntimeException("初始化 ip2region 失败", e);
+        }
+    }
+
 
     public static String getClientIp(HttpServletRequest request) {
         String ip = null;
@@ -27,6 +69,19 @@ public class IpUtil {
 
         // 处理直连 ip
         return request.getRemoteAddr();
+    }
+
+    /**
+     * 返回 ip 所在位置
+     * @param ip ip地址
+     * @return 位置
+     */
+    public static String ip2Region(String ip)  {
+        try {
+            return IP_2_REGION.search(ip);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

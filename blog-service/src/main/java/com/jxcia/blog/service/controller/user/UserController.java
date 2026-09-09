@@ -6,6 +6,7 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.*;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Email;
+import com.jxcia.blog.pojo.entity.UserIp;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.service.service.user.UserService;
 import com.jxcia.blog.service.util.IpUtil;
@@ -270,5 +271,17 @@ public class UserController {
 
         userService.historyDel(ids);
         return Result.success();
+    }
+
+    /**
+     * 获取用户位置信息
+     * @param request 请求
+     * @return ip + 地址
+     */
+    @GetMapping("/address")
+    public Result<UserIp> address(HttpServletRequest request) {
+        log.info("address");
+
+        return Result.success(userService.address(request));
     }
 }

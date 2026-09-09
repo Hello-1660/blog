@@ -13,12 +13,18 @@ import com.jxcia.blog.pojo.entity.*;
 import com.jxcia.blog.pojo.vo.*;
 import com.jxcia.blog.mapper.user.*;
 import com.jxcia.blog.service.service.user.UserService;
+import com.jxcia.blog.service.util.IpUtil;
 import com.jxcia.blog.service.util.SampleMailUtil;
 import com.jxcia.blog.service.util.VerificationCodeUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import org.lionsoul.ip2region.service.InvalidConfigException;
+import org.lionsoul.ip2region.xdb.InetAddressException;
+import org.lionsoul.ip2region.xdb.XdbException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -554,6 +560,22 @@ public class UserServiceImpl implements UserService {
         if (ids == null || ids.isEmpty()) return;
         Integer userId = SecurityContextUtil.getId();
         articleBrowseLogMapper.updateUserIdByArticleId(ids, userId);
+    }
+
+    /**
+     * 获取用户位置信息
+     * @param request 请求
+     * @return ip + 地址
+     */
+    @Override
+    public UserIp address(HttpServletRequest request) {
+        String clientIp = IpUtil.getClientIp(request);
+        String address = IpUtil.ip2Region(clientIp);
+
+        return UserIp.builder()
+                .ip(clientIp)
+                .address(address)
+                .build();
     }
 
 

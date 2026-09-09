@@ -5,7 +5,9 @@ import com.jxcia.blog.pojo.dto.*;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.Email;
 import com.jxcia.blog.pojo.entity.User;
+import com.jxcia.blog.pojo.entity.UserIp;
 import com.jxcia.blog.pojo.vo.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -149,4 +151,11 @@ public interface UserService {
      * @param ids 浏览文章编号
      */
     void historyDel(List<Integer> ids);
+
+    /**
+     * 获取用户位置信息
+     * @param request 请求
+     * @return ip + 地址
+     */
+    UserIp address(HttpServletRequest request);
 }
