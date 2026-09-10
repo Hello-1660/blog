@@ -25,4 +25,15 @@ public class CommonApiController {
         log.info("historyNew");
         return Result.success(commonApiService.historyNews());
     }
+
+    /**
+     * 地区新闻
+     * @param areaName 地区名称
+     * @return json
+     */
+    @GetMapping("/areaNews")
+    public Result<String> areaNews(String areaName) {
+        log.info("areaNews: {}", areaName);
+        return Result.success(commonApiService.areaNews(areaName));
+    }
 }

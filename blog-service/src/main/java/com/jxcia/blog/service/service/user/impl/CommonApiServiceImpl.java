@@ -17,6 +17,7 @@ public class CommonApiServiceImpl implements CommonApiService {
     private HttpUtil httpUtil;
 
     private static final String HISTORY_KEY = "historyNews:";
+    private static final String AREA_NEWS_KEY = "areaNews:";
 
     /**
      * 历史上的今天接口
@@ -32,6 +33,24 @@ public class CommonApiServiceImpl implements CommonApiService {
         String newsJson = httpUtil.getTodayHistoryNews();
         // 放入 redis 24小时过期
         redisTemplate.opsForValue().set(HISTORY_KEY + LocalDate.now(), newsJson, 24, TimeUnit.HOURS);
+        return newsJson;
+    }
+
+    /**
+     * 地区新闻
+     * @param areaName 地区
+     * @return json
+     */
+    @Override
+    public String areaNews(String areaName) {
+        // 读取 redis
+        String cached = redisTemplate.opsForValue().get(AREA_NEWS_KEY + areaName);
+        if (cached != null) return cached;
+
+        // 重新查询
+        String newsJson = httpUtil.getAreaNews(areaName);
+        // 放入 redis 24小时过期
+        redisTemplate.opsForValue().set(AREA_NEWS_KEY + areaName, newsJson, 24, TimeUnit.HOURS);
         return newsJson;
     }
 }

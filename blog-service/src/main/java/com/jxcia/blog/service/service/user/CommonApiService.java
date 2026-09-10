@@ -7,4 +7,11 @@ public interface CommonApiService {
      * @return json
      */
     String historyNews();
+
+    /**
+     * 地区新闻
+     * @param areaName 地区
+     * @return json
+     */
+    String areaNews(String areaName);
 }
