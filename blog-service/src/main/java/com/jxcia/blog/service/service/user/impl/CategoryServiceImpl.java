@@ -35,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             String cached = redisTemplate.opsForValue().get(CACHE_KEY);
             if (cached != null) {
-                return objectMapper.readValue(cached, new TypeReference<List<Category>>() {});
+                return objectMapper.readValue(cached, new TypeReference<>() {});
             }
         } catch (Exception e) {
             log.warn("读取分类缓存失败，回源数据库", e);
