@@ -578,6 +578,18 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    /**
+     * 刷新 token
+     * 旧 token 的校验在 security 层就顺带完成了，这里直接返回新的即可
+     * @param userId 用户b编号
+     * @return 新 token
+     */
+    @Override
+    public String refreshToken(Integer userId) {
+        User user = userMapper.getUserById(userId);
+        return jwtTokenUtil.generateUserAccessToken(user);
+    }
+
 
     /**
      * 根据文章编号查询文章点赞记录

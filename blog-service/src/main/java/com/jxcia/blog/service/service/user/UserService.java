@@ -158,4 +158,11 @@ public interface UserService {
      * @return ip + 地址
      */
     UserIp address(HttpServletRequest request);
+
+    /**
+     * 刷新 token
+     * @param userId 用户 id
+     * @return 新 token
+     */
+    String refreshToken(Integer userId);
 }

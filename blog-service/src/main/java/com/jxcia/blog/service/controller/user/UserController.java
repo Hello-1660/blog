@@ -1,6 +1,9 @@
 package com.jxcia.blog.service.controller.user;
 
+import com.jxcia.blog.blog.security.util.SecurityContextUtil;
+import com.jxcia.blog.common.constant.UserExceptionConstant;
 import com.jxcia.blog.common.constant.VerificationCodeConstant;
+import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.result.PageResult;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.*;
@@ -283,5 +286,17 @@ public class UserController {
         log.info("address");
 
         return Result.success(userService.address(request));
+    }
+
+    /**
+     * 刷新 token
+     * @return 新 token
+     */
+    @GetMapping("/refreshToken")
+    public Result<String> refreshToken() {
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        return Result.success(userService.refreshToken(userId));
     }
 }
