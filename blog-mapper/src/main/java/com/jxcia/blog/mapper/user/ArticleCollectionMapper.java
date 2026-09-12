@@ -33,7 +33,8 @@ public interface ArticleCollectionMapper {
      * @return 文章列表
      */
     @Select("select * from article where id in " +
-            "(select article_id from article_collection_relation where collection_id = #{id})")
+            "(select article_id from article_collection_relation where collection_id = #{id}) " +
+            "order by create_time desc")
     List<Article> getArticleListByCollectionId(Integer id);
 
     /**

@@ -39,8 +39,20 @@ public class ArticleCollectionServiceImpl implements ArticleCollectionService {
 
         if (articleCollection == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
 
-        // TODO 返回文章集合第一篇文章的封面
-        return null;
+        ArticleCollectionVo articleCollectionVo = ArticleCollectionVo.builder()
+                .id(articleCollection.getId())
+                .name(articleCollection.getName())
+                .userId(articleCollection.getUserId())
+                .sort(articleCollection.getSort())
+                .createTime(articleCollection.getCreateTime())
+                .build();
+
+        // 获取集合第一个文章作为集合封面
+        List<Article> articleList = articleCollectionMapper.getArticleListByCollectionId(id);
+        if (articleList != null && !articleList.isEmpty())
+            articleCollectionVo.setIcon(articleList.getFirst().getIcon());
+
+        return articleCollectionVo;
     }
 
     /**
