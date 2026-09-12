@@ -5,10 +5,7 @@ import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleCollection;
 import com.jxcia.blog.pojo.entity.ArticleCollectionRelation;
 import com.jxcia.blog.pojo.entity.ArticleListCollection;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -67,4 +64,12 @@ public interface ArticleCollectionMapper {
      */
     @Delete("delete from article_collection_relation where article_id = #{id}")
     void removeACRByArticleId(Integer id);
+
+    /**
+     * 更新文章集合记录
+     * @param articleCollection 文章集合信息
+     */
+    @Update("update article_collection set name = #{name}, sort = #{sort} " +
+            "where id = #{id}")
+    void update(ArticleCollection articleCollection);
 }

@@ -131,4 +131,18 @@ public class ArticleCollectionServiceImpl implements ArticleCollectionService {
 
         articleCollectionMapper.removeACRByACRList(articleListCollection);
     }
+
+    /**
+     * 修改文章集合信息
+     * @param userId 用户编号
+     * @param articleCollection 文章集合信息
+     */
+    @Override
+    public void update(Integer userId, ArticleCollection articleCollection) {
+        ArticleCollection collection = articleCollectionMapper.getById(articleCollection.getId());
+        if (collection == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
+        if (!collection.getUserId().equals(userId)) throw new ArticleException(ArticleExceptionConstant.ILLEGAL_OPERATION);
+
+        articleCollectionMapper.update(articleCollection);
+    }
 }

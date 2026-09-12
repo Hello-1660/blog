@@ -9,6 +9,7 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleCollectionDto;
 import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.ArticleCollection;
 import com.jxcia.blog.pojo.entity.ArticleListCollection;
 import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
 import com.jxcia.blog.service.service.user.ArticleCollectionService;
@@ -115,6 +116,28 @@ public class ArticleCollectionController {
                 if (articleId == null) throw new ArticleException(ArticleExceptionConstant.ILLEGAL_OPERATION);
             });
         articleCollectionService.remove(userId, articleListCollection);
+
+        return Result.success();
+    }
+
+    /**
+     * 修改集合信息
+     * @param articleCollection 集合信息
+     * @return 无
+     */
+    @PostMapping("/update")
+    public Result<Void> update(@RequestBody ArticleCollection articleCollection) {
+        log.info("articleCollection update articleCollectionDto:{}", articleCollection);
+
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null)
+            throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+        if (articleCollection.getId() == null)
+            throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
+        if (articleCollection.getName() == null || articleCollection.getName().trim().isEmpty())
+            throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NAME_IS_NULL);
+
+        articleCollectionService.update(userId, articleCollection);
 
         return Result.success();
     }

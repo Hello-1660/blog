@@ -3,6 +3,7 @@ package com.jxcia.blog.service.service.user;
 import com.jxcia.blog.pojo.dto.ArticleCollectionDto;
 import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.ArticleCollection;
 import com.jxcia.blog.pojo.entity.ArticleListCollection;
 import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
 
@@ -41,4 +42,11 @@ public interface ArticleCollectionService {
      * @param articleListCollection 文章集合信息
      */
     void remove(Integer userId, ArticleListCollection articleListCollection);
+
+    /**
+     * 修改文章集合
+     * @param userId 用户编号
+     * @param articleCollection 文章集合信息
+     */
+    void update(Integer userId, ArticleCollection articleCollection);
 }
