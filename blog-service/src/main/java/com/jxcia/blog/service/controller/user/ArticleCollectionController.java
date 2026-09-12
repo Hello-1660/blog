@@ -7,6 +7,7 @@ import com.jxcia.blog.common.exception.ArticleException;
 import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleCollectionDto;
+import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
 import com.jxcia.blog.service.service.user.ArticleCollectionService;
@@ -70,5 +71,27 @@ public class ArticleCollectionController {
         if (id == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
 
         return Result.success(articleCollectionService.list(id));
+    }
+
+    /**
+     * 添加文章
+     * @param articleCollectionRelationDto 添加文章信息
+     * @return 无
+     */
+    @PostMapping("/add")
+    public Result<Void> add(@RequestBody ArticleCollectionRelationDto articleCollectionRelationDto) {
+        log.info("articleCollection add id:{}", articleCollectionRelationDto);
+
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null)
+            throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+        if (articleCollectionRelationDto.getArticleId() == null)
+            throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+        if (articleCollectionRelationDto.getCollectionId() == null)
+            throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
+
+        articleCollectionService.add(userId, articleCollectionRelationDto);
+
+        return Result.success();
     }
 }

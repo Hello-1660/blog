@@ -1,7 +1,9 @@
 package com.jxcia.blog.mapper.user;
 
+import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleCollection;
+import com.jxcia.blog.pojo.entity.ArticleCollectionRelation;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -31,6 +33,23 @@ public interface ArticleCollectionMapper {
      * @param id 集合编号
      * @return 文章列表
      */
-    @Select("select * from article_category_relation where category_id = #{id}")
+    @Select("select * from article where id in " +
+            "(select article_id from article_collection_relation where collection_id = #{id})")
     List<Article> getArticleListByCollectionId(Integer id);
+
+    /**
+     * 想文章集合关系表插入数据
+     * @param articleCollectionRelation 文章集合关系
+     */
+    @Insert("insert into article_collection_relation (article_id, collection_id, add_time) " +
+            "value (#{articleId}, #{collectionId}, #{addTime})")
+    void insertACRByACR(ArticleCollectionRelation articleCollectionRelation);
+
+    /**
+     * 根据文章编号和集合编号查询文章关系
+     * @param articleCollectionRelationDto 文章编号和集合编号
+     * @return 文章关系记录
+     */
+    @Select("select * from article_collection_relation where collection_id = #{collectionId} and article_id = #{articleId}")
+    ArticleCollectionRelation getACRByArticleIdAndCollectionId(ArticleCollectionRelationDto articleCollectionRelationDto);
 }

@@ -5,9 +5,12 @@ import com.jxcia.blog.common.constant.ArticleExceptionConstant;
 import com.jxcia.blog.common.constant.ArticleStatusConstant;
 import com.jxcia.blog.common.exception.ArticleException;
 import com.jxcia.blog.mapper.user.ArticleCollectionMapper;
+import com.jxcia.blog.mapper.user.ArticleMapper;
 import com.jxcia.blog.pojo.dto.ArticleCollectionDto;
+import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleCollection;
+import com.jxcia.blog.pojo.entity.ArticleCollectionRelation;
 import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
 import com.jxcia.blog.service.service.user.ArticleCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,8 @@ import java.util.List;
 public class ArticleCollectionServiceImpl implements ArticleCollectionService {
     @Autowired
     private ArticleCollectionMapper articleCollectionMapper;
+    @Autowired
+    private ArticleMapper articleMapper;
 
     /**
      * 获取集合信息
@@ -80,5 +85,36 @@ public class ArticleCollectionServiceImpl implements ArticleCollectionService {
 
         // 集合为空直接返回
         return articleList;
+    }
+
+    /**
+     * 添加文章
+     * @param userId 用户编号
+     * @param articleCollectionRelationDto 添加文章信息
+     */
+    @Override
+    public void add(Integer userId, ArticleCollectionRelationDto articleCollectionRelationDto) {
+        ArticleCollection collection = articleCollectionMapper.getById(articleCollectionRelationDto.getCollectionId());
+        Article article = articleMapper.getByArticleId(articleCollectionRelationDto.getArticleId());
+
+        if (collection == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
+        if (article == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_NOT_FOND);
+
+        // 不能操作非自己的文章和集合
+        if (!article.getUserId().equals(userId) || !collection.getUserId().equals(userId))
+            throw new ArticleException(ArticleExceptionConstant.ILLEGAL_OPERATION);
+
+        // 不能重复插入
+        ArticleCollectionRelation acr = articleCollectionMapper.getACRByArticleIdAndCollectionId(articleCollectionRelationDto);
+        if (acr != null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_REPEAT_INSERT_COLLECTION);
+
+        ArticleCollectionRelation articleCollectionRelation = ArticleCollectionRelation
+                .builder()
+                .collectionId(articleCollectionRelationDto.getCollectionId())
+                .articleId(article.getId())
+                .addTime(LocalDateTime.now())
+                .build();
+        // 插入数据
+        articleCollectionMapper.insertACRByACR(articleCollectionRelation);
     }
 }

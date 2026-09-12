@@ -1,6 +1,7 @@
 package com.jxcia.blog.service.service.user;
 
 import com.jxcia.blog.pojo.dto.ArticleCollectionDto;
+import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
 
@@ -26,4 +27,11 @@ public interface ArticleCollectionService {
      * @return 文章列表
      */
     List<Article> list(Integer id);
+
+    /**
+     * 添加文章
+     * @param userId 用户编号
+     * @param articleCollectionRelationDto 添加文章信息
+     */
+    void add(Integer userId, ArticleCollectionRelationDto articleCollectionRelationDto);
 }
