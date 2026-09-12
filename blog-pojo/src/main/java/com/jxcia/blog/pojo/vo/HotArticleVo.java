@@ -14,6 +14,8 @@ public class HotArticleVo {
     private Integer userId;
     // 文章作者昵称
     private String userNickname;
+    // 文章作者头像
+    private String userIcon;
     // 文章封面
     private String icon;
     // 文章标题
@@ -24,4 +26,6 @@ public class HotArticleVo {
     private Long value;
     // 文章分类
     private Integer categoryId;
+    // 文章内容
+    private String content;
 }

@@ -86,18 +86,25 @@
             a.id,
             a.user_id,
             u.nickname as userNickname,
+            u.icon as userIcon,
             a.icon,
             a.title,
             a.create_time,
-            a.category_id,
-            count(*) value
-        from user_article_browse_log uabl
-        join article a on uabl.article_id = a.id
-        left join user u on a.user_id = u.id
+            IFNULL(log.browse_count,0) as value,
+        a.category_id,
+        a.content
+        from article a
+            left join user u on a.user_id = u.id
+            left join (
+            select article_id, count(*) as browse_count
+            from user_article_browse_log
+            group by article_id
+            ) log on a.id = log.article_id
         where a.status = 1
-        group by a.id, a.user_id, u.nickname, a.icon, a.title, a.create_time, a.category_id
         order by value desc
     </select>
+
+
 
     <select id="countByCategory" resultType="java.util.HashMap">
         select c.name, count(*) as value

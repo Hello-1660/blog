@@ -24,7 +24,7 @@ public class HttpUtil {
         try (HttpClient client = HttpClient.newHttpClient()) {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://route.showapi.com/119-42"))
-                    .POST(BodyPublishers.ofString("needContent=1&date=0220"))
+                    .POST(BodyPublishers.ofString("needContent=1"))
                     .setHeader("Content-Type", "application/x-www-form-urlencoded")
                     .setHeader("appKey", apiKey)
                     .build();
