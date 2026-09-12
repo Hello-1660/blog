@@ -7,11 +7,14 @@ import com.jxcia.blog.common.exception.ArticleException;
 import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleCollectionDto;
-import com.jxcia.blog.pojo.entity.ArticleCollection;
+import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
 import com.jxcia.blog.service.service.user.ArticleCollectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/articleCollection")
@@ -26,7 +29,7 @@ public class ArticleCollectionController {
      * @return 集合信息
      */
     @GetMapping("/detail/{id}")
-    public Result<ArticleCollection> detail(@PathVariable Integer id) {
+    public Result<ArticleCollectionVo> detail(@PathVariable Integer id) {
         log.info("articleCollection detail id:{}", id);
 
         if (id == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
@@ -53,5 +56,19 @@ public class ArticleCollectionController {
         articleCollectionService.save(userId, articleCollectionDto);
 
         return Result.success();
+    }
+
+    /**
+     * 获取文章集合中的文章
+     * @param id 文章集合编号
+     * @return 文章列表
+     */
+    @GetMapping("/list/{id}")
+    public Result<List<Article>> list(@PathVariable Integer id) {
+        log.info("articleCollection list id:{}", id);
+
+        if (id == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
+
+        return Result.success(articleCollectionService.list(id));
     }
 }

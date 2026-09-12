@@ -1,9 +1,12 @@
 package com.jxcia.blog.mapper.user;
 
+import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleCollection;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface ArticleCollectionMapper {
@@ -22,4 +25,12 @@ public interface ArticleCollectionMapper {
     @Insert("insert into article_collection (name, user_id, sort, create_time) " +
             "value (#{name}, #{userId}, #{sort}, #{createTime})")
     void insert(ArticleCollection articleCollection);
+
+    /**
+     * 根据集合编号查询文章列表
+     * @param id 集合编号
+     * @return 文章列表
+     */
+    @Select("select * from article_category_relation where category_id = #{id}")
+    List<Article> getArticleListByCollectionId(Integer id);
 }
