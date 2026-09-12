@@ -15,6 +15,7 @@ import com.jxcia.blog.pojo.dto.ArticleDto;
 import com.jxcia.blog.pojo.dto.ArticleSearchDto;
 import com.jxcia.blog.pojo.dto.ArticleUpdateDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.ArticleListCollection;
 import com.jxcia.blog.pojo.entity.User;
 import com.jxcia.blog.pojo.entity.UserLikeArticle;
 import com.jxcia.blog.pojo.vo.ArticleMsgVo;
@@ -47,6 +48,8 @@ public class ArticleServiceImpl implements ArticleService {
     private CommentMapper commentMapper;
     @Autowired
     private FavoriteMapper favoriteMapper;
+    @Autowired
+    private ArticleCollectionMapper articleCollectionMapper;
 
     /**
      * 文章搜索
@@ -82,7 +85,8 @@ public class ArticleServiceImpl implements ArticleService {
         userLikeArticleMapper.deleteByArticleId(articleId);
         // 删除评论
         commentMapper.deleteByArticleId(articleId);
-        // TODO 删除文章集合中的文章记录
+        // 删除文章集合中的文章记录
+        articleCollectionMapper.removeACRByArticleId(articleId);
         // 删除文章
         articleMapper.deleteByArticleId(articleId);
     }
