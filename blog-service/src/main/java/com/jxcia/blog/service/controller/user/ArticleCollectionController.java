@@ -141,4 +141,22 @@ public class ArticleCollectionController {
 
         return Result.success();
     }
+
+    /**
+     * 删除文章集合
+     * @param id 文章集合编号
+     * @return 无
+     */
+    @DeleteMapping("/delete/{id}")
+    public Result<Void> delete(@PathVariable Integer id) {
+        log.info("articleCollection delete id:{}", id);
+
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+        if (id == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
+
+        articleCollectionService.delete(userId, id);
+
+        return Result.success();
+    }
 }

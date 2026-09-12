@@ -72,4 +72,18 @@ public interface ArticleCollectionMapper {
     @Update("update article_collection set name = #{name}, sort = #{sort} " +
             "where id = #{id}")
     void update(ArticleCollection articleCollection);
+
+    /**
+     * 根据集合编号删除集合
+     * @param id 集合编号
+     */
+    @Delete("delete from article_collection where id = #{id}")
+    void removeById(Integer id);
+
+    /**
+     * 根据集合编号删除文章集合数据
+     * @param id 集合编号
+     */
+    @Delete("delete from article_collection_relation where collection_id = #{id}")
+    void removeACRByCollectionId(Integer id);
 }

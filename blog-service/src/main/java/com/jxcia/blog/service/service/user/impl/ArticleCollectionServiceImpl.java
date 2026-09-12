@@ -16,6 +16,7 @@ import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
 import com.jxcia.blog.service.service.user.ArticleCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -123,6 +124,7 @@ public class ArticleCollectionServiceImpl implements ArticleCollectionService {
      * 删除文章集合中的文章
      * @param articleListCollection 文章集合信息
      */
+    @Transactional
     @Override
     public void remove(Integer userId, ArticleListCollection articleListCollection) {
         ArticleCollection collection = articleCollectionMapper.getById(articleListCollection.getCollectionId());
@@ -144,5 +146,22 @@ public class ArticleCollectionServiceImpl implements ArticleCollectionService {
         if (!collection.getUserId().equals(userId)) throw new ArticleException(ArticleExceptionConstant.ILLEGAL_OPERATION);
 
         articleCollectionMapper.update(articleCollection);
+    }
+
+    /**
+     * 删除文章集合
+     * @param userId 用户编号
+     * @param id 集合编号
+     */
+    @Transactional
+    public void delete(Integer userId, Integer id) {
+        ArticleCollection collection = articleCollectionMapper.getById(id);
+        if (collection == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
+        if (!collection.getUserId().equals(userId)) throw new ArticleException(ArticleExceptionConstant.ILLEGAL_OPERATION);
+
+        // 删除集合
+        articleCollectionMapper.removeById(id);
+        // 删除文章集合数据
+        articleCollectionMapper.removeACRByCollectionId(id);
     }
 }

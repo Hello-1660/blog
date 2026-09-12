@@ -49,4 +49,11 @@ public interface ArticleCollectionService {
      * @param articleCollection 文章集合信息
      */
     void update(Integer userId, ArticleCollection articleCollection);
+
+    /**
+     * 删除文章集合
+     * @param userId 用户编号
+     * @param id 集合编号
+     */
+    void delete(Integer userId, Integer id);
 }
