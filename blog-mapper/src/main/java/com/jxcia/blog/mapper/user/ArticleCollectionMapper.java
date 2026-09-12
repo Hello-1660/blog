@@ -4,6 +4,7 @@ import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleCollection;
 import com.jxcia.blog.pojo.entity.ArticleCollectionRelation;
+import com.jxcia.blog.pojo.entity.ArticleListCollection;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -52,4 +53,10 @@ public interface ArticleCollectionMapper {
      */
     @Select("select * from article_collection_relation where collection_id = #{collectionId} and article_id = #{articleId}")
     ArticleCollectionRelation getACRByArticleIdAndCollectionId(ArticleCollectionRelationDto articleCollectionRelationDto);
+
+    /**
+     * 删除文章集合中的文章
+     * @param articleListCollection 文章集合信息
+     */
+    void removeACRByACRList(ArticleListCollection articleListCollection);
 }

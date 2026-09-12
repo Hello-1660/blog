@@ -9,6 +9,7 @@ import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleCollectionDto;
 import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
 import com.jxcia.blog.pojo.entity.Article;
+import com.jxcia.blog.pojo.entity.ArticleListCollection;
 import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
 import com.jxcia.blog.service.service.user.ArticleCollectionService;
 import lombok.extern.slf4j.Slf4j;
@@ -91,6 +92,29 @@ public class ArticleCollectionController {
             throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
 
         articleCollectionService.add(userId, articleCollectionRelationDto);
+
+        return Result.success();
+    }
+
+    /**
+     * 删除文章集合中的文章
+     * @param articleListCollection 文章集合信息
+     * @return 无
+     */
+    @PostMapping("/remove")
+    public Result<Void> remove(@RequestBody ArticleListCollection articleListCollection) {
+        log.info("articleCollection remove articleListCollection:{}", articleListCollection);
+
+        Integer userId = SecurityContextUtil.getId();
+        if (userId == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        // 文章和集合编号不能为空
+        if (articleListCollection.getCollectionId() == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
+        if (articleListCollection.getArticleIds() != null && !articleListCollection.getArticleIds().isEmpty())
+            articleListCollection.getArticleIds().forEach(articleId -> {
+                if (articleId == null) throw new ArticleException(ArticleExceptionConstant.ILLEGAL_OPERATION);
+            });
+        articleCollectionService.remove(userId, articleListCollection);
 
         return Result.success();
     }

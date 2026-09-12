@@ -82,6 +82,7 @@ public class ArticleServiceImpl implements ArticleService {
         userLikeArticleMapper.deleteByArticleId(articleId);
         // 删除评论
         commentMapper.deleteByArticleId(articleId);
+        // TODO 删除文章集合中的文章记录
         // 删除文章
         articleMapper.deleteByArticleId(articleId);
     }

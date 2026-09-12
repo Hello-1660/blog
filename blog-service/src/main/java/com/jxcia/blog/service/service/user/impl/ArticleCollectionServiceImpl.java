@@ -11,6 +11,7 @@ import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
 import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleCollection;
 import com.jxcia.blog.pojo.entity.ArticleCollectionRelation;
+import com.jxcia.blog.pojo.entity.ArticleListCollection;
 import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
 import com.jxcia.blog.service.service.user.ArticleCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,5 +117,18 @@ public class ArticleCollectionServiceImpl implements ArticleCollectionService {
                 .build();
         // 插入数据
         articleCollectionMapper.insertACRByACR(articleCollectionRelation);
+    }
+
+    /**
+     * 删除文章集合中的文章
+     * @param articleListCollection 文章集合信息
+     */
+    @Override
+    public void remove(Integer userId, ArticleListCollection articleListCollection) {
+        ArticleCollection collection = articleCollectionMapper.getById(articleListCollection.getCollectionId());
+        if (collection == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);
+        if (!collection.getUserId().equals(userId)) throw new ArticleException(ArticleExceptionConstant.ILLEGAL_OPERATION);
+
+        articleCollectionMapper.removeACRByACRList(articleListCollection);
     }
 }
