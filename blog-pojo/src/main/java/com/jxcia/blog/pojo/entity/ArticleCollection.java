@@ -20,6 +20,6 @@ public class ArticleCollection {
     private Integer userId;
     // 文章集合是否置顶 0不置顶 1置顶
     private Integer sort;
-    // 文章集合创建时间w
+    // 文章集合创建时间
     private LocalDateTime createTime;
 }

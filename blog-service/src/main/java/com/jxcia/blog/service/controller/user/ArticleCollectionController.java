@@ -8,10 +8,10 @@ import com.jxcia.blog.common.exception.UserException;
 import com.jxcia.blog.common.result.Result;
 import com.jxcia.blog.pojo.dto.ArticleCollectionDto;
 import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
-import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleCollection;
 import com.jxcia.blog.pojo.entity.ArticleListCollection;
 import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
+import com.jxcia.blog.pojo.vo.CollectionArticleListVo;
 import com.jxcia.blog.service.service.user.ArticleCollectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +41,34 @@ public class ArticleCollectionController {
     }
 
     /**
+     * 获取用户自己的集合列表
+     * @return 原始集合列表
+     */
+    @GetMapping("/collection")
+    public Result<List<ArticleCollectionVo>> collectionList() {
+        log.info("articleCollection selfCollectionList");
+
+        // 获取
+        Integer id = SecurityContextUtil.getId();
+        if (id == null) throw new UserException(UserExceptionConstant.USER_NOT_LOGIN);
+
+        return Result.success(articleCollectionService.collectionList(id));
+    }
+
+    /**
+     * 获取用户自己的集合列表
+     * @return 原始集合列表
+     */
+    @GetMapping("/collection/{id}")
+    public Result<List<ArticleCollectionVo>> collectionList(@PathVariable Integer id) {
+        log.info("articleCollection selfCollectionList id: {}", id);
+
+        if (id == null) throw  new UserException(UserExceptionConstant.USER_NOT_EXISTS);
+
+        return Result.success(articleCollectionService.collectionList(id));
+    }
+
+    /**
      * 创建文章集合
      * @param articleCollectionDto 文章集合信息
      * @return 无
@@ -67,7 +95,7 @@ public class ArticleCollectionController {
      * @return 文章列表
      */
     @GetMapping("/list/{id}")
-    public Result<List<Article>> list(@PathVariable Integer id) {
+    public Result<List<CollectionArticleListVo>> list(@PathVariable Integer id) {
         log.info("articleCollection list id:{}", id);
 
         if (id == null) throw new ArticleException(ArticleExceptionConstant.ARTICLE_COLLECTION_NOT_FOUND);

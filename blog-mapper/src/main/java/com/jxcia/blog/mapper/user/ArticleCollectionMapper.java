@@ -1,10 +1,11 @@
 package com.jxcia.blog.mapper.user;
 
 import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
-import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleCollection;
 import com.jxcia.blog.pojo.entity.ArticleCollectionRelation;
 import com.jxcia.blog.pojo.entity.ArticleListCollection;
+import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
+import com.jxcia.blog.pojo.vo.CollectionArticleListVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -32,10 +33,13 @@ public interface ArticleCollectionMapper {
      * @param id 集合编号
      * @return 文章列表
      */
-    @Select("select * from article where id in " +
-            "(select article_id from article_collection_relation where collection_id = #{id}) " +
-            "order by create_time desc")
-    List<Article> getArticleListByCollectionId(Integer id);
+    @Select("select a.*, acr.add_time " +
+            "from article a " +
+            "inner join article_collection_relation acr " +
+            "  on a.id = acr.article_id " +
+            "where acr.collection_id = #{id} " +
+            "order by a.create_time;")
+    List<CollectionArticleListVo> getArticleListByCollectionId(Integer id);
 
     /**
      * 想文章集合关系表插入数据
@@ -87,4 +91,12 @@ public interface ArticleCollectionMapper {
      */
     @Delete("delete from article_collection_relation where collection_id = #{id}")
     void removeACRByCollectionId(Integer id);
+
+    /**
+     * 根据用户编号获取集合列表
+     * @param userId 用户编号
+     * @return 集合列表
+     */
+    @Select("select * from article_collection where user_id = #{userId}")
+    List<ArticleCollectionVo> listByUserId(Integer userId);
 }

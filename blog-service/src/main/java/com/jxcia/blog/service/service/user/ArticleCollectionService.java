@@ -2,10 +2,10 @@ package com.jxcia.blog.service.service.user;
 
 import com.jxcia.blog.pojo.dto.ArticleCollectionDto;
 import com.jxcia.blog.pojo.dto.ArticleCollectionRelationDto;
-import com.jxcia.blog.pojo.entity.Article;
 import com.jxcia.blog.pojo.entity.ArticleCollection;
 import com.jxcia.blog.pojo.entity.ArticleListCollection;
 import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
+import com.jxcia.blog.pojo.vo.CollectionArticleListVo;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface ArticleCollectionService {
      * @param id 文章集合编号
      * @return 文章列表
      */
-    List<Article> list(Integer id);
+    List<CollectionArticleListVo> list(Integer id);
 
     /**
      * 添加文章
@@ -56,4 +56,10 @@ public interface ArticleCollectionService {
      * @param id 集合编号
      */
     void delete(Integer userId, Integer id);
+
+    /**
+     * 获取用户自己的集合列表
+     * @return 集合列表
+     */
+    List<ArticleCollectionVo> collectionList(Integer userId);
 }

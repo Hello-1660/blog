@@ -13,6 +13,7 @@ import com.jxcia.blog.pojo.entity.ArticleCollection;
 import com.jxcia.blog.pojo.entity.ArticleCollectionRelation;
 import com.jxcia.blog.pojo.entity.ArticleListCollection;
 import com.jxcia.blog.pojo.vo.ArticleCollectionVo;
+import com.jxcia.blog.pojo.vo.CollectionArticleListVo;
 import com.jxcia.blog.service.service.user.ArticleCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class ArticleCollectionServiceImpl implements ArticleCollectionService {
                 .build();
 
         // 获取集合第一个文章作为集合封面
-        List<Article> articleList = articleCollectionMapper.getArticleListByCollectionId(id);
+        List<CollectionArticleListVo> articleList = articleCollectionMapper.getArticleListByCollectionId(id);
         if (articleList != null && !articleList.isEmpty())
             articleCollectionVo.setIcon(articleList.getFirst().getIcon());
 
@@ -77,7 +78,7 @@ public class ArticleCollectionServiceImpl implements ArticleCollectionService {
      * @return 文章列表
      */
     @Override
-    public List<Article> list(Integer id) {
+    public List<CollectionArticleListVo> list(Integer id) {
         Integer userId = SecurityContextUtil.getId();
 
         // 集合
@@ -86,7 +87,7 @@ public class ArticleCollectionServiceImpl implements ArticleCollectionService {
 
 
         // 文章列表
-        List<Article> articleList = articleCollectionMapper.getArticleListByCollectionId(id);
+        List<CollectionArticleListVo> articleList = articleCollectionMapper.getArticleListByCollectionId(id);
 
         // 作者本人直接返回全部作品
         if (collection.getUserId().equals(userId)) return articleList;
@@ -175,5 +176,14 @@ public class ArticleCollectionServiceImpl implements ArticleCollectionService {
         articleCollectionMapper.removeById(id);
         // 删除文章集合数据
         articleCollectionMapper.removeACRByCollectionId(id);
+    }
+
+    /**
+     * 获取用户自己的文章集合列表
+     * @return 集合列表
+     */
+    @Override
+    public List<ArticleCollectionVo> collectionList(Integer userId) {
+        return articleCollectionMapper.listByUserId(userId);
     }
 }
