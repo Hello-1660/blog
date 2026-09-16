@@ -2,6 +2,8 @@ package com.jxcia.blog.service.service.user.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jxcia.blog.common.constant.RedisExceptionConstant;
+import com.jxcia.blog.common.exception.RedisException;
 import com.jxcia.blog.pojo.entity.Category;
 import com.jxcia.blog.mapper.user.CategoryMapper;
 import com.jxcia.blog.service.service.user.CategoryService;
@@ -38,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
                 return objectMapper.readValue(cached, new TypeReference<>() {});
             }
         } catch (Exception e) {
-            log.warn("读取分类缓存失败，回源数据库", e);
+            log.warn("读取分类缓存失败，回源数据库");
         }
 
         // 2. 缓存未命中，查数据库
@@ -49,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
             String json = objectMapper.writeValueAsString(categories);
             redisTemplate.opsForValue().set(CACHE_KEY, json, CACHE_TTL);
         } catch (Exception e) {
-            log.warn("写入分类缓存失败", e);
+            log.warn("写入分类缓存失败");
         }
 
         return categories;

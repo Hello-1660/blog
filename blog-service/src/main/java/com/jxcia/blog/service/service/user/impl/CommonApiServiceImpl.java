@@ -1,5 +1,7 @@
 package com.jxcia.blog.service.service.user.impl;
 
+import com.jxcia.blog.common.constant.RedisExceptionConstant;
+import com.jxcia.blog.common.exception.RedisException;
 import com.jxcia.blog.service.service.user.CommonApiService;
 import com.jxcia.blog.service.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +27,19 @@ public class CommonApiServiceImpl implements CommonApiService {
      */
     @Override
     public String historyNews() {
-        // 读取 redis
-        String cached = redisTemplate.opsForValue().get(HISTORY_KEY + LocalDate.now());
-        if (cached != null) return cached;
+        try {
+            // 读取 redis
+            String cached = redisTemplate.opsForValue().get(HISTORY_KEY + LocalDate.now());
+            if (cached != null) return cached;
 
-        // 重新查询
-        String newsJson = httpUtil.getTodayHistoryNews();
-        // 放入 redis 24小时过期
-        redisTemplate.opsForValue().set(HISTORY_KEY + LocalDate.now(), newsJson, 24, TimeUnit.HOURS);
-        return newsJson;
+            // 重新查询
+            String newsJson = httpUtil.getTodayHistoryNews();
+            // 放入 redis 24小时过期
+            redisTemplate.opsForValue().set(HISTORY_KEY + LocalDate.now(), newsJson, 24, TimeUnit.HOURS);
+            return newsJson;
+        } catch (Exception e) {
+            throw new RedisException(RedisExceptionConstant.REDIS_EXCEPTION);
+        }
     }
 
     /**

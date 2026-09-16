@@ -39,7 +39,7 @@ public class OssService {
         try {
             oss.putObject(properties.getBucketName(), objectName, file.getInputStream());
         } catch (IOException e) {
-            throw new OssException("上传失败: " + e.getMessage(), e);
+            throw new OssException("上传失败: " + e.getMessage());
         }
 
         return properties.getBaseUrl() + "/" + objectName;
