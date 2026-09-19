@@ -33,10 +33,11 @@ build/
 ### VS Code ###
 .vscode/
 
-# 忽略 Spring Boot 配置文件（含敏感信息）
-application.yml
-application-dev.yml
-application-pro.yml
+### Local / secrets（只忽略放真值的文件）###
+application-local.yml
+application-*-local.yml
+secrets/
+
 
 # 忽略环境变量文件
 .env
@@ -44,5 +45,8 @@ application-pro.yml
 
 # 忽略 IDE 或个人配置
 config/secret.properties
-*.yml
 reasonix.toml
+
+### OS ###
+Thumbs.db
+.DS_Store
