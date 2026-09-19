@@ -367,6 +367,63 @@ mvn -B clean verify
 
 ```powershell
 # ① 打包产物包含配置与数据文件
+
+---
+
+## 5. 补充：**不要把本地密钥打进 jar**（2026-09-19 实测发现）
+
+打包后我检查了产物，发现 `application-local.yml` **在 jar 里面**：
+
+```
+BOOT-INF/classes/application-local.yml     ← 真密钥！
+BOOT-INF/classes/application.yml
+BOOT-INF/classes/ip2region_v4.xdb
+```
+
+### 要记住的规则
+
+> **`.gitignore` 只影响 Git，完全不影响 Maven 打包。**
+> `src/main/resources` 目录下的一切都会被复制进 `target/classes`，进而进入 jar。
+
+所以"把密钥文件加进 .gitignore"**并不能阻止它被打包分发**。
+
+### 正确做法：让本地配置待在 classpath 之外
+
+1. 把本地配置移出 `src/main/resources`，放到项目根的 `config/`：
+   ```bash
+   mkdir -p config
+   mv blog-service/src/main/resources/application-local.yml config/application-local.yml
+   ```
+   （该文件名已被根 `.gitignore` 的 `application-local.yml` 规则忽略，无需再改）
+
+2. 运行时显式告诉 Spring 去那里找：
+   ```bash
+   # jar
+   java -jar blog-service/target/blog-service-0.0.1-SNAPSHOT.jar \
+     --spring.config.additional-location=optional:file:./config/
+
+   # IDEA：Run Configuration → Program arguments 填同样内容
+   #        并把 Working directory 设为项目根 D:\project\java\blog
+   ```
+   `optional:` 前缀表示"文件不存在也不报错"（生产环境靠环境变量时正好）。
+
+   > ✅ **但通常不需要这个参数**：Spring Boot 的默认配置位置本来就包含 `optional:file:./config/`。
+   > 所以只要**工作目录是项目根**（jar 在项目根执行；IDEA 里把 Run Configuration 的
+   > **Working directory** 设为 `D:\\project\\java\\blog`），`config/application-local.yml`
+   > 会被**自动加载**。上面的参数只是"工作目录无法固定"时的兜底。
+   >
+   > ⚠️ 另注：`spring.config.additional-location` **只能**作为命令行参数或环境变量生效，
+   > 写在 `application.yml` 里是**无效**的（它在配置文件被读取之前就要用到）。
+
+3. 验收：重新打包后，jar 里**只能**有 `application.yml`
+   ```bash
+   mvn -B clean package -DskipTests
+   jar tf blog-service/target/blog-service-0.0.1-SNAPSHOT.jar | grep -i application
+   # 期望：只有 BOOT-INF/classes/application.yml
+   ```
+
+> 另一种同样安全的做法：**本地也不用文件**，真值全部走环境变量
+> （IDEA 的 Environment variables、或 shell 里 `export`）。这样连"文件要不要排除"的问题都不存在。
 mvn -B clean package -DskipTests
 jar tf blog-service/target/blog-service-0.0.1-SNAPSHOT.jar | Select-String 'application|ip2region'
 

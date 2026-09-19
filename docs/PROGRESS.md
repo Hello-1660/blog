@@ -92,9 +92,9 @@ MyBatis-Plus **3.5.17**｜springdoc **2.9.1**（Boot 3 用 2.x，3.x 是 Boot 4�
 | 指南索引 | `guides/00-index.md` | ✅ 完成 | AI |
 | 阶段 0 指南 | `guides/01-phase0-baseline.md` | ✅ 完成 | AI |
 | 阶段 1 指南 | `guides/02-phase1-security.md` | ✅ 完成 | AI |
-| **阶段 0 执行** | 0.1–0.5 ✅ + **启动验证通过**（`Started BlogServiceApplication`，Hikari 已连 MySQL，空库只 WARN）；剩 0.6 docs / 0.7 Git / 0.8 Boot 升级 | 🟡 ~90% | 用户 |
+| **阶段 0 执行** | 0.1–0.8 **全部完成** ✅（含 `java -jar` 实测启动 + 本地密钥移出 jar） | ✅ **完成** | 用户 |
 | 环境（新 VM 192.168.48.128） | MySQL **8.4.11** ✅ ｜ Redis **8.10.2** ✅ ｜ Docker **29.8.1** + 镜像源 ✅ ｜ `application-local.yml` 已改 ✅ | ✅ 完成 | 用户 |
-| **阶段 1 执行** | 越权修复 + 第一个回归测试 | ⬜ **未开始** | 用户 |
+| **阶段 1 执行** | 越权修复 + 第一个回归测试 | 🟡 **进行中** | 用户 |
 | 阶段 2–7 指南 | —— | ⬜ 未编写（等阶段 0/1 结果） | AI |
 | 阶段 2–7 执行 | —— | ⬜ 未开始 | 用户 |
 | 凭据轮换 | OSS/DB/Redis/邮箱/JWT/VM 口令 | 🟡 大部分已做；**VM 弱口令待改**；旧 `application-{dev,test,pro}.yml` 已删 | 用户 |
@@ -125,11 +125,22 @@ WARN DynamicSecurityMetadataSource : 启动期加载权限失败，将延迟到�
 
 👉 容错改动按设计工作：**空库不再阻塞启动**（只留一条 WARN）。
 
-**阶段 0 剩余 4 项：**
-1. 处理 `docs/` 的 4 个删除（建议恢复历史设计文档，它们是阶段 1/6 的参考）；
-2. **Git 基线**：`master` → `main`、统一身份、按逻辑拆分提交（目前阶段 0 的改动**一个都没提交**）；
-3. 用 `java -jar` 再验证一次（刚才那次是从 `target/classes` 起的，**不是 jar**）；
-4. Step 0.8：Spring Boot `3.4.13` → `3.5.16`。
+**阶段 0：✅ 全部完成（2026-09-19 AI 复核通过）**
+
+| 验收项 | 证据 |
+|--------|------|
+| 0.1–0.5 构建 / 配置 / wrapper | ✅ |
+| 0.6 docs 归档 | ✅ `docs/legacy/` |
+| 0.7 Git 基线 | ✅ `main` + `feature/phase0-baseline`，均已推送（远端 `main` = c97e23c） |
+| 0.8 Boot 升 3.5.16 | ✅ jar 内含 `spring-boot-3.5.16.jar` |
+| **jar 实测启动** | ✅ AI 实跑 `java -jar`：`Started BlogServiceApplication`，连上 MySQL |
+| **密钥不随产物分发** | ✅ `config/application-local.yml` 已移出 classpath；jar 内**只剩** `application.yml` |
+
+⇒ **P0-1（打包缺配置）与"本地密钥进 jar"均已关闭。**
+
+**下一步：阶段 1 · 安全止血** —— 见 [`guides/02-phase1-security.md`](guides/02-phase1-security.md)。
+从 **Step 1.1** 开始：**先写一个会失败的单元测试**复现「普通用户能访问 `/admin/**`」——
+纯单元测试，**不需要数据库**。
 
 实测连通性：
 
