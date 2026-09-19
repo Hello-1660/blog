@@ -27,8 +27,13 @@ public class DynamicSecurityMetadataSource implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        if (dynamicSecurityService != null) {
+        if (dynamicSecurityService == null) return;
+        try {
             configAttributeMap = dynamicSecurityService.loadDataSource();
+        } catch (Exception e) {
+            // 启动期数据库不可用/表不存在：不要因此让整个应用起不来，改为首次请求时懒加载重试
+            log.warn("启动期加载权限失败，将延迟到首次请求时重试: {}", e.getMessage());
+            configAttributeMap = new HashMap<>();
         }
     }
 
