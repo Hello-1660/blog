@@ -1,0 +1,80 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: blog-service
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  main:
+    allow-circular-references: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:blog}?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 10000
+      idle-timeout: 600000
+      max-lifetime: 7200000
+      keepalive-time: 60000
+      connection-test-query: /* ping */ SELECT 1
+      validation-timeout: 2000
+      pool-name: BlogHikariPool
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+      database: ${REDIS_DATABASE:0}
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+oss:
+  endpoint: ${OSS_ENDPOINT:oss-cn-qingdao.aliyuncs.com}
+  access-key-id: ${OSS_ACCESS_KEY_ID}
+  access-key-secret: ${OSS_ACCESS_KEY_SECRET}
+  bucket-name: ${OSS_BUCKET_NAME:image-blog-xinfeng}
+
+mybatis:
+  mapper-locations: classpath:com/jxcia/blog/mapper/**/*.xml
+  type-aliases-package: com.jxcia.blog.pojo.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.jxcia.blog.mapper: INFO
+    org.springframework.data.redis: WARN
+    io.lettuce.core: WARN
+
+
+
+jwt:
+  tokenHeader: ${JWT_TOKEN_HEADER:Authorization}
+  secret: ${JWT_SECRET}
+  tokenHead: "${JWT_TOKEN_HEAD:Bearer}"
+  accessExpiration: ${JWT_TOKEN_EXPIRATION:604800000}
+
+email:
+  send-address: ${MAIL_SEND_ADDRESS:xinfeng@mail.dxinfeng.top}
+  password: ${MAIL_PASSWORD}
+  reply-address: ${MAIL_REPLY_ADDRESS:2075722023@qq.com}
+  send-name: ${MAIL_SEND_NAME:信风}
+
+verification-code:
+  length: ${VERIFICATION_CODE_LENGTH:6}
+  ttl: ${VERIFICATION_CODE_TTL:10}
+  min-interval-time: ${VERIFICATION_CODE_MIN_INTERVAL:50}
+  minute-ip-limit: ${VERIFICATION_CODE_MINUTE_IP_LIMIT:3}
+
+wanwei:
+  api-key: ${WANWEI_API_KEY}
